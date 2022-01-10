@@ -1,0 +1,30 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}    
+    <div class="card-header">Lista de Usuarios</div>
+    <div class="card card-body">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Razon Social</th>
+                    <th scope="col">Cuil</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{user.id}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.razonSocial}}</td>
+                    <td>{{user.cuit}}</td>
+                    <td><a href="#"><i class="fas fa-search text-primary" title="ver"></i></a> <i class="fas fa-edit text-primary" title="Editar"></i> <i class="fas fa-times text-danger" title="Borrar"></i></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+{% endblock %}

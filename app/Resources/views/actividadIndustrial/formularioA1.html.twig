@@ -1,0 +1,155 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block titleForm %}{{titulo}}{% endblock %}
+
+{% block subTitle %} 1. DATOS IDENTIFICATORIOS{% endblock %}
+
+{% block contenctForms %}
+
+    <div class="card-body">
+        <form id="formularioA1" action="{{ path('/tramiteA1') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <p for="razonSocial">Nombre Completo / Razón Social <span class="text-danger">(*)</span><span class="text-success">(?)</span></p>
+                        <input type="text" class="form-control" id="razonSocial" name="Persona[razonSocial]" required value="{{Persona.RazonSocial ?? null}}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p for="cuit">CUIT <span class="text-danger">(*)</span></p>
+                    <input type="number" class="form-control" id="cuit" name="Persona[cuit]" required max="99999999999" min="10000000000" step="1" value="{{Persona.cuit ?? null}}">
+                </div>
+                <div class="col-md-4">
+                    <p for="fechaInicio">Fecha Inicio Actividades <span class="text-danger">(*)</span><span class="text-success">(?)</span></p>
+                    <div class="form-row">                                        
+                    <input type="date" class="form-control" id="fechaInicio" name="Empresa[fechaInicio]" required max="{{ maxDate }}" value="{% if Empresa is defined %}{{ Empresa.FechaInicioActividad|date("Y-m-d") }}{% else %} null {% endif %}">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <p for="actividad">Actividades de la Empresa<span class="text-danger">(*)</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-row">
+                        <p for="grupo">Grupo</p>
+                        <select class="form-control grupo" id="grupo" name="grupo[]" required onchange="parent.grupo('grupo','actividad','caucm','ambiental')">
+                            <option value="">SELECCIONE UN GRUPO</option>
+                            {% for grupo in grupos %}
+                                {% if Grupo is defined and Grupo.grupo == grupo.id%}
+                                    <option value="{{ grupo.id }}" selected>{{ grupo.nombre }}</option>
+                                {% else %}
+                                    <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-row">
+                        <p for="actividad">ACTIVIDAD DE EMPRESA</p>                    
+                        <select class="form-control" id="actividad" name="actividadEmpresa[]" required  onchange="parent.actividad('actividad','caucm','ambiental')">                        
+                        <option value="">SELECCIONE UNA ACTIVIDAD</option>
+                        </select>
+                        <div class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                            <span class='spinner-message'>Cargando actividades...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-row">
+                        <p for="prse">PRINCIPAL / SECUNDARIA</p>
+                        <select class="form-control" id="prse" name="prse[]" required>
+                            <option value="0">SELECCIONE UN NIVEL</option>
+                            <option value="1">Principal</option>
+                            <option value="2">Secundaria</option>                        
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-row">
+                        <p for="caucm">CÓDIGO CUACM</p>
+                        <input type="text" class="form-control" id="caucm" readonly name="caucm[]">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-row">
+                        <p for="ambiental">ESTANDAR AMBIENTAL</p>
+                        <input type="text" class="form-control" id="ambiental" readonly name="estandarAmbiental[]">
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+            <div id="filas"></div>
+            {# FIN DUPLICACIÓN #}
+            </br>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <a onClick="agregarFila()" class="btn btn-secondary text-light">Agregar actividad</a>
+                </div>
+            </div>
+            </br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <p>¿Existe depósito?<span class="text-danger">(*)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <p>Si la superficie del espacio destinado a almacenamiento supera el 50% de la superficie cubierta total del predio deberá indicar “SI”. En caso contrario deberá indicar “NO”.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Empresa[deposito]" required {% if Empresa is defined and Empresa.deposito == 1 %} checked {% endif %}> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Empresa[deposito]" required {% if Empresa is defined and Empresa.deposito == 0 %} checked {% endif %}> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script src="{{asset('bundles/js/formularioA1.js')}}"></script>
+<script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    {% if (Grupo is defined) %}
+        $( document ).ready(function() {
+            $(".grupo").each(function(){
+                $(this).trigger("change");
+                setTimeout(function(){
+                    $("#actividad").val({{Actividad.actividad.id}});
+                    $("#actividad").trigger("change");
+                }, 8000);
+            });            
+        });
+    {% endif %}    
+</script>
+{% endblock %}

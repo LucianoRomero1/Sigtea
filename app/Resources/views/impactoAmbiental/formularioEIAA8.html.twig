@@ -1,0 +1,97 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">8. Marco legal, administrativo y político <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) análisis del marco legal ambiental relevante y aplicable en el que se encuadra especfficamente la actividad. Aquí se debe incluir tanto el marco normativo nacional, provincial y municipal o comunal, como también exigencias propias de la actividad (por ej. por aparatos sometidos a presión, almacenamiento de combustibles, depósito de agroquímicos, almacenamiento de sustancias químicas nomencladas, de sustancias inflamables, etc.) Insertar una fila por cada norma citada. ">(?)</span></div>
+    <div class="card-body">
+        <form id="formularioEIAAA8" action="{{ path('tramiteEIAA8') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        <span data-toggle="tooltip" class="text-success" data-placement="right" title="Jurisdicción: Nacional / Provincial / Municipal / etc... Aplicación especifica del proyecto: Cite las implicancias y articulado de la ley relacionadas al proyecto que deberán cumplirse. Cumplimiento: Se refiere al resumen de medidas, técnicas, procedimientos a aplicar para cumplir con cada normativa. (Ej: Medición calidad de Aire, Monitoreo cada 6 meses, Destino final de residuos peligrosos a Operadores habilitados...) ">(?)</span>
+        <table id="tablaMarcos" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Tipo de norma y N°</th>
+                    <th scope="col">Tema</th>
+                    <th scope="col">Aplicación específica del proyecto / Cumplimiento</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for marco in Marcos %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>
+                        <textarea class="form-control" placeholder="Límite: 100 caracteres" name="Marco[tipo][]" required>{{marco.tipoNorma}}</textarea>
+                    </td>
+                    <td>
+                        <textarea class="form-control" placeholder="Límite: 200 caracteres" name="Marco[tema][]" required>{{marco.tema}}</textarea>
+                    </td>
+                    <td>
+                        <textarea class="form-control" placeholder="Límite: 500 caracteres" name="Marco[aplicacion][]" required>{{marco.aplicacionEspecifica}}</textarea>
+                    </td>
+                    <td>
+                        <a class="btn text-danger" onClick="eliminarFila(this, 'tablaMarcos')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <textarea class="form-control" placeholder="Límite: 100 caracteres" name="Marco[tipo][]" required></textarea>
+                    </td>
+                    <td>
+                        <textarea class="form-control" placeholder="Límite: 200 caracteres" name="Marco[tema][]" required></textarea>
+                    </td>
+                    <td>
+                        <textarea class="form-control" placeholder="Límite: 500 caracteres" name="Marco[aplicacion][]" required></textarea>
+                    </td>
+                    <td>
+                        <a class="btn text-danger" onClick="eliminarFila(this, 'tablaMarcos')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <a class="btn text-primary" onClick="agregarFila('tablaMarcos')">Agregar Norma</a>
+            </div>
+        </div>
+        
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA7',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

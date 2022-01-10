@@ -1,0 +1,107 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+
+<div class="pad">
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalLong">
+        Subir archivos
+    </button>
+
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Subir archivos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pad">
+                    <form method="post" id="formArchivos" enctype="multipart/form-data">
+
+                        <h6>1- Contrato social o estatutos inscriptos:</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                 <input required="true" id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+                        {# ########### #}
+
+                        <h6>2- Actas societarias:</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                 <input required="true" id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+                        {# ########### #}
+
+                        <h6>3- Fotocopia Documento de Identidad correspondiente a las personas físicas detalladas en 4, 5 y 6:</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                 <input required="true" id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+                        {# ########### #}
+
+                        <h6>4- Constancia de inscripción en AFIP.</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                 <input required="true" id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+                        {# ########### #}
+
+                        <h6>5- Impuesto Inmobiliario.En caso de no coincidir el Nombre/Razón social con el titular del
+                        Impuesto Inmobiliario, deberá adjuntarse la documentación que acredite el derecho de uso del
+                        predio. (Ej: Contrato de locación, comodato, usufructo).</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                 <input required="true" id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+
+                        {# ########### #}
+
+                        <h6>6- Certificado de uso conforme de suelo para la actividad otorgado por la autoridad municipal o local que
+                        corresponda.</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                 <input required="true" id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+
+                        <h6>7- Otro: En caso de existir otra información que considere importante presentarla.</h6>
+                        
+                        <div class="pad">
+                            <div class="text-center container-fluid">
+                                <input id="archivoContrato" class="p-top" name="contrato" type="file" /> 
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="container-fluid text-center">
+                            <button id="subirContrato" class="btn btn-success">Cargar archivos</button>
+                            <p id="success" style="color:green;"></p>
+                            <p id="error" style="color:red;">..........</p>
+                        </div>
+
+                    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

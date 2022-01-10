@@ -1,0 +1,162 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %}PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 5. ALMACENAMIENTO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG5" action="{{ path('tramiteAG6') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b>ALMACENAMIENTO DE SILOS </b>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <table class="table text-center" id="tablaSilos">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">PERÍODO (MESES)</th>
+                </tr>
+            </thead>
+            <tbody id="fila">  
+                {% for almacen in AlmacenamientoSilos %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="number" class="form-control" name="AlmacenamientoSilos[cantidad][]"  value="{{almacen.cantidad}}" required></td>
+                        <td><input type="text" class="form-control" name="AlmacenamientoSilos[unidad][]"  value="{{almacen.unidad}}" required></td>
+                        <td class="media">
+                            <input type="text" class="form-control" name="AlmacenamientoSilos[periodo][]"  value="{{almacen.periodo}}" required>
+                            <a onClick="eliminarFila(this, 'tablaSilos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>  
+                {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="number" class="form-control" name="AlmacenamientoSilos[cantidad][]"  required></td>
+                        <td><input type="text" class="form-control" name="AlmacenamientoSilos[unidad][]"  required></td>
+                        <td class="media">
+                            <input type="text" class="form-control" name="AlmacenamientoSilos[periodo][]"  required>
+                            <a onClick="eliminarFila(this, 'tablaSilos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr> 
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaSilos')" class="btn btn-secondary text-light">Agregar Silo</a>
+        </div>
+    </div>
+    <br>    
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b for="descripccion">ALMACENAMIENTO DE CELDAS </b>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <table class="table text-center" id="tablaCeldas">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">PERÍODO (MESES)</th>
+                </tr>
+            </thead>
+            <tbody id="fila2">   
+            {% for almacen in AlmacenamientoCeldas %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td><input type="number" class="form-control" name="AlmacenamientoCeldas[cantidad][]"   value="{{almacen.cantidad}}" required></td>
+                    <td><input type="text" class="form-control" name="AlmacenamientoCeldas[unidad][]"   value="{{almacen.unidad}}" required ></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="AlmacenamientoCeldas[periodo][]"   value="{{almacen.periodo}}" required>
+                        <a onClick="eliminarFila(this, 'tablaCeldas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="number" class="form-control" name="AlmacenamientoCeldas[cantidad][]"   required></td>
+                    <td><input type="text" class="form-control" name="AlmacenamientoCeldas[unidad][]"   required ></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="AlmacenamientoCeldas[periodo][]"   required>
+                        <a onClick="eliminarFila(this, 'tablaCeldas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaCeldas')" class="btn btn-secondary text-light">Agregar Celda</a>
+        </div>
+    </div>
+    <br>    
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b>ALMACENAMIENTO OTROS </b>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <table class="table text-center" id="tablaOtros">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">PERÍODO (MESES)</th>
+                </tr>
+            </thead>
+            <tbody id="fila3">     
+            {% for almacen in AlmacenamientoOtros %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td><input type="number" class="form-control" name="AlmacenamientoOtros[cantidad][]"   value="{{almacen.cantidad}}" required></td>
+                    <td><input type="text" class="form-control" name="AlmacenamientoOtros[unidad][]"   value="{{almacen.unidad}}" required ></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="AlmacenamientoOtros[periodo][]"   value="{{almacen.periodo}}" required>
+                        <a onClick="eliminarFila(this, 'tablaOtros')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="number" class="form-control" name="AlmacenamientoOtros[cantidad][]"   required></td>
+                    <td><input type="text" class="form-control" name="AlmacenamientoOtros[unidad][]"   required ></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="AlmacenamientoOtros[periodo][]"   required>
+                        <a onClick="eliminarFila(this, 'tablaOtros')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr> 
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaOtros')" class="btn btn-secondary text-light">Agregar Otro</a>
+        </div>
+    </div>
+    <br>    
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}9. DECLARACIÓN DE PASIVOS AMBIENTALES{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio10') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="SitioContaminado[check]" data-tipo="pasivosAmbientales" required class="ck-check" value='1' {% if SitioContaminado is defined and SitioContaminado != null%} checked {% endif %}> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="SitioContaminado[check]" data-tipo="pasivosAmbientales" class="ck-check" value=0 {% if SitioContaminado is not defined %} checked {% endif %}> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="pasivosAmbientales" style="display:none;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <div class="input-group-prepend">
+                                <label for="descripcion">DESCRIPCIÓN DEL SITIO CONTAMINADO
+                                <textarea cols="120" rows="3" name="SitioContaminado[descripcion]" >{% if SitioContaminado is defined and SitioContaminado != null %} {{SitioContaminado.descripcion}} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <div class="input-group-prepend">
+                                <label for="descripcion">PROPUESTA DE MITIGACIÓN Y/O REMEDIACIÓN Y/O SEGUIMIENTO DE CADA UNO DE LOS PASIVOS AMBIENTALES DECLARADOS
+                                <textarea cols="120" rows="3" name="SitioContaminado[planRemediacio]" >{% if SitioContaminado is defined and SitioContaminado != null %} {{SitioContaminado.planRemediacion}} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <div class="input-group-prepend">
+                                <label for="descripcion">Otras consideraciones, factores ambientales, etc., que se consideren de interés y que no estén contempladas en lo solictado, o necesitan ser ampliadas. O en aquellos casos que la extensión del campo no sea suficiente. Se deberá indicar el número de ítem al que se refiere o el nuevo para aquellos casos no previstos anteriormente.<br/>
+                                <textarea cols="120" rows="3" name="SitioContaminado[parametrosInteres]" >{% if SitioContaminado is defined and SitioContaminado != null %} {{SitioContaminado.parametrosIntereses}} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendio8') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                {% else %}
+                    <a href="{{ path('formularioExpendio10',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-check').click(function(){
+                $('#pasivosAmbientales').toggle();
+            })
+            {% if SitioContaminado is defined and SitioContaminado != null%} $('#pasivosAmbientales').show() {% endif %}
+        })
+    </script>
+{% endblock %}

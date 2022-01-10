@@ -1,0 +1,36 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 3. MEMORIA DESCRIPTIVA DE LA ACTIVIDAD {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL3" action="{{ path('tramiteFL4') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-6">
+            <p>CAPACIDAD MÁXIMA DE ANIMALES DEL ESTABLECIMIENTO<span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Descriptiva != null %}{{Descriptiva.capacidadMaxima}}{% endif %}"   name="Descriptiva[capacidadMaxima]">
+        </div>
+        <div class="col-md-6">
+            <p>CANTIDAD DE ANIMALES CON QUE CUENTA EL ESTABLECIMIENTO<span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Descriptiva != null %}{{Descriptiva.cantidadAnimal}}{% endif %}"   name="Descriptiva[cantidadAnimal]">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <p>SUPERFICIE TOTAL DEL ESTABLECIMIENTO (metros cuadrados)<span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Descriptiva != null %}{{Descriptiva.superficieEstablecimiento}}{% endif %}"   name="Descriptiva[superficieEstablecimiento]">
+        </div>
+        <div class="col-md-6">
+            <p>SUPERFICIE EN METROS CUADRADOS POR UNIDAD ANIMAL<span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Descriptiva != null %}{{Descriptiva.superficieAnimal}}{% endif %}"   name="Descriptiva[superficieAnimal]">
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

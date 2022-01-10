@@ -1,0 +1,25 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 4. TOPOGRAFÍA {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL4" action="{{ path('tramiteFL5') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-6">
+            <p>DESCRIPCIÓN DEL SITIO<span class="text-danger">(*)</span></p>
+            <textarea class="form-control" name="Topografia[descripcionSitio]">{% if Topografia is defined and Topografia != null %}{{Topografia.descripcionSitio}}{% endif %}</textarea>
+        </div>
+        <div class="col-md-6">
+            <p>DESCRIPCIÓN PENDIENTES<span class="text-danger">(*)</span></p>
+            <textarea class="form-control" name="Topografia[descripcionPendientes]">{% if Topografia is defined and  Topografia != null %}{{Topografia.descripcionPendientes}}{% endif %}</textarea>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

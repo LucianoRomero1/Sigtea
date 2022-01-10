@@ -1,0 +1,243 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}5. ALMACENAMIENTO{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio6') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">ALMACENAMIENTO DE SUSTANCIAS LÍQUIDAS</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Almacenamiento[liquido]" data-tipo="liquido" required {% if Almacenamiento is defined and Almacenamiento.liquido is defined %} checked {% endif %} class="ck-check" value=1> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Almacenamiento[liquido]" data-tipo="liquido" required {% if Almacenamiento is defined and Almacenamiento.liquido is not defined %} check {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="almacenamientoliquido"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Descripción del Almacenamiento y medidas de Seguridad</th>
+                            <th scope="col">Sustancia / Producto</hd>
+                            <th scope="col">Capacidad</hd>
+                        </tr>
+                        </thead>
+                        <tbody id="filasalmacenamientoLiquido">
+                            {% if Almacenamiento is defined and Almacenamiento.liquido is defined %}
+                                {% for almacenamientoLiquido in Almacenamiento.liquido %}
+                                    <tr>
+                                        <td>
+                                            <select name="Tanque[almacenamientoLiquido][Tipo][]" required class="selectTipo" data-numero=1>
+                                                <option value="aereo" {{ almacenamientoLiquido.tipoAlmacenamiento.nombre == 'aereo' ? 'selected' }}>Tanque Aéreo</option>
+                                                <option value="subterraneo" {{ almacenamientoLiquido.tipoAlmacenamiento.nombre == 'subterraneo' ? 'selected' }} >Tanque Subterráneo</option>
+                                                <option value="otro" {{ almacenamientoLiquido.tipoAlmacenamiento.nombre == 'otro' ? 'selected' }}>Otro</option>
+                                            </select>
+                                            <input tipe="text" name="Tanque[almacenamientoLiquido][tipo][otro][]" id="otro{{almacenamientoLiquido.numero}}" style="display:none;" value="{{ almacenamientoLiquido.tipoAlmacenamiento.nombre == 'otro' ? almacenamientoLiquido.nombre }}"/>
+                                        </td>
+                                        <td><textarea name="Tanque[almacenamientoLiquido][descripcion][]" cols="50">{{almacenamientoLiquido.descripcion}}</textarea></td>
+                                        <td><input type="text" name="Tanque[almacenamientoLiquido][sustancia][]" value="{{almacenamientoLiquido.sustancia}}"/></td>
+                                        <td><input type="text" name="Tanque[almacenamientoLiquido][capacidad][]" value="{{almacenamientoLiquido.capacidad}}"/>
+                                        <a onClick="eliminarFila(this,{{almacenamientoLiquido.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaLiquidos('almacenamientoLiquido')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            </br> 
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">ALMACENAMIENTO DE GNC</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Almacenamiento[gnc]" data-tipo="gnc" required {% if Almacenamiento is defined and Almacenamiento.gnc is defined %} checked {% endif %} class="ck-check" value=1> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Almacenamiento[gnc]" data-tipo="gnc" required {% if Almacenamiento is defined and Almacenamiento.gnc is not defined %} checked {% endif %} class="ck-check" value=1> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="almacenamientognc"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Almacenamiento</th>
+                            <th scope="col">Presión (indicar unidad)</th>
+                            <th scope="col">Capacidad</hd>
+                        </tr>
+                        </thead>
+                        <tbody id="filasalmacenamientognc">
+                            {% if Almacenamiento is defined and Almacenamiento.gnc != null %}
+                                {% for almacenamientoGnc in Almacenamiento.gnc %}
+                                    <tr>
+                                        <td><input type="text" name="Tanque[almacenamientognc][almacenamiento][]" value="{{almacenamientoGnc.descripcion}}"/></td>
+                                        <td><input type="text" name="Tanque[almacenamientognc][unidad][]" value="{{almacenamientoGnc.presion}}"/></td>
+                                        <td><input type="text" name="Tanque[almacenamientognc][capacidad][]" value="{{almacenamientoGnc.capacidad}}"/>
+                                        <a onClick="eliminarFila(this,{{almacenamientoGnc.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaGnc('almacenamientognc')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            </br> 
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">ALMACENAMIENTO DE OTRAS SUSTANCIAS</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Almacenamiento[otro]" data-tipo="otro" required {% if Almacenamiento is defined and Almacenamiento.otro is defined %} checked {% endif %} class="ck-check" value=1> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Almacenamiento[otro]" data-tipo="otro" required {% if Almacenamiento is defined and Almacenamiento.otro is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="almacenamientootro"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Almacenamiento</th>
+                            <th scope="col">Presión (indicar unidad)</th>
+                            <th scope="col">Capacidad</hd>
+                        </tr>
+                        </thead>
+                        <tbody id="filasalmacenamientootro">
+                            {% if Almacenamiento is defined and Almacenamiento.otro is defined %}
+                                {% for almacenamientoOtro in Almacenamiento.otro %}
+                                    <tr>
+                                        <td><input type="text" name="Tanque[almacenamientootro][almacenamiento][]" value="{{almacenamientoOtro.descripcion}}"/></td>
+                                        <td><input type="text" name="Tanque[almacenamientootro][unidad][]" value="{{almacenamientoOtro.presion}}"/></td>
+                                        <td><input type="text" name="Tanque[almacenamientootro][capacidad][]" value="{{almacenamientoOtro.capacidad}}"/>
+                                        <a onClick="eliminarFila(this,{{almacenamientoOtro.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaOtro('almacenamientootro')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            </br> 
+        </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendio4') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('formularioExpendio4',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script src="{{asset('bundles/js/expendioCombustible/formulario5.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-check').click(function(){
+                var tipo = $(this).data('tipo');
+                $('#almacenamiento'+tipo).toggle();
+            })
+            $('.selectTipo').change(function(){
+                var otro = $(this).data('numero');
+                switch ($(this).val()){
+                    case 'otro':                        
+                        $("#otro"+otro).show();
+                        break;
+                    default:
+                        $("#otro"+otro).attr("style","display:none");
+                        break;
+                }
+            })            
+        })
+        {% if Almacenamiento is defined and Almacenamiento.liquido is defined %} $('#almacenamientoliquido').toggle(); {% endif %}
+        {% if Almacenamiento is defined and Almacenamiento.gnc is defined %} $('#almacenamientognc').toggle(); {% endif %}
+        {% if Almacenamiento is defined and Almacenamiento.otro is defined %} $('#almacenamientootro').toggle(); {% endif %}
+        {% if Almacenamiento is defined and Almacenamiento.liquido is defined %}
+            {% for almacenamientoLiquido in Almacenamiento.liquido %}
+                {% if almacenamientoLiquido.tipoAlmacenamiento.nombre == 'otro' %}
+                    $('#otro'+{{almacenamientoLiquido.numero}}).show();
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

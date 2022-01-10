@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+{% block body %}    
+    {% block contenct %} {% endblock %}
+    {% block modal %} 
+    <div class="modal fade" id="crearNoticias" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Nuevo Mensaje</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('/mensajes/nuevo') }}" method="post">
+                    <div class="modal-body">
+                            <div class="form-group">
+                                <label for="mensaje">Mensaje</label>
+                                <input type="hidden" name="idTramite" id="idTramite"/>
+                                <input type="hidden" name="idEstado" id="idEstado"/>
+                                <textarea class="form-control" col="5" row="3" id="mensajeNuevo" required></textarea>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success">Enviar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>        
+    <div class="modal fade bd-example-modal-lg" id="listarMensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Lista de Mensajes</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Usuario - CUIL</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Mensaje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mensajesLista"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+            </div>
+        </div>
+    </div>        
+    {% endblock %}
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/estado.js')}}"></script>
+<script>
+    $(document).ready( function(){
+
+        $('[data-toggle="tooltip"]').tooltip();
+        $('.tooltip').tooltip();
+
+        $('.mensaje').on('click',function(){
+            if($(this).data('idestado') == 4){
+                Swal.fire({
+                    title: '¿ Desea rechazar este trámite ?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Rechazar',
+                    cancelButtonText: `Cancelar`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(".messageError")[0] != null ? $(".messageError").remove() : ''
+                        $("#mensajeNuevo").css('border-color', '')
+                        $("#mensajeNuevo").val('')
+                        $("#crearNoticias").modal('show');
+                        $("#idTramite").val($(this).data('idtramite'));
+                        $("#idEstado").val($(this).data('idestado'));
+                    }
+                })
+            }else{
+                $(".messageError")[0] != null ? $(".messageError").remove() : ''
+                $("#mensajeNuevo").css('border-color', '')
+                $("#mensajeNuevo").val('')
+                $("#crearNoticias").modal('show');
+                $("#idTramite").val($(this).data('idtramite'));
+                $("#idEstado").val($(this).data('idestado'));
+            }
+
+        })
+
+        $('.btn-success').on('click',function(){
+
+            if($("#mensajeNuevo").val().trim() != ""){
+                $.ajax({
+                    url:'{{ path('/mensajes/nuevo') }}',
+                    method: "POST",
+                    dataType: 'json',
+                    data: {idTramite : $("#idTramite").val(), mensaje:$("#mensajeNuevo").val() },
+                    beforeSend: function(){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'info',
+                            showConfirmButton: false,
+                            backdrop: false,
+                            title: 'Enviando mensaje...',
+                        })
+                    },
+                    success: function(data){                        
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'El mensaje fue enviado',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        if($("#idEstado").val() == 4){
+                            setTimeout(() => { parent.cambioEstado($("#idTramite").val(),$("#idEstado").val()) },2000)
+                        }
+                        $("#crearNoticias").modal('hide');
+                    },
+                    error: function(data){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al obtener mensajes!',
+                        })
+                    },
+                })
+            }else{
+                $("#mensajeNuevo").css('border-color', 'red')
+                $("#mensajeNuevo").after('<p class="text-danger messageError">Este campo es requerido</p>')
+            }
+            
+        })
+    });
+
+    function mensajes(idTramite){
+        $("#mensajesLista").empty();
+        $("#listarMensajes").modal('show')
+        $.ajax({
+            url:'{{ path("/mensajes/lista") }}',
+            method: "GET",
+            dataType: 'json',
+            data: {idTramite : idTramite },
+            beforeSend: function(){
+                $("#mensajesLista").append('<tr id="message"><td>Cargando mensajes...</td></tr>');
+            },
+            success: function(data){
+                console.log(data);
+                $("#message").remove();
+                $(data).each(function(i){ // indice, valor                    
+                    $("#mensajesLista").append('<tr><td>'+data[i].usuario+'</td><td>'+data[i].fechaCreacion+'</td><td>'+data[i].mensaje+'</td></tr>');
+                })
+            },
+            error: function(data){
+                $("#message").remove();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sistema',
+                    text: data.responseText,
+                })
+            },
+        });
+    };
+
+</script>
+{% endblock %}

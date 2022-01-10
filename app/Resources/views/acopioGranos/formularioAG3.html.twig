@@ -1,0 +1,109 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 3. PERSONAL ENCARGADO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG3" action="{{ path('tramiteAG4') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    {# PREGUNTAR #}
+    <div class="row">
+        <div class="col-md-12">
+            <b for=""> FORMACIÓN DE PERSONAL </b>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <b>Obreros<span class="text-danger">(*)</span></b>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-row">
+                <label>Cantidad:</label>
+                <input type="text" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.cantidadObrero}}{% endif %}" class="form-control" min=0 name="FormacionPersonalObrero[cantidad]" required>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="form-row">
+                <label>Capacitación/Especialidades:</label>
+                <input type="text" class="form-control" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.capacitacionObrero}}{% endif %}" name="FormacionPersonalObrero[capacitacion]" required>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <b>Técnicos<span class="text-danger">(*)</span></b>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-row">
+                <label>Cantidad:</label>
+                <input type="text" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.cantidadTecnico}}{% endif %}" class="form-control" min=0 name="FormacionPersonalTecnico[cantidad]" required>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="form-row">
+                <label>Capacitación/Especialidades:</label>
+                <input type="text" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.capacitacionTecnico}}{% endif %}" class="form-control" name="FormacionPersonalTecnico[capacitacion]" required>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <b>Profesionales<span class="text-danger">(*)</span></b>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-row">
+                <label>Cantidad:</label>
+                <input type="text" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.cantidadProfecional}}{% endif %}" class="form-control" min=0 name="FormacionPersonalProfesional[cantidad]" required>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="form-row">
+                <label>Capacitación/Especialidades:</label>
+                <input type="text" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.capacitacionProfecional}}{% endif %}" class="form-control" name="FormacionPersonalProfesional[capacitacion]" required>
+            </div>
+        </div>
+    </div>
+    </br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-row">
+                <label>Horarios de Trabajo</label>
+                <input type="text" class="form-control" value="{% if FormacionPersonal is defined %}{{FormacionPersonal.horarioTrabajo}}{% endif %}" name="FormacionPersonal[horas]" required>
+            </div>
+        </div>            
+    </div>
+    </br>
+      <div class="row">
+        <div class="col-md-12">
+            <b for=""> PERÍODO DE SERVICIO </b>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-row">
+                <label>Horas de funcionamiento/día</label>
+                <input type="text" class="form-control"  value="{% if Planta is defined %}{{Planta.periodoServicio}}{% endif %}" name="Planta[periodoServicio]" required>
+            </div>
+        </div>            
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>    
+{% endblock %}

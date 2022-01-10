@@ -1,0 +1,66 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 2. DIMENSIONAMIENTO PLANTA {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG2" action="{{ path('tramiteAG3') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    {# PREGUNTAR #}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>ÁREA CONSTRUIDA PARA EL SERVICIO: <span class="text-danger">(*)</span></label>
+                    <input type="text" value="{% if DimensionPlanta is defined %}{{DimensionPlanta.superficieCubierta}}{% endif %}" class="form-control" name="DimensionPlanta[superficieCubierta]" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>ÁREA DE TERRENO NO EDIFICADO: <span class="text-danger">(*)</span></label>
+                    <input type="text" value="{% if DimensionPlanta is defined %}{{DimensionPlanta.superficieSinEdificar}}{% endif %}" class="form-control" name="DimensionPlanta[sinEdificar]" required>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>ÁREA CONSTRUIDA PARA OFICINAS: <span class="text-danger">(*)</span></label>
+                    <input type="text" class="form-control" value="{% if DimensionPlanta is defined %}{{DimensionPlanta.superficieInstalada}}{% endif %}" name="DimensionPlanta[superficieInstalada]" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>SUPERFICIE TOTAL DEL PREDIO: <span class="text-danger">(*)</span></label>
+                    <input type="text" value="{% if DimensionPlanta is defined %}{{DimensionPlanta.superficieTotal}}{% endif %}" class="form-control" name="DimensionPlanta[superficieTotal]" required>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-7">
+                <b for=""> LOCALIZACIÓN PLANTA </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <p>LOCALIZACIÓN: <span class="text-danger">(*)</span></p>
+                <select class="form-control" id="zona" name="DomicilioReal[zonificacion]" >
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 1) %}selected{% endif %} value="1">ZONA URBANA</option>
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 2) %}selected{% endif %} value="2">ZONA SUBURBANA LOTEADA</option>
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 3) %}selected{% endif %} value="3">ZONA SUBURBANA DE MAYOR ÁREA</option>
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 4) %}selected{% endif %} value="4">ZONA RURAL LINDERA A PLANTA URBANA</option>
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 5) %}selected{% endif %} value="5">ZONA RURAL NO LINDERA</option>
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 6) %}selected{% endif %} value="6">ZONA LINDERA A INDUSTRIA</option>
+                    <option {% if (DomicilioReal is defined and DomicilioReal.zonificacion == 7) %}selected{% endif %} value="7">ÁREA DE RESERVA NATURAL PROTEGIDA</option>
+                </select>
+            </div>
+        </div>
+        </br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

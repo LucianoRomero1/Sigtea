@@ -1,0 +1,462 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 1. RESUMEN EJECUTIVO {% endblock %}
+
+{% block contenctForms %}
+    <div class="card-body">
+        <form id="formularioIAC1" action="{{ path("tramiteIAC3") }}" method="post">
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <label for="resumenEjecutivo" class="labels">1. Resumen ejecutivo
+                        <span class="text-danger">(*)</span>
+                        <span class="text-success" data-toggle="tooltip" title="Descripción concisa que permita la identificación de la actividad, problemas involucrados, obras, acciones, desarrolladas (en forma concisa) para su mitifación, etc.">(?)</span>
+                        </label>
+                    <textarea class="form-control" name="ResumenEjecutivo[descripcion]">{% if ResumenEjecutivo is defined %}{{ResumenEjecutivo.descripcion}}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="row inputs">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="nroExpediente" class="labels">Nº de Expediente correspondiente al Formulario de Presentación
+                            <span class="text-danger">(*)</span>
+                            <span class="text-success" data-toggle="tooltip" title="Para Expedientes en papel el formato deberá ser: 99999 - 9999999 - 9, Para Expedientes Electrónicos: el formato deberá ser: EX-'AÑO' 'NUMERO' -GSF- 'REPARTICION'">(?)</span>
+                        </label>
+                        <input type="text" class="form-control" name="ResumenEjecutivo[numero]" value="{% if ResumenEjecutivo is defined %}{{ResumenEjecutivo.nroExpediente}}{% endif %}">
+                    </div>
+                </div>
+            </div>
+            <h6 class="titulos">1.1 DATOS IDENTIFICATORIOS</h6>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <p for="razonSocial">NOMBRE COMPLETO / RAZÓN SOCIAL <span class="text-danger">(*)</span></p>
+                        <input type="text" class="form-control" id="razonSocial" name="Persona[razonSocial]"  value="{% if Persona is defined %}{{Persona.razonSocial}}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <p for="cuit">CUIT <span class="text-danger">(*)</span></p>
+                    <input type="number" class="form-control" id="cuit" name="Persona[cuit]"  max="99999999999" min="10000000000" step="1" value="{% if Persona is defined %}{{Persona.cuit}}{% endif %}" required>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-7">
+                    <b for=""> DOMICILIO LEGAL</b>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-row">
+                        <label for="calle" class="labels">CALLE <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" id="calle" name="DomicilioLegal[calle]" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.calle}}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <label for="nro" class="labels">N° <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" id="nro" name="DomicilioLegal[numero]" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.numero}}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-row">
+                        <label for="piso" class="labels">PISO</label>
+                        <input type="text" class="form-control" id="piso" name="DomicilioLegal[piso]" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.piso}}{% endif %}" >
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-row">
+                        <label for="dpto" class="labels">DEPTO</label>
+                        <input type="text" class="form-control" id="dpto" name="DomicilioLegal[depto]" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.depto}}{% endif %}" >
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>Provincia: <span class="text-danger">(*)</span></p>
+                    <select for="provincia" class="form-control" id="provincia" name="DomicilioLegal[provincia]" onChange="parent.provincia('provincia','departamento')" required>
+                        <option value="">SELECCIONE UNA PROVINCIA</option>
+                        {% for provincia in provincias %}
+                            {% if DomicilioLegal is defined and DomicilioLegal|length >0 and DomicilioLegal.provincia.id == provincia.id %}
+                                <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                            {% else %}
+                                <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <p>Departamento: <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="departamento" name="DomicilioLegal[departamento]"  onChange="parent.localidad('departamento','localidad')" required>
+                        {% if DomicilioLegal is defined %}
+                        <option value="{{DomicilioLegal.departamento.id}}">{{DomicilioLegal.departamento.nombre}}</option>   
+                        {% endif %}
+                        <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <p>Localidad: <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="localidad" name="DomicilioLegal[localidad]"  onChange="parent.departamento('localidad','codigoPostal')" required>
+                        {% if DomicilioLegal is defined %}
+                            <option value="{{DomicilioLegal.localidad.id}}">{{DomicilioLegal.localidad.nombre}}</option> 
+                        {% endif %}
+                        <option value="">SELECCIONE UNA LOCALIDAD</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row mt-2">
+            <div class="col-md-3">
+                    <p>CP: <span class="text-danger">(*)</span></p>
+                    <input type="text" class="form-control" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.localidad.codigoPostal}}{% endif %}"  id="codigoPostal" name="DomicilioLegal[cp]" readonly>
+                </div>
+                <div class="col-md-3">
+                    <p>Teléfono / Fax: <span class="text-danger">(*)</span></p>
+                    <input type="text" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.telefono}} {% endif %}" class="form-control" name="DomicilioLegal[telefono]"  required/>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-5">
+                    <div class="form-row">
+                        <label for="mail" class="labels">EMAIL <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Este email recibirá notificaciones legales.">(?)</span></label>
+                        <input type="email" class="form-control" id="mail" name="DomicilioLegal[email]" value="{% if DomicilioLegal is defined %}{{DomicilioLegal.email}}{% endif %}" required >
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h6 class="titulos">1.3 DOMICILIO REAL DEL ESTABLECIMIENTO <span class="text-success" data-toggle="tooltip" title="Consignar los datos de ubicación real, donde se encuentra emplazado el establecimiento. Deberá coincidir con lo declarado dentro de Título 8 del Formulario A de la Resolución N° 403/16">(?)</span></h6>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-row">
+                        <label for="calle" class="labels">CALLE <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" id="calle" name="DomicilioReal[calle]" value="{% if DomicilioReal is defined %}{{DomicilioReal.calle}}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <label for="nro" class="labels">N° <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" id="nro" name="DomicilioReal[numero]" value="{% if DomicilioReal is defined %}{{DomicilioReal.numero}}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-row">
+                        <label for="piso" class="labels">PISO</label>
+                        <input type="text" class="form-control" id="piso" name="DomicilioReal[piso]" value="{% if DomicilioReal is defined %}{{DomicilioReal.piso}}{% endif %}" >
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-row">
+                        <label for="dpto" class="labels">DEPTO</label>
+                        <input type="text" class="form-control" id="dpto" name="DomicilioReal[depto]" value="{% if DomicilioReal is defined %}{{DomicilioReal.depto}}{% endif %}" >
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>Provincia: <span class="text-danger">(*)</span></p>
+                    <select for="provincia" class="form-control" id="provinciaDos" name="DomicilioReal[provincia]" onChange="parent.provincia('provinciaDos','departamentoDos')" required>
+                        <option value="">SELECCIONE UNA PROVINCIA</option>
+                        {% for provincia in provincias %}
+                            {% if DomicilioReal is defined and DomicilioReal|length > 0 and DomicilioReal.provincia.id == provincia.id %}
+                                <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                            {% else %}
+                                <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <p>Departamento: <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="departamentoDos" name="DomicilioReal[departamento]"  onChange="parent.localidad('departamentoDos','localidadDos')" required>
+                        {% if DomicilioReal is defined %}
+                            <option value="{{DomicilioReal.departamento.id}}">{{DomicilioReal.departamento.nombre}}</option>   
+                        {% endif %}
+                        <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <p>Localidad: <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="localidadDos" name="DomicilioReal[localidad]"  onChange="parent.departamento('localidadDos','codigoPostalDos')" required>
+                        {% if DomicilioReal is defined %}
+                            <option value="{{DomicilioReal.localidad.id}}">{{DomicilioReal.localidad.nombre}}</option> 
+                        {% endif %}
+                        <option value="">SELECCIONE UNA LOCALIDAD</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row mt-2">
+            <div class="col-md-3">
+                    <p>CP: <span class="text-danger">(*)</span></p>
+                    <input type="text" class="form-control" value="{% if DomicilioReal is defined %}{{DomicilioReal.localidad.codigoPostal}} {% endif %}" id="codigoPostalDos" name="DomicilioReal[cp]" readonly>
+                </div>
+                <div class="col-md-3">
+                    <p>Teléfono / Fax: <span class="text-danger">(*)</span></p>
+                    <input type="text" value="{% if DomicilioReal is defined %}{{DomicilioReal.telefono}} {% endif %}" class="form-control" name="DomicilioReal[telefono]"  required/>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-5">
+                    <div class="form-row">
+                        <label for="mail" class="labels">EMAIL <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Este email recibirá notificaciones legales.">(?)</span></label>
+                        <input type="email" class="form-control" id="mail" name="DomicilioReal[email]" value="{% if DomicilioReal is defined %}{{DomicilioReal.email}}{% endif %}" required>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h6 class="titulos">1.4 COORDENAS GEODÉSICAS DEL ESTABLECIMIENTO <span class="text-success" data-toggle="tooltip" title="Colocar coordenadas geodésicas del sitio del emplazamiento">(?)</span></h6>
+            <div class="row inputs">
+                <div class="col-md-4">
+                    <label for="Latitud_grados" class="labels">Latitud <span class="text-danger">(*)</span></label>
+                    <input type="number" class="form-control"  name="PartidaInmobiliaria[latitud]" required value="{% if PartidaInmobiliaria is defined %}{{PartidaInmobiliaria.latitud}}{% endif %}">
+                </div>
+            </div>
+            <div class="row inputs">
+                <div class="col-md-4">
+                    <label for="Longitud_grados" class="labels">Longitud <span class="text-danger">(*)</span></label>
+                    <input type="number" class="form-control" name="PartidaInmobiliaria[longitud]" required value="{% if PartidaInmobiliaria is defined %}{{PartidaInmobiliaria.longitud}}{% endif %}">
+                </div>
+            </div>
+            <h6 class="titulos">1.5 PLANO GENERAL / CROQUIS DE LA PLANTA DESCRIPCIÓN DEL PLANO GENERAL <span class="text-success" data-toggle="tooltip" title="Descripción de los distintos sectores de la planta, productivos, almacenamiento, carga, descarga, ingresos, planta de tratamiento, etc. Presentar plano o croquis a escala legible para visualizar la información relevante correspondiente al punto 10.1. Adjuntar además en anexo planos o croquis, a escala legible, para visualizar la información relevante correspondiente a este punto.">(?)</span></h6>
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <label for="planoGeneral" class="labels">DESCRIPCIÓN DEL PLANO GENERAL <span class="text-danger">(*)</span></label>
+                    <textarea class="form-control" name="Plano[descripcion]">{% if Plano is defined %}{{Plano.descripcion}}{% endif %}</textarea>
+                </div>
+            </div>
+            {% set i = 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'1.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage1 is defined and Storage1 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+
+    {% if (Domicilio is defined) %}
+        $( document ).ready(function() {
+            $("#provincia").trigger("change");
+            setTimeout(function(){
+                $("#departamento").val({{ Domicilio.departamento.id }});
+                $("#departamento").trigger("change");
+            }, 2000);
+            setTimeout(function(){
+                $("#localidad").val({{ Domicilio.localidad.id }});
+                $("#localidad").trigger("change");
+            }, 3000);
+        });        
+    {% endif %}
+
+    {# $.validator.addMethod('soloNumeros',function(value, element){
+        return this.optional(element) || value == value.match(/^[0-9\s]+$/)
+    })
+
+    $.validator.addMethod('coordenadas',function(value, element){
+        return this.optional(element) || value == value.match(/^[0-9.\s]+$/)
+    })
+
+    $.validator.addMethod('latinos',function(value, element){
+        return this.optional(element) || value == value.match(/^[A-Za-z0-9áéíóúñ\s]+$/)
+    })
+
+    $.validator.addMethod('radios',function(value, element){
+        return this.optional(element) || value == value.match(/^[A-Za-z0-9áéíóúñ\s]+$/)
+    })
+
+    $.validator.addMethod('email',function(value, element){
+       return value.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/);
+    })
+
+    $.validator.addMethod('verificarEmail',function(value, element){
+        var email = $('#mail').val()
+        return email == value
+    })
+
+    $("#siguiente").on("click", function(e){
+        setTimeout( function(){
+            $('input[name="persona_cuit"]').trigger('keyup')
+            $('input[name="persona_cuit2"]').trigger('keyup')
+            $('input[name="persona_cuit3"]').trigger('keyup')
+        }, 10);
+        if(!validarCuit()){
+            $('#formularioIAC1').valid();
+            e.preventDefault();
+            setTimeout( function(){
+                $('input[name="persona_cuit"]').trigger('focus')
+            }, 10);
+        }else{
+          if($('#formularioIAC1').valid()){
+            $('#siguiente').attr('disabled', true);
+            $("#formularioIAC1")[0].submit()
+          }
+        }
+    })
+
+    function validarCuit(){
+        var cuit1 = $('input[name="persona_cuit"]');
+        var cuit2 = $('input[name="persona_cuit2"]');
+        var cuit3 = $('input[name="persona_cuit3"]');
+        var error = $('#cuit-error');
+        var noHayErrores = false;
+
+        if (validarCuits(cuit1, error) && validarCuits(cuit3, error)){
+            noHayErrores = true;
+        }
+
+        if(!validarCuits(cuit2, error) || cuit2.val().length<7){
+            noHayErrores = false;
+            if(cuit2.val().length<7){
+                cuit2.removeClass('validado');
+                cuit2.addClass('noValidado');
+                error.attr("style","display:block");
+                error.text("Ingrese al menos 7 caracteres.")
+            }
+        }
+
+        validarCuits(cuit1, error)
+        validarCuits(cuit3, error)
+
+        if(noHayErrores){
+            cuit1.removeClass('noValidado');
+            cuit1.addClass('validado');
+            cuit2.removeClass('noValidado');
+            cuit2.addClass('validado');
+            cuit3.removeClass('noValidado');
+            cuit3.addClass('validado');
+            error.attr("style","display:none");
+        }
+        return noHayErrores;
+    }
+
+    function validarCuits(cuit, error){
+        var resultado = true;
+        if(cuit.val().trim() == "" || cuit.val().match(/^[0-9\s]+$/) == null){
+            resultado = false;
+            cuit.removeClass('validado');
+            cuit.addClass('noValidado');
+            error.attr("style","display:block");
+            if(cuit.val().trim() == ""){
+                error.text("Este campo es requerido.")
+            }else{
+                error.text("Cuit inválido.")
+            }
+        }
+        return resultado;
+    }
+
+    $('input[name="persona_cuit"], input[name="persona_cuit2"], input[name="persona_cuit3"]').on("keyup", function(){
+        validarCuit();
+    })
+
+    $( "#formularioIAC1" ).validate( {
+
+        submitHandler: function () {
+        },
+        onkeyup: function(element) {
+            if(element.id != "cuit"){
+                $(element).valid()
+            }
+        },
+        rules:
+        {
+            resumenEjecutivo:{required: true, minlength:2, maxlength:3000},
+            nroExpediente:{required: true, minlength:2},
+            razonSocial:{required: true, minlength:2, latinos: true},
+            empresa:{required: true},
+            domicilioCalle:{required: true, minlength:2, latinos: true},
+            domicilioNumero:{required: true, soloNumeros:true},
+            codigoPostal:{required: true, soloNumeros:true},
+            telefono:{required: true, soloNumeros:true},
+            email:{required: true, email:true},
+            confMail:{required: true, email:true, verificarEmail: true},
+            DomicilioRealcalle:{required: true, minlength:2, latinos: true},
+            DomicilioRealnro:{required: true, soloNumeros:true},
+            Latitud_grados:{required: true, coordenadas:true},
+            Latitud_minutos:{required: true, coordenadas:true},
+            Latitud_segundos:{required: true, coordenadas:true},
+            Longitud_grados:{required: true, coordenadas:true},
+            Longitud_minutos:{required: true, coordenadas:true},
+            Longitud_segundos:{required: true, coordenadas:true},
+            planoGeneral:{required: true, maxlength:3000},
+            archivos:{required: true}
+        },
+        messages:
+        {
+            resumenEjecutivo: {required:'Este campo es requerido.', minlength:'Ingrese al menos 4 caracteres.', maxlength:'Máximo de caracteres superados.'},
+            nroExpediente: {required:'Este campo es requerido.', minlength:'Ingrese al menos 4 caracteres.'},
+            razonSocial: {required:'Este campo es requerido.', minlength:'Ingrese al menos 4 caracteres.',latinos:'Nombre inválido.'},
+            empresa: {required:'Este campo es requerido.'},
+            domicilioCalle: {required:'Este campo es requerido.', minlength:'Ingrese al menos 4 caracteres.', latinos:'Calle inválida.'},
+            domicilioNumero:{required:'Este campo es requerido.', soloNumeros: 'Ingrese un número válido.'},
+            codigoPostal:{required:'Este campo es requerido.', soloNumeros:'CP inválido.'},
+            telefono:{required:'Este campo es requerido.', soloNumeros:'Teléfono inválido.'},
+            email:{required: 'Este campo es requerido.', email:'Email inválido.'},
+            confMail:{required: 'Este campo es requerido.', email:'Email inválido.', verificarEmail:'Los emails no coniciden.'},
+            DomicilioRealcalle: {required:'Este campo es requerido.', minlength:'Ingrese al menos 4 caracteres.', latinos:'Calle inválida.'},
+            DomicilioRealnro:{required:'Este campo es requerido.', soloNumeros: 'Ingrese un número válido.'},
+            Latitud_grados:{required:'Este campo es requerido.', coordenadas:'Ingrese un número válido.'},
+            Latitud_minutos:{required:'Este campo es requerido.', coordenadas:'Ingrese un número válido.'},
+            Latitud_segundos:{required:'Este campo es requerido.', coordenadas:'Ingrese un número válido.'},
+            Longitud_grados:{required:'Este campo es requerido.', coordenadas:'Ingrese un número válido.'},
+            Longitud_minutos:{required:'Este campo es requerido.', coordenadas:'Ingrese un número válido.'},
+            Longitud_segundos:{required:'Este campo es requerido.', coordenadas:'Ingrese un número válido.'},
+            planoGeneral:{required:'Este campo es requerido.', maxlength:'Máximo de caracteres superados.'},
+            archivos:{required: 'Este campo es requerido.'}
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+            // Add the `help-block` class to the error element
+            error.addClass( "help-block" )
+
+            // Add `has-feedback` class to the parent div.form-group
+            // in order to add icons to inputs
+            element.parents( ".col-md-5" ).addClass( "has-feedback" )
+
+            if ( element.prop( "type" ) ===  "select-one" || element.prop( "type" ) ===  "checkbox" ||  element.prop( "type" ) ===  "number" || element.prop( "type" ) === "date" || element.prop( "type" ) ===  "radio" || element.prop( "type" ) === "textarea" || (element.prop( "type" ) === "text" && element.prop( "id" ) != "cuit") ) {
+                error.insertAfter( element.parent("div"))
+            }
+            // Add the span element, if doesn't exists, and apply the icon classes to it.
+            if ( !element.next( "span" )[ 0 ] ) {
+            }
+        },
+        success: function ( label, element ) {
+            // Add the span element, if doesn't exists, and apply the icon classes to it.
+            if ( !$( element ).next( "span" )[ 0 ] ) {
+            }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+            if(element.id != "cuit"){
+                $( element ).parents( ".col-md-5" ).addClass( "has-error" ).removeClass( "has-success" )
+                $( element ).addClass("noValidado").removeClass( " validado" )
+            }
+        },
+        unhighlight: function ( element, errorClass, validClass ) {
+            if(element.id != "cuit"){
+                $( element ).parents( ".col-md-5" ).addClass( "has-success" ).removeClass( "has-error" )
+                $( element ).addClass( "validado" ).removeClass( "noValidado" )
+            }
+        },
+    }) #}
+</script>
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>
+{% endblock %}

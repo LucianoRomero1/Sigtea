@@ -1,0 +1,57 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">11. Prefactibilidades <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Anexar en papel y en digital, en caso de corresponder, Factibilidad hídrica (o constancia de no inundabilidad del predio), de provisión de servicios y cualquier otra que corresponda, específica según la actividad y de provisión de servicios. ">(?)</span></div>
+    <div class="card-body">
+        <form id="formularioEIAAA11" action="{{ path('tramiteEIAA11') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        {% set i = 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'11.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA10',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario2.js')}}"></script>
+{% endblock %}

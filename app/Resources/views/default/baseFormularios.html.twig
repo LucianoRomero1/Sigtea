@@ -1,0 +1,68 @@
+{% extends 'default/index.html.twig' %}
+{% block contenct %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center"><h5>{% block subTitle %}{% endblock %}</h5></div>
+    {% block volverUrl %}{% endblock %}
+    {% block contenctForms %}
+    {% endblock %}
+        <div class="row botones">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    {% if paginaInicio|default(null) %}
+                        <a href="{{ path(paginaInicio ,{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    {% elseif volverUrl|default(null) %}
+                        <button class="btn btn-outline-dark" data-url="{{ path(volverUrl) }}">Volver</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" id="siguiente"><i class="fas fa-arrow-right"></i> Siguiente</button>
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger links" id="salir"><i class="fas fa-sign-out-alt"></i> Salir</a>
+                {% else %}
+                    {% if paginaInicio|default(null) %}
+                        <a href="{{ path(paginaInicio ,{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    {% elseif volverUrl|default(null) %}
+                        <button class="btn btn-outline-dark" data-url="{{ path(volverUrl) }}" data-idtramite="{{idTramite}}">Volver</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" id="siguiente"><i class="fas fa-arrow-right"></i> Siguiente</button>
+                    <a href="{{ path('admin/listadoTramite') }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script type="text/javascript">
+        $('input, textarea').on({ //evito que envien solo espacios vacios
+            keydown: function(e) {
+                if (e.which === 32)
+                if(this.value == ""){
+                    return false;
+                }else{
+                    return true;
+                }
+            },
+            change: function() {
+                if($(this).val()[0] == " "){
+                    this.value = this.value.replace(/\s/g, "");
+                }
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+        $('.tooltip').tooltip();
+    </script>
+{% endblock %}

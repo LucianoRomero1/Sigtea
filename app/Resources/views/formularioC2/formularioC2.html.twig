@@ -1,0 +1,405 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} DATOS DE LA EMPRESA {% endblock %}
+
+{% block contenctForms %}
+
+    <div class="card-body">
+        <form id="formularioC2" action="{{path('formularioc2Back')}}" method="post">
+    
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <div class="tabla-pers">
+                <table id="talCosa" class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th scope="col">CORRIENTE DE DESECHO</th>
+                            <th scope="col">CANTIDAD</th>
+                            <th scope="col">U. DE MEDIDA</th>
+                            <th scope="col">METODO DE TRATAMIENTO</th>
+                            <th scope="col">OBSERVACIONES</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for residuo in ResiduosPeligrosos %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" value="{{residuo.receptor}}" name="ResiduosPeligrosos[receptor][]" /></td>
+                            <td><input type="text" class="form-control" value="{{residuo.volumen}}" name="ResiduosPeligrosos[volumen][]" /></td>
+                            <td><input type="text" class="form-control" value="{{residuo.unidad}}" name="ResiduosPeligrosos[unidad][]" /></td>
+                            <td><input type="text" class="form-control" value="{{residuo.gestion}}" name="ResiduosPeligrosos[gestion][]" /></td>
+                            <td><input type="text" class="form-control" value="{{residuo.componenteRelevante}}" name="ResiduosPeligrosos[componenteRelevante][]" /></td>
+                            <td>
+                                <a class="btn text-danger" onClick="eliminarFila(this, 'talCosa')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="ResiduosPeligrosos[receptor][]" /></td>
+                            <td><input type="text" class="form-control" name="ResiduosPeligrosos[volumen][]" /></td>
+                            <td><input type="text" class="form-control" name="ResiduosPeligrosos[unidad][]" /></td>
+                            <td><input type="text" class="form-control" name="ResiduosPeligrosos[gestion][]" /></td>
+                            <td><input type="text" class="form-control" name="ResiduosPeligrosos[componenteRelevante][]" /></td>
+                            <td>
+                                <a class="btn text-danger" onClick="eliminarFila(this, 'talCosa')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a onClick="agregarFila('talCosa')" class="btn btn-primary text-light">Agregar fila</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h6>Información que se adjunta</h6>
+            <h6 class="text-secondary">PRESENTACIÓN DE LA MEMORIA TÉCNICA</h6>
+            <div class="tabla-pers">
+                {% set i = 1 %}
+                <h6>1- Descripción de la instalación donde se va a tratar el residuo peligroso, características edilicias<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage1 is defined and Storage1 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>2- Características del equipamiento<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage2 is defined and Storage2 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>3- Descripción de las instalaciones de almacenamiento del residuo peligroso<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage3 is defined and Storage3 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>3.1- Capacidad de diseño y unidad de medida<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage4 is defined and Storage4 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>4- Descripción de las de las operaciones de carga y descarga del residuo peligroso<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage5 is defined and Storage5 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>4.1- Capacidad de diseño y unidad de medida<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage6 is defined and Storage6 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage6.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>5- Descripción de las operaciones de tratamiento del residuo peligroso<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage7 is defined and Storage7 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage7.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>5.1- Capacidad de diseño y unidad de medida<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage8 is defined and Storage8 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage8.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>6- Descripción del tratamiento a seguir del envase contenedor del residuo peligroso<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage9 is defined and Storage9 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage9.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>6.1- Capacidad de diseño y unidad de medida<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage10 is defined and Storage10 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage10.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>7- Procedencia de los residuos peligrosos<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage11 is defined and Storage11 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage11.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>7.1- Protocolo de análisis realizados a los efluentes generados en la destrucción de los residuos peligrosos<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage12 is defined and Storage12 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage12.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <br>
+            <h6 class="text-secondary">PARA PLANTAS DE DISPOSICIÓN FINAL UNICAMENTE</h6>
+            <div class="tabla-pers">
+                {% set i = i + 1 %}
+                <h6>8.1- Antecedentes y experiencias en la metodología a emplear<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage13 is defined and Storage13 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage13.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>8.2- Descripción de las celdas, contenedores de residuos peligrosos<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage14 is defined and Storage14 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage14.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>8.3- Descripción del sitio de ubicación de la planta<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage15 is defined and Storage15 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage15.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>8.4- Plan de cierre y restauración del área<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage16 is defined and Storage16 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage16.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% set i = i + 1 %}
+                <h6>8.5- Estudio de inundabilidad del área<span class="text-danger">(*)</span></h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                        <a id="button{{i}}" onclick="subirArchivo({{i}},'C2.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                    </div>
+                    <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                        {% if Storage17 is defined and Storage17 != null %}
+                            <div>
+                                <h6 class="text-success"><i class='fas fa-check'></i> {{Storage17.nombre}} </h6>
+                            </div>
+                        {% endif %}
+                        <div id="spinner{{i}}" class='spinner form-row'>
+                            <div class="three-quarters-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/archivoIndividual.js')}}"></script>
+
+{% endblock %}

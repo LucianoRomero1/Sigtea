@@ -1,0 +1,125 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 10. CONSIDERACIONES ADICIONALES  {% endblock %}
+
+{% block contenctForms %}
+  <div class="card-body">
+    <form id="formularioIAC10" action="tramiteIAC11" method="POST">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+          {# {% if rol is not defined %} #}
+          <div class="col-md-14" class="inputs">
+              <div class="form-group">
+                  <label for="archivos" class="labels">10.1 Nivel de complejidad Ambiental - (Resolución 177/07 y modificatoria<span class="text-danger">(*)<input type="text" class="form-control" id="modificatorias" name="modificatorias"/></p>
+                  <input type="text" class="form-control" id="adjuntos" name="adjuntos"/>
+              </div>
+          </div>
+
+          <h6 class="titulos">10.2 Rubro (según Anexo I - Resolución 1639/07)</h6>
+          <table class="table" id="tablaRubro">
+              <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">CIUU <span class="text-success">(?)</span></th>
+                    <th scope="col">Descripción <span class="text-success">(?)</span></th>
+                    <th scope="col">Grupo <span class="text-success">(?)</span></th>
+                    <th scope="col"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <th scope="row">1</th>
+                        <td>
+                            <input type="text" class="form-control" id="ciuu" name="ciuu" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="descripcion" name="descripcion" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="grupo" name="grupo" />
+                        </td>
+                        <td>
+                            <button title="Eliminar" type="button" class="btn btn-danger eliminarRegistro"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                  </tr>
+              </tbody>
+          </table>
+          <button title="agregar recurso" type="button" class="btn btn-primary agregarRegistro"><i class="fas fa-plus"></i> Agregar Rubro</button>
+          <h6 class="titulos">10.3 Factores de Ajuste (para el cálculo del NCA - Anexo II - Resolución
+          1639/07)</h6>
+          <h6 class="titulos">10.3.1 AjSP. Ajuste por manejo de sustancias particularmente riesgosas:</h6>
+          <div class="col-md-5" class="inputs">
+              <p class="labels">Utiliza alguna sustancia riesgosa en los volúmenes que figuran en el listado del Anexo II de la Resolución
+              1639/07?</p>
+              <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="radios" id="aguaPublica_si" value="Si">
+                  <label class="form-check-label" for="aguaPublica_si">Si</label>
+              </div>
+              <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="radios" id="aguaPublica_no" value="No">
+                  <label class="form-check-label" for="aguaPublica_no">No</label>
+              </div>
+          </div>
+          <table class="table" id="tablaResiduosPeligrosos">
+              <thead>
+                  <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">SUSTANCIA</th>
+                  <th scope="col">CANTIDAD UMBRAL TN<span class="text-success">(?)</span></th>
+                  <th scope="col"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <th scope="row">1</th>
+                      <td>
+                          <input type="text" class="form-control" id="gestion[]" name="gestion[]" />
+                      </td>
+                      <td>
+                          <input type="text" class="form-control" id="tratamiento[]" name="tratamiento[]" />
+                      </td>
+                      <td>
+                          <button title="Eliminar" type="button" class="btn btn-danger eliminarRegistro"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <button title="agregar recurso" type="button" class="btn btn-primary agregarRegistro"><i class="fas fa-plus"></i> Agregar sustancia</button>
+          <h6 class="titulos">10.3.2 AjSGA. Ajuste por Sistema de Gestión Ambiental <span class="text-success">(?)</span></h6>
+
+          <div class="col-md-5" class="inputs">
+              <p class="labels">¿Cuenta con certificación vigente de sistema de gestión ambiental, otorgada por un organismo independiente debidamente acreditado y autorizado para ello?</p>
+              <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="radios" id="aguaPublica_si" value="Si">
+                  <label class="form-check-label" for="aguaPublica_si">Si</label>
+              </div>
+              <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="radios" id="aguaPublica_no" value="No">
+                  <label class="form-check-label" for="aguaPublica_no">No</label>
+              </div>
+          </div>
+          <div class="col-md-14" class="inputs">
+              <div class="form-group">
+                  <label for="archivos" class="label">Nombres de archivos adjuntos <span class="text-danger">(*) <span class="text-success">(?)</span></label>
+                  <input type="text" class="form-control" id="adjunto_ambiental" name="adjunto_ambiental">
+              </div>
+          </div>
+          <label for="archivos" class="labels">10.4 Seguro ambiental <span class="text-success">(?)</span></label>
+          <div class="col-md-14" class="inputs">
+              <div class="form-group">
+                  <p for="archivos">Nombres de archivos adjuntos <span class="text-success">(?)</span></p>
+                  <input type="text" class="form-control" id="archivos" name="archivos[]">
+              </div>
+          </div>
+          <label for="archivos" class="labels">10.5 Otras consideraciones <span class="text-success">(?)</span></label>
+          <label for="obseravaciones" class="labels">OBSERVACIONES/ ACLARACIONES </label>
+          <textarea class="form-control" id="obseravaciones" name="obseravaciones"></textarea>
+          <div class="col-md-14">
+              <div class="form-group">
+                  <label for="archivos" class="labels">Nombres de archivos adjuntos</labels>
+                  <input type="text" class="form-control" id="archivos" name="archivos">
+              </div>
+          </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO B - 5. RESIDUOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB5') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+
+    <div class="tabla-pers">
+        <h6>
+            RESIDUOS
+            <span data-toggle="tooltip" data-placement="right" 
+                title="(?) Se listarán todas las materias primas que forman parte del producto final (excluyendo el agua)"
+                class="text-success pad-span">(?)</span>
+        </h6>
+        <table id="tablaResiduos" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Componente relevante</th>
+                    <th scope="col">Características de peligrosidad</th>
+                    <th scope="col">Estado físico</th>
+                    <th scope="col">Proceso que lo genera</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for residuo in Residuos %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>
+                        <input type="text" value="{{residuo.componenteRelevante}}" class="form-control" name="Residuo[componente][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{residuo.categoriaResiduoPeligroso.categoria}}" class="form-control" name="Residuo[peligrosidad][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{residuo.estadoFisico}}" class="form-control" name="Residuo[estado][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{residuo.procesoGenerador}}" class="form-control" name="Residuo[proceso][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaResiduos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="text" class="form-control" name="Residuo[componente][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Residuo[peligrosidad][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Residuo[estado][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Residuo[proceso][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaResiduos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <div class="text-center">
+                <a class="btn btn-primary text-white" onClick="agregarFila('tablaResiduos', 1)">Agregar residuo</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    
+    
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

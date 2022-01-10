@@ -1,0 +1,55 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 1. OBJETO DE SUBDIVISIÓN {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU1" action="{{ path('tramiteU2') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <ul style="list-style:none;">
+        <li>
+            <input type="radio" name="Subdivision" {% if Subdivision is defined and Subdivision.objeto == "Proyecto de Intervención Urbanística" %}checked{% endif %} value="Proyecto de Intervención Urbanística" required > 
+            <label for="">Proyecto de Intervención Urbanística (Reservado a intervenciones del Estado para regularizaciones dominiales
+            y puestas en valor)</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Loteo con fines de Urbanización Residencial") %}checked{% endif %} value="Loteo con fines de Urbanización Residencial" >
+            <label for="">Loteo con fines de Urbanización Residencial</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Barrio Cerrado Residencial") %}checked{% endif %} value="Barrio Cerrado Residencial">
+            <label for="">Barrio Cerrado Residencial</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Área de Servicios Abierto (Incluye Comercios)") %}checked{% endif %} value="Área de Servicios Abierto (Incluye Comercios)">
+            <label for="">Área de Servicios Abierto (Incluye Comercios)</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Área de Servicios Cerrados (Incluye Comercios)") %}checked{% endif %} value="Áreas de Servicios Cerrados (Incluye Comercios)">
+            <label for="">Áreas de Servicios Cerrados (Incluye Comercios)</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Área Industrial Abierta") %}checked{% endif %} value="Área Industrial Abierta">
+            <label for="">Área Industrial Abierta</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Área Industrial Cerrada") %}checked{% endif %} value="Área Industrial Cerrada">
+            <label for="">Área Industrial Cerrada</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Parque Industrial") %}checked{% endif %} value="Parque Industrial">
+            <label for="">Parque Industrial (Regulado por ley Provincial de Parques Industriales Ley Nro. 11525)</label><br>
+        </li>
+        <li>
+            <input type="radio"  name="Subdivision" {% if (Subdivision is defined and Subdivision.objeto == "Con fines Turísticos") %}checked{% endif %} value="Con fines Turísticos">
+            <label for="">Con fines Turísticos</label><br>
+        </li>
+        
+    </ul> 
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

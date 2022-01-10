@@ -1,0 +1,372 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %}FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 7. IDENTIFICACIÓN DE IMPACTOS  {% endblock %}
+
+{% block contenctForms %}
+    <div class="card-body">
+        <form id="formularioIAC7" action="{{ path('tramiteIAC8') }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+          <input type="hidden" name="idTramite" value="{{idTramite }}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-12">
+                    <p><b>ACLARACIÓN:</b> Al seleccionar SÍ en cada una de los siguientes impactos, se habilitarán automáticamente los campos relacionados en los ítems 8 (Prevención),(Mitigación) y (Plan de monitoreo). De la misma manera, al seleccionar NO en estas opciones, cada uno de los campos mencionados se deshabilitarán.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">SOBRE EL SUELO</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][suelo]" data-tipo="suelo" required {% if ImpactoSuelo is defined and ImpactoSuelo|length > 0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][suelo]" data-tipo="suelo" required checked class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="impactosuelo" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Descripción <span class="text-success" title="Describir concretamente los impactos identificados a partir de las actividades / porecesos (punto 3 y 4)">(?)</span></th>
+                                <th>Operación o proceso que lo genera<span class="text-success" title="Identificar el sector, proceso y operacion que lo genera, utilizando la misma nomenclatura que en el punto 3 y 4">(?)</span></th>
+                                <th>Contaminante/s relevante/s</th>
+                                <th colspan="2">Anexos - Nombre del Archivo adjuntado:</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Plano de Ubicación de los puntos de muestreo<span class="text-success" title="Adjuntar planop indicando y georreferenciando los puntos de muestreo e indicar la profunciddad a la cual se extrajeron las muestras">(?)</span></th>
+                                <th>Protocolos de Muestreo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasimpactosuelo">
+                            {% if ImpactoSuelo is defined and ImpactoSuelo|length > 0 %}
+                                {% for suelo in ImpactoSuelo %}
+                                    <tr>
+                                        <td><textarea name="ImpactoSuelo[descripcion][]" rows="5">{{ suelo.descripcion }}</textarea></td>
+                                        <td><textarea name="ImpactoSuelo[proceso][]" rows="5">{{ suelo.proceso }}</textarea></td>
+                                        <td><textarea name="ImpactoSuelo[contaminacionRelevantes][]" rows="5">{{ suelo.contaminanteRelevante }}</textarea></td>
+                                        <td><input class="p-top" name="ImpactoSuelo[PlanoUbbicacionPuntosMuestreo][]" type="file" accept=".pdf"/>
+                                            {% if ImagenesImpactoSuelo is defined and ImagenesImpactoSuelo.PlanoUbbicacionPuntosMuestreo is defined %}<spam class='text-success'>{{ImagenesImpactoSuelo.PlanoUbbicacionPuntosMuestreo[loop.index - 1]}}</spam>{% endif %}
+                                        </td>                                        
+                                        <td><input class="p-top" name="ImpactoSuelo[ProtocoloMuestreo][]" type="file" accept=".pdf"/>
+                                            {% if ImagenesImpactoSuelo is defined and ImagenesImpactoSuelo.ProtocoloMuestreo is defined %}<spam class='text-success'>{{ImagenesImpactoSuelo.ProtocoloMuestreo[loop.index -1]}}</spam>{% endif %}
+                                        </td>
+                                        <td><a onClick="eliminarFila(this,{{suelo.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaSuelo()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">SOBRE EL AGUA SUBTERRÁNEA</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][aguasubterranea]" data-tipo="aguasubterranea" required {% if ImpactoAguaSubterranea is defined and ImpactoAguaSubterranea|length > 0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][aguasubterranea]" data-tipo="aguasubterranea" required checked class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="impactoaguasubterranea" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Descripción <span class="text-success" title="Describir concretamente los impactos identificados a partir de las actividades / porecesos (punto 3 y 4)">(?)</span></th>
+                                <th>Operación o proceso que lo genera<span class="text-success" title="Identificar el sector, proceso y operacion que lo genera, utilizando la misma nomenclatura que en el punto 3 y 4">(?)</span></th>
+                                <th>Contaminante/s relevante/s</th>
+                                <th colspan="2">Anexos - Nombre del Archivo adjuntado:</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Plano de Ubicación de los freatimetros y sentido de escurrimiento de agua subt<span class="text-success" title="Adjuntar plano indicando y georeferenciando los puintos donde se encuentran ubicados lso posos de monitoreo. Adjuntar detalles constructivos de los mismo. Nivel piezometrico.( En cada monitoreo de sebera indicar ademas la profundidad del agua subterranea medida in situ)">(?)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasimpactoagua">
+                        {% if ImpactoAguaSubterranea is defined and ImpactoAguaSubterranea|length > 0 %}
+                            {% for agua in ImpactoAguaSubterranea %}
+                                <tr>
+                                    <td><textarea name="ImpactoAguaSubterranea[descripcion][]" rows="5">{{agua.descripcion }}</textarea></td>
+                                    <td><textarea name="ImpactoAguaSubterranea[proceso][]" rows="5">{{agua.proceso }}</textarea></td>
+                                    <td><textarea name="ImpactoAguaSubterranea[contaminacionRelevantes][]" rows="5">{{agua.contaminanteRelevante }}</textarea></td>
+                                    <td><input class="p-top" name="ImpactoAguaSubterranea[PlanoUbicacionFreatimetrosEscurrimiento][]" type="file" accept=".pdf" />
+                                        {% if ImagenesAgua is defined %}<spam class='text-success'>{{ImagenesAgua.PlanoUbicacionFreatimetrosEscurrimiento[loop.index - 1]}}</spam>{% endif %} 
+                                    </td>
+                                    <td><a onClick="eliminarFila(this,{{agua.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaAgua()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">SOBRE EL AIRE<span class="text-success" title="Considerar los producidos por emisiones de Olores, Gases liberados, Acusticos, radiaciones, otros. Tanto puntuales(Chimeneas) o difusas.">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][aire]" data-tipo="aire" required {% if ImpactoAire is defined and ImpactoAire|length > 0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][aire]" data-tipo="aire" required checked class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="impactoaire" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Descripción <span class="text-success" title="Describir concretamente los impactos identificados a partir de las actividades / porecesos (punto 3 y 4)">(?)</span></th>
+                                <th>Operación o proceso que lo genera<span class="text-success" title="Identificar el sector, proceso y operacion que lo genera, utilizando la misma nomenclatura que en el punto 3 y 4">(?)</span></th>
+                                <th>Contaminante/s relevante/s</th>
+                                <th colspan="2">Anexos - Nombre del Archivo adjuntado:</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Plano de Ubicación de los puntos de muestreo<span class="text-success" title="Adjuntar planop indicando y georreferenciando los puntos de muestreo e indicar la profunciddad a la cual se extrajeron las muestras">(?)</span></th>
+                                <th>Protocolos de Muestreo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasimpactoaire">
+                        {% if ImpactoAire is defined and ImpactoAire|length > 0 %}
+                            {% for aire in ImpactoAire %}
+                                <tr>
+                                    <td><textarea name="ImpactoAire[descripcion][]" rows="5">{{aire.descripcion }}</textarea></td>
+                                    <td><textarea name="ImpactoAire[proceso][]" rows="5">{{aire.proceso }}</textarea></td>
+                                    <td><textarea name="ImpactoAire[contaminacionRelevantes][]" rows="5">{{aire.contaminanteRelevante }}</textarea></td>
+                                    <td><input class="p-top" name="ImpactoAire[PlanoUbbicacionPuntosMuestreo][]" type="file" accept=".pdf" />
+                                        {% if ImagenesAire is defined and ImagenesAire.PlanoUbbicacionPuntosMuestreo is defined %}<spam class='text-success'>{{ImagenesAire.PlanoUbbicacionPuntosMuestreo[loop.index - 1]}}</spam>{% endif %} 
+                                    </td>
+                                    <td><input class="p-top" name="ImpactoAire[ProtocoloMuestreo][]" type="file" accept=".pdf" />
+                                        {% if ImagenesAire is defined and ImagenesAire.ProtocoloMuestreo is defined %}<spam class='text-success'>{{ImagenesAire.ProtocoloMuestreo[loop.index - 1]}}</spam>{% endif %} 
+                                    </td>
+                                    <td><a onClick="eliminarFila(this,{{aire.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaAire()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">SOBRE EL AGUA SUPERFICIAL O CUERPO RECEPTOR<span class="text-success" title="Considerar los impactos producidos por volcamiento de efluentes, derrames, agua de lavado, pluviales, etc. Escribir sobre cda desplegable la informacion soliciitada. Descripccion sintetica del proceso que produce el efluente, caudal con sus unidades de tiempo. Parametro relevantes. Aquellos parametros que se monitorean al final de la planta de tratamiento">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][cuerpoReceptor]" data-tipo="cuerporeceptor" required {% if ImpactoCuerpoReceptor is defined and ImpactoCuerpoReceptor|length > 0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][cuerpoReceptor]" data-tipo="cuerporeceptor" required checked class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="impactocuerporeceptor" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Origne <span class="text-success" title="Identificar el sector, proceso u operacion que lo genera.">(?)</span></th>
+                                <th>Descripcion</span></th>
+                                <th>Caudal</th>
+                                <th>Paramentros Relevantes</th>
+                                <th>Cuerpo Receptor</th>
+                                <th>Anexo - Nombre del Archivo adjuntado:</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Archivos referidos al sistema de tratamiento<span class="text-success" title="Adjuntar planop indicando y georreferenciando los puntos de muestreo e indicar la profunciddad a la cual se extrajeron las muestras">(?)</span></th>
+                                <th>Plano de Ubicación de los puntos de muestreo<span class="text-success" title="Adjuntar planop indicando y georreferenciando los puntos de muestreo e indicar la profunciddad a la cual se extrajeron las muestras">(?)</span></th>
+                                <th>Protocolos de Muestreo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasimpactocuerporeceptor">
+                        {% if ImpactoCuerpoReceptor is defined and ImpactoCuerpoReceptor|length > 0 %}
+                            {% for receptor in ImpactoCuerpoReceptor %}
+                                <tr>
+                                    <td><textarea name="ImpactoCuerpoReceptor[origen][]" rows="5">{{receptor.descripcion}}</textarea></td>
+                                    <td><textarea name="ImpactoCuerpoReceptor[descripcion][]" rows="5">{{receptor.proceso }}</textarea></td>
+                                    <td><textarea name="ImpactoCuerpoReceptor[caudal][]" rows="5">{{receptor.caudal }}</textarea></td>
+                                    <td><textarea name="ImpactoCuerpoReceptor[parametroReceptor][]" rows="5">{{receptor.contaminanteRelevante }}</textarea></td>
+                                    <td><textarea name="ImpactoCuerpoReceptor[cuerpoReceptor][]" rows="5">{{receptor.cuerpoReceptor }}</textarea></td>
+                                    <td><input class="p-top" name="ImpactoCuerpoReceptor[SistemaTratamiento][]" type="file" accept=".pdf" />
+                                        {% if ImagenesCuerpoReceptor is defined and ImagenesCuerpoReceptor.SistemaTratamiento is defined %}<spam class='text-success'>{{ImagenesCuerpoReceptor.SistemaTratamiento[loop.index - 1]}}</spam>{% endif %} 
+                                    </td>
+                                    <td><input class="p-top" name="ImpactoCuerpoReceptor[PlanoMuestreo][]" type="file" accept=".pdf" />
+                                        {% if ImagenesCuerpoReceptor is defined and ImagenesCuerpoReceptor.PlanoMuestreo is defined %}<spam class='text-success'>{{ImagenesCuerpoReceptor.PlanoMuestreo[loop.index - 1]}}</spam>{% endif %} 
+                                    </td>
+                                    <td><input class="p-top" name="ImpactoCuerpoReceptor[ProtocoloMuestreo][]" type="file" accept=".pdf" />
+                                        {% if ImagenesCuerpoReceptor is defined and ImagenesCuerpoReceptor.ProtocoloMuestreo is defined %}<spam class='text-success'>{{ImagenesCuerpoReceptor.ProtocoloMuestreo[loop.index - 1]}}</spam>{% endif %} 
+                                    </td>
+                                    <td><a onClick="eliminarFila(this,{{receptor.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaCuerpoReceptor()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">OTROS IMPACTOS<span class="text-success" title="Escribir sobre cada fila otros impactos no idenfiticados anterioremten. Ej: trafico vehicular, visual, social sobre la flora, fauna, etc.">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][otros]" data-tipo="otros" required {% if ImpactoOtro is defined and ImpactoOtro|length > 0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Impacto[tipo][otros]" data-tipo="otros" required checked class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="impactootros" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Descripcion</span></th>
+                                <th>Operación o proceso que lo genera</th>
+                                <th>Consecuencia que produce</th>
+                                <th>Anexo - Nombre del Archivo adjuntado:</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Plano de Ubicación de los puntos de muestreo<span class="text-success" title="Adjuntar planop indicando y georreferenciando los puntos de muestreo e indicar la profunciddad a la cual se extrajeron las muestras">(?)</span></th>
+                                <th>Protocolos de Muestreo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasimpactootro">
+                            {% if ImpactoOtro is defined and ImpactoOtro|length > 0 %}
+                                {% for otro in ImpactoOtro %}
+                                    <tr>
+                                        <td><textarea name="ImpactoOtro[descripcion][]" rows="5">{{otro.descripcion }}</textarea></td>
+                                        <td><textarea name="ImpactoOtro[proceso][]" rows="5">{{otro.proceso }}</textarea></td>
+                                        <td><textarea name="ImpactoOtro[consecuencia][]" rows="5">{{otro.contaminanteRelevante }}</textarea></td>
+                                        <td><input class="p-top" name="ImpactoOtro[PlanoUbicacion][]" type="file" accept=".pdf" />
+                                            {% if ImagenesoOtro is defined and ImagenesoOtro.PlanoMuestreo is defined %}<spam class='text-success'>{{ImagenesoOtro.PlanoMuestreo[loop.index - 1]}}</spam>{% endif %} 
+                                        </td>
+                                        <td><input class="p-top" name="ImpactoOtro[ProtocoloMuestreo][]" type="file" accept=".pdf" />
+                                            {% if ImagenesoOtro is defined and ImagenesoOtro.ProtocoloMuestreo is defined %}<spam class='text-success'>{{ImagenesoOtro.ProtocoloMuestreo[loop.index - 1]}}</spam>{% endif %} 
+                                        </td>
+                                        <td><a onClick="eliminarFila(this,{{otro.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaOtro()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script src="{{asset('bundles/js/informeAmbiental/formularioIAC7.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-check').click(function(){
+                var tipo = $(this).data('tipo');
+                $('#impacto'+tipo).toggle();
+            })
+        })
+        {% if ImpactoSuelo is defined and ImpactoSuelo|length > 0 %} $('#impactosuelo').toggle(); {% endif %}
+        {% if ImpactoAguaSubterranea is defined and ImpactoAguaSubterranea|length > 0 %} $('#impactoaguasubterranea').toggle(); {% endif %}
+        {% if ImpactoAire is defined and ImpactoAire|length > 0 %} $('#impactoaire').toggle(); {% endif %}
+        {% if ImpactoCuerpoReceptor is defined and ImpactoCuerpoReceptor|length > 0 %} $('#impactocuerporeceptor').toggle(); {% endif %}
+        {% if ImpactoOtro is defined and ImpactoOtro|length > 0 %} $('#impactootros').toggle(); {% endif %}
+    </script>
+{% endblock %}

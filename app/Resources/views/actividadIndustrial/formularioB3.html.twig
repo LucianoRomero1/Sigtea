@@ -1,0 +1,299 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO B</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">
+        3. LOCALIZACIÓN  
+        <span data-toggle="tooltip" data-placement="right" 
+                        title="(?) Campos no editables, por favor, complete arriba en el punto 8."
+                        class="text-success pad-span">(?)</span>
+    </div>
+    <div class="card-body">
+        <form action="{{ path('tramiteB3') }}" method="post">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <input type="hidden" name="idPlanta" value="{{idPlanta}}">
+        {# {% endif %} #}
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-row">                    
+                    <p for="calle">CALLE <span class="text-danger">(*)</span></p>
+                    <input type="text" value="{{ Domicilio is defined and Domicilio != null ? Domicilio.calle}}" class="form-control" id="calle" name="Domicilio[calle]" required>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-row">                    
+                    <p for="nro">N° <span class="text-danger">(*)</span></p>
+                    <input type="text" value="{{ Domicilio is defined and Domicilio != null ? Domicilio.numero}}" class="form-control" id="nro" name="Domicilio[numero]" required>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-row">                    
+                    <p for="piso">PISO</p>
+                    <input type="text" value="{{ Domicilio is defined and Domicilio != null ? Domicilio.piso}}" class="form-control" id="piso" name="Domicilio[piso]">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-row">                    
+                    <p for="dpto">DPTO</p>
+                    <input type="text" value="{{ Domicilio is defined and Domicilio != null ? Domicilio.depto}}" class="form-control" id="dpto" name="Domicilio[depto]">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-row">
+                    <p for="provincia">PROVINCIA <span class="text-danger">(*)</span></p>
+                    <select for="provincia" class="form-control" id="provincia" name="Domicilio[provincia]" required onChange="parent.provincia('provincia','departamento')">
+                        <option value="">SELECCIONA UNA PROVINCIA</option>
+                        {% for provincia in provincias %}
+                            <option value="{{ provincia.id }}" {% if Domicilio is defined and Domicilio != null and Domicilio.provincia.nombre == provincia.nombre %} selected {% endif %}>
+                            {{ provincia.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-row">                    
+                    <p for="departamento">DEPARTAMENTO <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="departamento" name="Domicilio[departamento]" required onChange="parent.localidad('departamento','localidad')">
+                        {% if Domicilio is defined and Domicilio != null %}
+                        <option value="{{Domicilio.departamento.id}}">{{Domicilio.departamento.nombre}}</option>   
+                        {% endif %}
+                        <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-row">                    
+                    <p for="localidad">LOCALIDAD</p>
+                    <select class="form-control" id="localidad" name="Domicilio[localidad]" required onChange="parent.departamento('localidad','codigoPostal')">
+                        
+                        {% if Domicilio is defined and Domicilio != null %}
+                        <option value="{{Domicilio.localidad.id}}">{{Domicilio.localidad.nombre}}</option> 
+                        {% endif %}
+                        <option value="">SELECCIONE UNA LOCALIDAD</option>
+                    </select>
+                </div>
+            </div>          
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <p for="codigoPostal">CP <span class="text-danger">(*)</span></p>
+                    <input type="text" {% if Domicilio is defined and Domicilio != null %} value="{{Domicilio.localidad.codigoPostal}}" {% endif %} class="form-control" id="codigoPostal" name="Domicilio[cp]" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <p for="zona>">ZONIFICACIÓN <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="zona" name="Domicilio[zona]" required>
+                        <option {% if Domicilio is defined and Domicilio.zonificacion == 1 %} selected {% endif %} value="1">Parque Industrial</option>
+                        <option {% if Domicilio is defined and Domicilio.zonificacion == 2 %} selected {% endif %} value="2">Industria/ Rural</option>
+                        <option {% if Domicilio is defined and Domicilio.zonificacion == 3 %} selected {% endif %} value="3">Urbana</option>
+                        <option {% if Domicilio is defined and Domicilio.zonificacion == 4 %} selected {% endif %} value="4">Otras Zonas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        </br>        
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" rowspan="2">NÚMERO DE PARTIDA INMOBILIARIA <span class="text-danger">(*)</span></th>
+                            <th scope="col" colspan="2" class="text-center">COORDENADAS GEOGRÁFICAS: <span class="text-danger">(*)</span></th>
+                        </tr>
+                        <tr>
+                            <th>LAT:</th><th>LONG:</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody id="filasPartidaInmobiliaria">
+                        <tr>
+                            <td><input class="form-control" value="{{PartidaInmobiliaria is defined ? PartidaInmobiliaria.numero}}" type="number" name="PartidaInmobiliaria[partida]" required></td>
+                            <td><input class="form-control" value="{{PartidaInmobiliaria is defined ?  PartidaInmobiliaria.latitud}}" type="text" name="PartidaInmobiliaria[lat]" required></td>
+                            <td>
+                                <input class="form-control" value="{{PartidaInmobiliaria is defined ? PartidaInmobiliaria.longitud}}" type="text" name="PartidaInmobiliaria[long]" required>
+                            </td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        </br>        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>
+                        EXISTEN INMUEBLES ANEXOS 
+                        <span class="text-danger">(*)</span>
+                        <span data-toggle="tooltip" data-placement="right" 
+                        title="(?) En caso de contar con inmueble anexo, se deberá adjuntar la documentación correspondiente 
+                        para el mismo."
+                        class="text-success pad-span">(?)</span>
+                    </label>
+                    
+                    <div class="input-group-text">
+                        <input onClick="mostrarTabla()"{% if InmuebleAnexo is defined %} checked {% endif %} type="radio" value="SI" name="InmuebleAnexo[opt]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" onClick="desactivarTabla()" value="NO" name="InmuebleAnexo[opt]" required> NO
+                    </div>
+                </div>
+            <div>
+        <div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tabla" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">DOMICILIO</th>
+                            <th scope="col">ACTIVIDAD DESARROLLADA</th>
+                        </tr>                        
+                    </thead>
+                    <tbody id="filasInmuebleAnexo">
+                        {% if InmuebleAnexo is defined %}
+                            {% for inmuebleAnexo in InmuebleAnexo %}                        
+                                
+                                <tr>
+                                    <tr>
+                                        <td><input class="form-control" value="{{inmuebleAnexo.domicilio}}" type="text" name="InmuebleAnexo[domicilio][]" required></td>
+                                        <td>
+                                            <input class="form-control" value="{{inmuebleAnexo.actividadDesarrollada}}" type="text" name="InmuebleAnexo[actividad][]" required>
+                                            <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                </tr>  
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            <div>
+        <div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a id="buttonDatos" onClick="agregarFilaInmuebleAnexo()" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <label>
+                    SERVICIOS DISPONIBLES EN LA ZONA: 
+                    <span class="text-danger">(*)</span>
+                    <span data-toggle="tooltip" data-placement="right" 
+                        title="(?) Señalar aquellos servicios disponibles en la zona en la que está ubicado el predio, sin 
+                        importar si dichos servicios están contratados o no."
+                        class="text-success pad-span">(?)</span>
+                </label>
+            </div>
+        </div>
+        </br>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>ENERGÍA ELÉCTRICA: </label>
+                    <div class="input-group-text">
+                        <input type="radio" {% if Servicio is defined and Servicio != null and Servicio.energiaElectrica == 1 %} checked {% endif %} value="1" name="Servicio[energiaElectrica]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" {% if (Servicio|length == 0) or (Servicio is defined and Servicio != null and Servicio.energiaElectrica == 0) %} checked {% endif %} value="0" name="Servicio[energiaElectrica]" required> NO
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>GAS NATURAL: </label>
+                    <div class="input-group-text" >
+                        <input type="radio" {% if Servicio is defined and Servicio != null and Servicio.gasNatural == 1 %} checked {% endif %} value="1" name="Servicio[gasNatural]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" {% if (Servicio|length == 0) or (Servicio is defined and Servicio != null and Servicio.gasNatural == 0) %} checked {% endif %} value="0" name="Servicio[gasNatural]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>AGUA DE RED: </label>
+                    <div class="input-group-text">
+                        <input type="radio" {% if Servicio is defined and Servicio != null and Servicio.aguaRed == 1 %} checked {% endif %} value="1" name="Servicio[aguaRed]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" {% if (Servicio|length == 0) or (Servicio is defined and Servicio != null and Servicio.aguaRed == 0) %} checked {% endif %} value="0" name="Servicio[aguaRed]" required> NO
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>CLOACAS: </label>
+                    <div class="input-group-text">
+                        <input type="radio" {% if Servicio is defined and Servicio != null and Servicio.cloacas == 1 %} checked {% endif %} value="1" name="Servicio[cloacas]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" {% if (Servicio|length == 0) or (Servicio is defined and Servicio != null and Servicio.cloacas == 0) %} checked {% endif %} value="0" name="Servicio[cloacas]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('tramiteB1') }} data-idtramite="{{idTramite}}" data-idplanta="{{idPlanta}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteB1',{'idTramite': idTramite ?? 0},{'rol':'admin'},{'diPlanta': idPlanta ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteB4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/formularioB3.js')}}"></script>
+    <script src="{{asset('bundles/js/domicilio.js')}}"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    {% if (Domicilio is defined) %}
+        $( document ).ready(function() {
+            $("#provincia").trigger("change");
+            setTimeout(function(){
+                $("#departamento").val({{ Domicilio.departamento.id }});
+                $("#departamento").trigger("change");
+            }, 7000);
+            setTimeout(function(){
+                $("#localidad").val({{ Domicilio.localidad.id }});
+                $("#localidad").trigger("change");
+            }, 16000);
+        });        
+    {% endif %}
+    </script>
+{% endblock %}

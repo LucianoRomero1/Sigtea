@@ -1,0 +1,57 @@
+{% extends 'default/index.html.twig' %}
+{% block contenct %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO IAC</h4></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title alert alert-secondary text-center">2. PROFESIONALES INTERVINIENTES</div>
+        <div class="card-body">
+            <form id="formularioIAC2" action="{{ path('/tramiteA1') }}" method="post">
+                {# {% if rol is not defined %} #}
+                <button title="agregar profesional" type="button" class="btn btn-primary agregarRegistro"><i class="fas fa-plus"></i> Agregar profesional</button>
+                <input type="hidden" name="idTramite" value="">
+                {# {% endif %} #}
+                <table class="table" id="tabla">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre y Apellido</th>
+                        <th scope="col">Profesión</th>
+                        <th scope="col">N° de Registro</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <select class="custom-select" name="Profesional[nombreYapellido]">
+                                    <option value=""selected>Seleccione</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="Profesional[nombreYapellido]" name="Profesional[nombreYapellido]" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="nro_registro[]" name="nro_registro[]" required />
+                            </td>
+                            <td>
+                                <button title="Eliminar" type="button" class="btn btn-danger eliminarRegistro"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

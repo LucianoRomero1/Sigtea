@@ -1,0 +1,58 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}    
+    <div class="card-header">Administración de Tramites</div>
+    <div class="card card-body">
+        <table class="table table-striped table-bordered" id="tablaTramites">
+            <thead>
+                <tr>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Tramite</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if Tramites is defined %}
+                    {% for tramite in Tramites %}
+                        {% if tramite.empresa != null %}
+                            <tr>                            
+                                <td>{{tramite.empresa.persona.razonSocial}}</td>
+                                <td>{{tramite.nombre}}</td>
+                                <td>{{tramite.estado.descripcion}}</td>
+                                <td>
+                                    {% for listaTramite in ListadoTramites %}
+                                        {% if listaTramite.descripcion == tramite.nombre %}
+                                            <a href="{{ path(listaTramite.url,{'rol':'admin','idTramite':tramite.id}) }}" data-toggle="tooltip" title="ver"><i class="fas fa-search text-primary iconMenu"></i></a> 
+                                        {% endif %}                                                                                                        
+                                    {% endfor %}
+                                    {% if tramite.estado.id <= 3 %}
+                                        <buttom class="mensaje iconMenu" data-idtramite={{tramite.id}} data-idestado=3 data-toggle="tooltip" title="Observado" ><i class="fas fa-backward text-danger"></i></buttom>
+                                        <buttom class="mensaje iconMenu" data-idtramite={{tramite.id}} data-idestado=4 data-toggle="tooltip" title="Rechazar" ><i class="fas fa-times text-danger"></i></buttom>
+                                        <buttom onclick="parent.cambioEstado({{tramite.id}},5)" class="iconMenu" data-toggle="tooltip" title="Aprobar"><i class="fas fa-check text-success"></i></buttom>
+                                    {% endif %}
+                                    <buttom onclick="parent.mensajes({{tramite.id}})" data-toggle="tooltip" title="Mensajes" class="iconMenu"><i class="fas fa-list text-primary"></i></buttom>
+                                    <buttom class="mensaje iconMenu" data-idtramite={{tramite.id}} data-toggle="tooltip" title="Nuevo Mensaje"><i class="far fa-envelope text-primary"></i></buttom>
+                                </td>
+                            </tr>                
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $(document).ready(function() {
+        $('#tablaTramites').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            }
+        });
+    });
+</script>
+{% endblock %}

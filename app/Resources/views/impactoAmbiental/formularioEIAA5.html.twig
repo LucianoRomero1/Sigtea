@@ -1,0 +1,123 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">5. Identificación y valoración de impactos ambientales <span data-toggle="tooltip" class="text-success" title="(?) Una vez caracterizado el proyecto y el ambiente en el que se implantará el mismo, tomando como base toda la información disponible, desde un enfoque sistémico se evaluarán los impactos, a partir del cruzamiento de datos de los distintos componentes del medio ambiente circundante (relevados en el punto 3) y las diferentes acciones del proyecto (identificadas en el punto 4) que son potencialmente capaces de impactarlos. El procedimiento se divide en dos etapas: 1° Identificación de los posibles impactos que puede generar el proyecto, 2° Valoración de esos impactos. Realizar el análisis para cada una de las etapas del proceso, incluyendo áreas auxiliares, de servicio y actividades complementarias y cada factor ambiental identificado. Como recomendación y como ya fuera mencionado previamente, deberán determinarse correctamente cuáles son los factores que se encuentran presentes en el área de influencia del proyecto y trabajar sólo sobre los mismos, a fin de no omitir potenciales impactos y tampoco incorporar una gran cantidad de información inespecifica e innecesaria, que puede enmascarar impactos y que incrementa los tiempos de evaluación por parte de la autoridad de aplicación. " data-placement="right">(?)</span></div>
+    <div class="card-body">
+        <form id="formularioEIAAA5" action="{{ path('tramiteEIAA5') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        
+        <h6>5.1 Metodología y fuentes de información para la identificación y valoración de impactos: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" title="(?) Existe una gran variedad de metodologías que pueden aplicarse en el proceso de valoración de los impactos ambientales o en la presentación de los resultados obtenidos, como por ejemplo: listas de verificación, matrices, mapas temáticos, entre otras. Deberá citarse la metodología empleada junto con una breve descripción de la misma. Límite 3500 caracteres. " data-placement="right">(?)</span></h6>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" maxlength="3500" name="Impacto[descripcion]" required>{% if Impactos|length != 0 %}{{Impactos[0].descripcion}}{% endif %}</textarea>
+            </div>
+        </div>
+        
+        <hr/>
+        <h6>5.2 Aplicación de la metodología: <span data-toggle="tooltip" class="text-success" title="(?) Anexar en papel y en digital, la aplicación de la metodología para el caso particular en estudio. Todas las consideraciones para cada valoración deben volcarse en un informe técnico. Deberán incluirse efectos adversos inevitables del proyecto, impactos y efectos ambientales previsibles, impactos por eventuales condiciones de operación anormal o accidentes y beneficios económicos, sociales y culturales a obtener. Límite 450 caracteres. " data-placement="right">(?)</span></h6>
+        <br/>
+        {% set i = 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'5.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr/>
+        <h6>5.3 Identificación y valoración de impactos y efectos ambientales del proyecto: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" title="(?) Una vez concluidas las etapas de identificación y valoración, mediante la metodología seleccionada, se deben describir y resumir los resultados expresándolos en forma de lista numerada. Límite: 7500 caracteres. " data-placement="right">(?)</span></h6>
+        <br/>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Impacto</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="filas">
+                {% for impacto in Impactos %}
+                {% if loop.index != 1 %}{# Es para que no me recorra el primero, porque ya lo muestro al principio  #}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>
+                        <input type="text" value="{{impacto.descripcion}}" maxlength="7500" class="form-control" name="TipoImpacto[tipo][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                    
+                </tr>
+                {% endif %}
+                {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="text" value="" maxlength="7500" class="form-control" name="TipoImpacto[tipo][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <a class="btn text-primary" onClick="agregarFila()">
+                Agregar impacto
+            </a>
+        </div>
+        <hr/>
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA4',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario5.js')}}"></script>
+{% endblock %}

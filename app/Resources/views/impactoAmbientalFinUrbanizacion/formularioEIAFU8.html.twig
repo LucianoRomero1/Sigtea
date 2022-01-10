@@ -1,0 +1,31 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 8. PLAN DE GESTIÓN AMBIENTAL - MEDIDAS PREVENTIVAS / CORRECTIVAS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU8') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <h6>8.1 - Breve descripción de las obras de infraestructura básicas de saneamiento. <span class="text-danger">(*)</span></h6>
+                <textarea class="form-control"  name="MedidaPreventiva[Saneamiento]" required>{% if MedidaPreventiva != null %}{{MedidaPreventiva.infraestructuraSaneamiento}}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <h6>8.2 - Descripción de las acciones que mitiguen los impactos identificados en el punto 6. <span class="text-danger">(*)</span></h6>
+                <textarea class="form-control"  name="MedidaPreventiva[Mitigacion]" required>{% if MedidaPreventiva != null %}{{MedidaPreventiva.descripcionMitigacionImpacto}}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

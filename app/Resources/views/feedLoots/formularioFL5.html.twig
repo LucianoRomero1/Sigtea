@@ -1,0 +1,58 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 5. SUELO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL5" action="{{ path('tramiteFL6') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    
+    <div class="row">
+        <table id="tablaTopografias" class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">TIPO DE SUELO</th>
+                    <th scope="col">PERMEABILIDAD</th>
+                    <th scope="col">TRATAMIENTO DEL SUELO</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for topografia in Topografia %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td><input type="text" class="form-control" name="Topografias[tipoSuelo][]"  value="{{topografia.tipoSuelo}}"></td>
+                    <td><input type="text" class="form-control" name="Topografias[permeabilidad][]"  value="{{topografia.permeabilidad}}"></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="Topografias[tratamientoSuelo][]"  value="{{topografia.tratamientoSuelo}}">
+                        <a onClick="eliminarFila(this, 'tablaTopografias')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="text" class="form-control" name="Topografias[tipoSuelo][]" value=""></td>
+                    <td><input type="text" class="form-control" name="Topografias[permeabilidad][]" value=""></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="Topografias[tratamientoSuelo][]" value="">
+                        <a onClick="eliminarFila(this, 'tablaTopografias')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaTopografias')" class="btn btn-secondary text-light">Agregar suelo</a>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/feedLoots/formularioFL5.js')}}"></script>   
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

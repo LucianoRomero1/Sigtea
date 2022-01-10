@@ -1,0 +1,324 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 6. USO DE ENERGÍA {% endblock %}
+
+{% block contenctForms %}
+    <div class="card-body">
+        <form id="formularioIAC6" action="{{ path('tramiteIAC7') }}" method="post">
+        {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">6.1 ENERGÍA ELÉCTRICA ADQUIRIDA <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Tipear sobre las celdas la información solicitada">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ElectricaAdquirida[check]" id="energiaElectrica_si" value="Si" {% if ElectricaAdquirida != null %}checked{% endif %}>
+                    <label class="form-check-label" for="energiaElectrica_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ElectricaAdquirida[check]" id="energiaElectrica_no" value="No" {% if ElectricaAdquirida == null %}checked{% endif %}>
+                    <label class="form-check-label" for="energiaElectrica_no">No</label>
+                </div>
+            </div>
+            <div id="divEnergiaElectrica" {% if ElectricaAdquirida != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_energiaElectrica">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre del Prestador de Servicios</th>
+                        <th scope="col">Consumo mensual (kw)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for electrica in ElectricaAdquirida %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="ElectricaAdquirida[nombre][]" value="{{electrica.nombre}}"/></td>
+                            <td><input type="number" step="any" class="form-control" name="ElectricaAdquirida[cantidad][]" value="{{electrica.cantidad}}"/></td>
+                            <td>
+                                <button onClick="eliminarFilaBd(this, 'tabla_energiaElectrica', {{electrica.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="ElectricaAdquirida[nombre][]" /></td>
+                            <td><input type="number" step="any" class="form-control" name="ElectricaAdquirida[cantidad][]" /></td>
+                            <td>
+                                <button onClick="eliminarFila(this, 'tabla_energiaElectrica')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_energiaElectrica')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 inputs">
+                <h6 class="titulos">6.2 ENERGÍA ELÉCTRICA POR GENERACIÓN PROPIA <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Tipear sobre las celdas la información solicitada">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ElectricaPropia[check]" id="energiaPropia_si" value="Si" {% if ElectricaPropia != null %}checked{% endif %}>
+                    <label class="form-check-label" for="energiaPropia_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ElectricaPropia[check]" id="energiaPropia_no" value="No" {% if ElectricaPropia == null %}checked{% endif %}>
+                    <label class="form-check-label" for="energiaPropia_no">No</label>
+                </div>
+            </div>
+            <div id="divGeneracionPorpia" {% if ElectricaPropia != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_energiaPropia">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Método</th>
+                        <th scope="col">Consumo mensual (kw)</th>
+                        <th scope="col">Tipo de Combustible o fuente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for electrica in ElectricaPropia %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="ElectricaPropia[metodo][]" value="{{electrica.metodo}}"/></td>
+                            <td><input type="number" step="any" class="form-control" name="ElectricaPropia[consumo][]" value="{{electrica.consumo}}"/></td>
+                            <td><input type="text" class="form-control" name="ElectricaPropia[fuente][]" value="{{electrica.fuente}}"/></td>
+                            <td>
+                                <button onClick="eliminarFilaBd2(this, 'tabla_energiaPropia', {{electrica.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="ElectricaPropia[metodo][]" /></td>
+                                <td><input type="number" step="any" class="form-control" name="ElectricaPropia[consumo][]" /></td>
+                                <td><input type="text" class="form-control" name="ElectricaPropia[fuente][]" /></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_energiaPropia')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_energiaPropia')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">6.3 GAS (GN, GLP) <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Tipear sobre las celdas la información solicitada">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Gases[check]" id="gas_si" value="Si" {% if Gases != null %}checked{% endif %}>
+                    <label class="form-check-label" for="gas_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Gases[check]" id="gas_no" value="No" {% if Gases == null %}checked{% endif %}>
+                    <label class="form-check-label" for="gas_no">No</label>
+                </div>
+            </div>
+            <div id="divGas" {% if Gases != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_gas">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Nombre prestador</th>
+                        <th scope="col">Consumo mensual (m3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for gas in Gases %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="Gases[tipo][]" value="{{gas.tipo}}"/></td>
+                            <td><input type="text" class="form-control" name="Gases[nombre][]" value="{{gas.nombre}}"/></td>
+                            <td><input type="number" step="any" class="form-control" name="Gases[consumo][]" value="{{gas.consumo}}"/></td>
+                            <td>
+                                <button onClick="eliminarFilaBd3(this, 'tabla_gas', {{gas.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="Gases[tipo][]" /></td>
+                                <td><input type="text" class="form-control" name="Gases[nombre][]" /></td>
+                                <td><input type="number" step="any" class="form-control" name="Gases[consumo][]" /></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_gas')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_gas')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">6.4 OTRO TIPO DE FUENTE DE ENERGÍA <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Incluye otros combustibles para generación de nergía, no contemplada anteriormente p. ej. Gas oil, carbón, leña, etc. Puede ser hidráulica (por medio de una represa), solar, eólica etc. Consumo mensual: en unidades de masa, para obtener la potencia generada. Vincular con 9.6 si aplica.">(?)</span></p>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="OtraEnergia[check]" id="otraFuente_si" value="Si" {% if OtraEnergia != null %}checked{% endif %}>
+                    <label class="form-check-label" for="otraFuente_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="OtraEnergia[check]" id="otraFuente_no" value="No" {% if OtraEnergia == null %}checked{% endif %}>
+                    <label class="form-check-label" for="otraFuente_no">No</label>
+                </div>
+            </div>
+            <div id="divOtroTipo" {% if OtraEnergia != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_otros">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Potencia generada</th>
+                        <th scope="col">Consumo mensual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for otra in OtraEnergia %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="OtraEnergia[tipo][]" value="{{otra.tipo}}"/></td>
+                            <td><input type="text" class="form-control" name="OtraEnergia[nombre][]" value="{{otra.nombre}}"/></td>
+                            <td><input type="number" step="any" class="form-control" name="OtraEnergia[consumo][]" value="{{otra.consumo}}"/></td>
+                            <td>
+                                <button onClick="eliminarFilaBd4(this, 'tabla_otros', {{otra.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="OtraEnergia[tipo][]" /></td>
+                                <td><input type="text" class="form-control" name="OtraEnergia[nombre][]" /></td>
+                                <td><input type="number" step="any" class="form-control" name="OtraEnergia[consumo][]" /></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_otros')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_otros')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/informeAmbiental/formularioIAC6.js')}}"></script>
+<script>
+    {# $( "#formularioIAC6" ).validate( {
+
+        submitHandler: function () {
+            $("#formularioIAC6").submit();
+        },
+        onkeyup: function(element) {
+            $(element).valid()
+        },
+        rules:
+        {
+            nombre_prestador:{required: true},
+            consumo_mensual:{required: true},
+            metodo:{required: true},
+            consumo_mensual_propio:{required: true},
+            tipoCombustible:{required: true},
+            tipo:{required: true},
+            nombre_prestador_gas:{required: true},
+            consumo_m3:{required: true},
+            tipo_otros:{required: true},
+            potencia_generada:{required: true},
+            consumo_otros:{required: true}
+        },
+        messages:
+        {
+            nombre_prestador:{required: 'Este campo es requerido.'},
+            consumo_mensual: {required:'Este campo es requerido.'},
+            consumo_mensual_propio:{required: 'Este campo es requerido.'},
+            tipoCombustible:{required: 'Este campo es requerido.'},
+            tipo:{required:'Este campo es requerido.'},
+            nombre_prestador_gas:{required: 'Este campo es requerido.'},
+            descripcion_plano: {required:'Este campo es requerido.'},
+            consumo_m3:{required: 'Este campo es requerido.'},
+            tipo_otros:{required: 'Este campo es requerido.'},
+            potencia_generada:{required:'Este campo es requerido.'},
+            consumo_otros:{required:'Este campo es requerido.'}
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+            // Add the `help-block` class to the error element
+            error.addClass( "help-block" )
+
+            // Add `has-feedback` class to the parent div.form-group
+            // in order to add icons to inputs
+            element.parents( ".col-md-5" ).addClass( "has-feedback" )
+
+            if (element.prop( "type" ) ===  "text" || element.prop( "type" ) ===  "checkbox" ||  element.prop( "type" ) ===  "number" || element.prop( "type" ) === "date" || element.prop( "type" ) ===  "radio" || element.prop( "type" ) === "textarea" ) {
+                error.insertAfter( element.parent("div"))
+                if(element.parent()[0].localName == "td"){
+                    error.insertAfter(element)
+                }
+            }
+            // Add the span element, if doesn't exists, and apply the icon classes to it.
+            if ( !element.next( "span" )[ 0 ] ) {
+            }
+        },
+        success: function ( label, element ) {
+            // Add the span element, if doesn't exists, and apply the icon classes to it.
+            if ( !$( element ).next( "span" )[ 0 ] ) {
+            }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+            $( element ).parents( ".col-md-5" ).addClass( "has-error" ).removeClass( "has-success" )
+            $( element ).addClass("noValidado").removeClass( " validado" )
+        },
+        unhighlight: function ( element, errorClass, validClass ) {
+            $( element ).parents( ".col-md-5" ).addClass( "has-success" ).removeClass( "has-error" )
+            $( element ).addClass( "validado" ).removeClass( "noValidado" )
+        },
+    }) #}
+
+    $("#energiaElectrica_si").on("click", function(){
+        mostrarTabla("#energiaElectrica_si", "#divEnergiaElectrica")
+    })
+    $("#energiaElectrica_no").on("click", function(){
+        mostrarTabla("#energiaElectrica_si", "#divEnergiaElectrica")
+    })
+    $("#energiaPropia_si").on("click", function(){
+        mostrarTabla("#energiaPropia_si", "#divGeneracionPorpia")
+    })
+    $("#energiaPropia_no").on("click", function(){
+        mostrarTabla("#energiaPropia_si", "#divGeneracionPorpia")
+    })
+    $("#gas_si").on("click", function(){
+        mostrarTabla("#gas_si", "#divGas")
+    })
+    $("#gas_no").on("click", function(){
+        mostrarTabla("#gas_si", "#divGas")
+    })
+    $("#otraFuente_si").on("click", function(){
+        mostrarTabla("#otraFuente_si", "#divOtroTipo")
+    })
+    $("#otraFuente_no").on("click", function(){
+        mostrarTabla("#otraFuente_si", "#divOtroTipo")
+    })
+
+    function mostrarTabla(check, tabla){
+        if($(check)[0].checked){
+            $(tabla).css("display","block")
+        }else{
+            $(tabla).css("display","none")
+        }
+    }
+
+</script>
+{% endblock %}

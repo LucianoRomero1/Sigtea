@@ -1,0 +1,53 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}2. DESCRIPCIÓN DEL ENTORNO{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio3') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <p for="descripccion">DESCRIPCIÓN DE LAS POSIBLES EXTERNALIDADES DEL ENTORNO DESDE Y HACIA EL ESTABLECIMIENTO <span class="text-danger">(*)</span></p>
+                        <textarea class="form-control" id="descripccion" name="MarcaBandera[entorno]" required >{{MarcaBandera.entorno ?? null}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendioCombustiblePresentacion') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('formularioExpendioCombustiblePresentacion',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+{% endblock %}

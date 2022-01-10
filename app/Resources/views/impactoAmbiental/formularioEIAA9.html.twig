@@ -1,0 +1,360 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">9. Consideraciones adicionales</div>
+    <div class="card-body">
+        <form id="formularioEIAAA9" action="{{ path('tramiteEIAA9') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        
+        <h6>9.1 Nivel de complejidad Ambiental - (<a href="http://servicios.infoleg.gob.ar/infolegInternet/anexos/125000-129999/126265/texact.htm">Resolución 177/07</a> y modificatorias):</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <p>Nivel de complejidad: </p>
+                <input type="text" placeholder="Ingrese un valor entre 1 y 100" value="" class="form-control" name="" required />
+            </div>
+        </div>
+        <br/>
+        {% set i = 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+        <h6>9.2 Rubro - ( Según Anexo 1 - <a href="http://servicios.infoleg.gob.ar/infolegInternet/anexos/130000-134999/134704/norma.htm">Resolución 1639/07</a>):</h6>
+        <br/>
+        <div id="tablaActividades">
+            <div>
+                {% for empresaActividad in EmpresaActividad %}
+                <div class="tabla-sub-pers mb-3 p-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="grupo">Grupo</p>
+                                <select class="form-control grupo" id="grupo" name="grupo[]" required onchange="parent.grupo('grupo','actividad','caucm','ambiental')">
+                                    <option value="">SELECCIONE UN GRUPO</option>
+                                    {% for grupo in grupos %}
+                                            <option {% if empresaActividad.actividad.grupo == grupo.id %} selected {% endif %} value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="actividad">ACTIVIDAD DE EMPRESA</p>                    
+                                <select class="form-control" id="actividad" name="actividadEmpresa[]" required  onchange="parent.actividad('actividad','caucm','ambiental')">                        
+                                <option value="">SELECCIONE UNA ACTIVIDAD</option>
+                                <option value="{{ empresaActividad.actividad.id }}" selected>{{ empresaActividad.actividad.nombreActividad }}</option>
+                                </select>
+                                <div class='spinner form-row'>
+                                    <div class="three-quarters-loader"></div>
+                                    <span class='spinner-message'>Cargando actividades...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="prse">PRINCIPAL / SECUNDARIA</p>
+                                <select class="form-control" id="prse" name="prse[]" required>
+                                    <option {% if empresaActividad.tipo == '0' %} selected {% endif %} value="0">SELECCIONE UN NIVEL</option>
+                                    <option {% if empresaActividad.tipo == '1' %} selected {% endif %} value="1">Principal</option>
+                                    <option {% if empresaActividad.tipo == '2' %} selected {% endif %} value="2">Secundaria</option>                        
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="caucm">CÓDIGO CUACM</p>
+                                <input type="text" value="{{empresaActividad.actividad.cuacm}}" class="form-control" id="caucm" readonly name="caucm[]">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="ambiental">ESTANDAR AMBIENTAL</p>
+                                <input type="text" value="{{empresaActividad.actividad.estandar}}" class="form-control" id="ambiental" readonly name="estandarAmbiental[]">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <a class="btn text-danger" onClick="eliminar(this,'tablaActividades')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="tabla-sub-pers mb-3 p-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="grupo">Grupo</p>
+                                <select class="form-control grupo" id="grupo" name="grupo[]" required onchange="parent.grupo('grupo','actividad','caucm','ambiental')">
+                                    <option value="">SELECCIONE UN GRUPO</option>
+                                    {% for grupo in grupos %}
+                                        {% if Grupo is defined and Grupo.grupo == grupo.id %}
+                                            <option value="{{ grupo.id }}" selected>{{ grupo.nombre }}</option>
+                                        {% else %}
+                                            <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="actividad">ACTIVIDAD DE EMPRESA</p>                    
+                                <select class="form-control" id="actividad" name="actividadEmpresa[]" required  onchange="parent.actividad('actividad','caucm','ambiental')">                        
+                                <option value="">SELECCIONE UNA ACTIVIDAD</option>
+                                </select>
+                                <div class='spinner form-row'>
+                                    <div class="three-quarters-loader"></div>
+                                    <span class='spinner-message'>Cargando actividades...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="prse">PRINCIPAL / SECUNDARIA</p>
+                                <select class="form-control" id="prse" name="prse[]" required>
+                                    <option value="0">SELECCIONE UN NIVEL</option>
+                                    <option value="1">Principal</option>
+                                    <option value="2">Secundaria</option>                        
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="caucm">CÓDIGO CUACM</p>
+                                <input type="text" class="form-control" id="caucm" readonly name="caucm[]">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <p for="ambiental">ESTANDAR AMBIENTAL</p>
+                                <input type="text" class="form-control" id="ambiental" readonly name="estandarAmbiental[]">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <a class="btn text-danger" onClick="eliminar(this,'tablaActividades')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <a onClick="agregar('tablaActividades')" class="btn text-primary">Agregar rubro</a>
+            </div>
+        </div>
+        <hr/>
+        <br/>
+        <h6>9.3 Factores de Ajuste ( para el cálculo del NCA - Anexo 2 - <a href="http://servicios.infoleg.gob.ar/infolegInternet/anexos/130000-134999/134704/norma.htm">Resolución 1639/07</a>)</h6>
+        <h6>9.3.1 AjSP. Ajuste por manejo de sustancias particularmente riesgosas:</h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Utiliza alguna sustancia riesgosa en los volúmenes que figuran en el listado del Anexo II de la Resolución 1639/07?</p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if Sustancias|length != 0 %} checked {% endif %} onClick="mostrar('sustancias')" value="SI" name="Sustancia[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if Sustancias|length == 0 %} checked {% endif %} onClick="ocultar('sustancias')" value="NO" name="Sustancia[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="sustancias" class="tabla-pers">
+            <table id="tablaSustancias" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Sustancia</th>
+                        <th scope="col">Cantidad umbral </th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sustancia in Sustancias %}
+                    <tr>
+                        <td>
+                            <input type="text" value="{{sustancia.nombre}}" name="Sustancia[nombre][]" class="form-control" required />
+                        </td>
+                        <td>
+                            <input type="text" value="{{sustancia.cantidad}}" name="Sustancia[cantidad][]" class="form-control" required />
+                        </td>
+                        <td>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaSustancias')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td>
+                            <input type="text" name="Sustancia[nombre][]" class="form-control" required />
+                        </td>
+                        <td>
+                            <input type="text" name="Sustancia[cantidad][]" class="form-control" required />
+                        </td>
+                        <td>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaSustancias')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a onClick="agregarFila('tablaSustancias')" class="btn text-primary">Agregar sustancia</a>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <h6>9.3.2 AjSGA. Ajuste por Sistema de Gestión Ambiental <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Anexar en papel y en formato digital, la documentación sobre certificación vigente de sistema de gestión ambiental, en caso de corresponder.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>¿Cuenta con certificación vigente de sistema de gestión ambiental, otorgada por un organismo independiente
+                debidamente acreditado y autorizado para ello?</p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="mostrar('anexo')" value="SI" name="Anexo[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" checked onClick="ocultar('anexo')" value="NO" name="Anexo[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        {% set i = 2 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage2 is defined and Storage2 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <h6>9.4 Seguro ambiental <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Anexar en papel y en formato digital, la documentación sobre seguro ambiental, en caso de corresponder.">(?)</span></h6>
+        {% set i = 3 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage3 is defined and Storage3 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+
+        <h6>9.5 Otras consideraciones <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Otra/s consideraciones, factores ambientales no señalados, etc. que se consideren de interés, que complementen lo solicitado, generación de residuos no señalados, medidas de mitigación adicionales como cortina forestal, etc. Anexar documentación o imagenes necesarias, en papel y en formato digital. ">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Observaciones / Aclaraciones</p>
+                <textarea class="form-control" required></textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 4 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage4 is defined and Storage4 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA8',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario6.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario9.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

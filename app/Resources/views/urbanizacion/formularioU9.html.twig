@@ -1,0 +1,151 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 8. DIMENSIONAMIENTO Y DESTINO DEL SUELO {% endblock %}
+
+{% block contenctForms %}
+    
+
+<div class="card-body">
+<form id="formularioU9" action="{{ path('tramiteU10') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-5">
+            <p for="entreCalles"> SUPERFICIE TOTAL A INTERVENIR <span class="text-danger">(*)</span></p>
+            <div class="input-group">
+                <input type="text" class="form-control" name="Dimensionamiento[superficieTotal]" required value="{% if Dimensionamiento is defined %}{{Dimensionamiento.superficieTotal}}{% endif %}">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">m<sup>2</sup></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <p for="entreCalles"> CANTIDAD DE LOTES DESTINADOS A VIVIENDAS <span class="text-danger">(*)</span></p>
+            <div class="input-group">
+                <input type="number" class="form-control" name="Dimensionamiento[cantidadLotes]" required value="{% if Dimensionamiento is defined %}{{Dimensionamiento.cantidadLotes}}{% endif %}">
+            </div>
+        </div>
+    </div> 
+    <br>
+    <div class="row">
+        <div class="col-md-5">
+            <p for="entreCalles"> SUPERFICIE TOTAL LOTEADA (descontadas las calles y avenidas) <span class="text-danger">(*)</span></p>
+            <div class="input-group">
+                <input type="number" class="form-control" name="Dimensionamiento[superficieLoteada]" required value="{% if Dimensionamiento is defined %}{{Dimensionamiento.superficieTotalLoteada}}{% endif %}">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">m<sup>2</sup></span>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <b>ESPACIOS VERDES <span class="text-success" data-toggle="tooltip" title="Parcelas de uso público como por ejemplo: parques urbanos, plazas y jardines de barrio, terrenos de deportes o juegos.">(?)</span></b>
+        </div>
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">IDENTIFICACION DEL LOTE</th>
+                    <th scope="col">SUPERFICIE[m<sup>2</sup>]</th>
+                    <th scope="col">PORCENTAJE DE ESPACIOS VERDES</th>
+                </tr>
+            </thead>
+            <tbody id="filas1">
+                {% if DestinoSuelo is defined %}     
+                    {% for suelo in DestinoSuelo %}
+                        {% if suelo.tipo == "Espacios Verdes" %} 
+                            <tr>
+                                <td><input class ='form-control' type="text" name="DestinoSuelo[verdes][nombre][]" required value="{{suelo.nombre}}"></td>
+                                <td><input class ='form-control' type="number" name="DestinoSuelo[verdes][superficie][]" required value="{{suelo.superficie}}"></td>
+                                <td class = 'media'>
+                                    <input class ='form-control' type="number" name="DestinoSuelo[verdes][porcentaje][]" required value="{{suelo.porcentaje}}"> 
+                                    <a onClick="eliminarFila(this,{{suelo.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                   {% endfor %} 
+                {% endif %}    
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila1()" class="btn btn-primary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <b>RETARDADORES HÍDRICOS </b>
+        </div>
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">IDENTIFICACION DEL LOTE</th>
+                    <th scope="col">SUPERFICIE[m<sup>2</sup>]</th>
+                </tr>
+            </thead>
+            <tbody id="filas2">
+                {% if DestinoSuelo is defined %}   
+                    {% for suelo in DestinoSuelo %} 
+                        {% if suelo.tipo == "Retardadores Hidricos" %}
+                            <tr>
+                                <td><input class ='form-control' type="text" name="DestinoSuelo[retardadores][nombre][]"  value="{{suelo.nombre}}" required></td>
+                                <td class = 'media'>
+                                    <input class ='form-control' type="number" name="DestinoSuelo[retardadores][superficie][]"  value="{{suelo.superficie}}" required>
+                                    <a onClick="eliminarFila2(this,{{suelo.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %} 
+                {% endif %}   
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila2()" class="btn btn-primary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <b>EQUIPAMIENTO COMUNITARIO <span class="text-success" data-toggle="tooltip" title="Inmuebles destinados a salud, educación, seguridad, transporte público, planta de tratamientos (cloacales y de agua potable), estaciones de transferencia de residuos, transformadores eléctricos y otros.">(?)</span></b>
+        </div>
+        <table class="table text-center">
+           <thead>
+                <tr>
+                    <th scope="col">IDENTIFICACION DEL LOTE</th>
+                    <th scope="col">SUPERFICIE[m<sup>2</sup>]</th>
+                </tr>
+            </thead>
+            <tbody id="filas3">
+                {% if DestinoSuelo is defined %}
+                    {% for suelo in DestinoSuelo %} 
+                        {% if suelo.tipo == "Equipamiento Comunitario" %}
+                            <tr>
+                                <td><input class ='form-control' type="text" name="DestinoSuelo[equipamiento][nombre][]"  value="{{suelo.nombre}}" required></td>
+                                <td class = 'media'>
+                                    <input class ='form-control' type="number" name="DestinoSuelo[equipamiento][superficie][]"  value="{{suelo.superficie}}" required>
+                                    <a onClick="eliminarFila3(this,{{suelo.id}})" class="btn text-danger "><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %} 
+                {% endif %}    
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila3()" class="btn btn-primary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('bundles/js/formularioUrbanizacion/formularioU9.js')}}"></script>   
+{% endblock %}

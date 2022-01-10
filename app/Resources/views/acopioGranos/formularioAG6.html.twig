@@ -1,0 +1,125 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 6. BARRERAS PROTECTORAS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG6" action="{{ path('tramiteAG7') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b>BARRERAS ARTIFICIALES </b>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <table class="table text-center" id="filaArtificial">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">UBICACIÓN</th>
+                    <th scope="col">TIPO</th>
+                    <th scope="col">ALTURA</th>
+                    <th scope="col">LONGITUD</th>
+                    <th scope="col">MATERIAL</th>
+                </tr>
+            </thead>
+            <tbody id="fila">   
+            {% for artificial in BarreraArtificial %}
+            <tr>
+                <th scope="row">1</th> 
+                <td><input type="text" class="form-control" name="BarreraArtificial[ubicacion][]"  value="{{artificial.ubicacion}}" required></td>
+                <td><input type="text" class="form-control" name="BarreraArtificial[tipo][]"  value="{{artificial.tipo}}" required></td>
+                <td><input type="number" class="form-control" name="BarreraArtificial[altura][]"  value="{{artificial.altura}}" required ></td>
+                <td><input type="number" class="form-control" name="BarreraArtificial[longitud][]"  value="{{artificial.longitud}}" required ></td>
+                <td class="media">
+                    <input type="text" class="form-control" name="BarreraArtificial[material][]"  value="{{artificial.material}}" required>
+                    <a onClick="eliminarFila(this, 'filaArtificial')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <th scope="row">1</th> 
+                <td><input type="text" class="form-control" name="BarreraArtificial[ubicacion][]"  required></td>
+                <td><input type="text" class="form-control" name="BarreraArtificial[tipo][]"  required></td>
+                <td><input type="number" class="form-control" name="BarreraArtificial[altura][]"  required ></td>
+                <td><input type="number" class="form-control" name="BarreraArtificial[longitud][]"  required ></td>
+                <td class="media">
+                    <input type="text" class="form-control" name="BarreraArtificial[material][]"  required>
+                    <a onClick="eliminarFila(this, 'filaArtificial')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% endfor %} 
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('filaArtificial')" class="btn btn-secondary text-light">Agregar Barrera Artificial</a>
+        </div>
+    </div>
+    <br>  
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b>BARRERAS VEGETALES </b>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <table class="table text-center" id="tablaVegetal">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">GÉNERO Y ESPECIE</th>
+                    <th scope="col">AÑO PLANTACIÓN</th>
+                    <th scope="col">SISTEMA PLANTACIÓN</th>
+                    <th scope="col">UBICACIÓN</th>
+                    <th scope="col">N° ÁRBOLES</th>
+                </tr>
+            </thead>
+            <tbody  id="fila2">  
+            {% for vegetal in BarreraVegetal %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td><input type="text" class="form-control" name="BarreraVegetal[especie][]"  value="{{vegetal.generoEspecie}}" required></td>
+                <td><input type="date" class="form-control" name="BarreraVegetal[fecha][]"  max="{{ maxDate }}" value="{{vegetal.fechaPlantacion|date("Y-m-d")}}" required></td>
+                <td><input type="text" class="form-control" name="BarreraVegetal[sistema][]"  value="{{vegetal.sistemaPlantacion}}" required ></td>
+                <td><input type="text" class="form-control" name="BarreraVegetal[ubicacion][]"  value="{{vegetal.ubicacion}}" required ></td>
+                <td class="media">
+                    <input type="number" class="form-control" name="BarreraVegetal[numeroArboles][]"  value="{{vegetal.numeroArboles}}" required>
+                    <a onClick="eliminarFila(this, 'tablaVegetal')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr> 
+            {% else %}
+            <tr>
+                <th scope="row">1</th>
+                <td><input type="text" class="form-control" name="BarreraVegetal[especie][]"  required></td>
+                <td><input type="date" class="form-control" name="BarreraVegetal[fecha][]"  max="{{ maxDate }}" required></td>
+                <td><input type="text" class="form-control" name="BarreraVegetal[sistema][]"  required ></td>
+                <td><input type="text" class="form-control" name="BarreraVegetal[ubicacion][]" required ></td>
+                <td class="media">
+                    <input type="number" class="form-control" name="BarreraVegetal[numeroArboles][]" required>
+                    <a onClick="eliminarFila(this, 'tablaVegetal')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr> 
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaVegetal')" class="btn btn-secondary text-light">Agregar Barrera Vegetal</a>
+        </div>
+    </div>
+    <br>      
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

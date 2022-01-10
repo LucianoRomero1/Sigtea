@@ -1,0 +1,79 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO A</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">7. CONSULTOR, EXPERTO o PERITO DEL REGISTRO OFICIAL DE CONSULTORES, EXPERTOS
+Y PERITOS (Esta información es obligatoria si la presentación se encuadra como standard 2 ó 3 -
+Revise la penúltima página para conocer el encuadramiento del emprendimiento). <span class="text-danger">(**)</span><span class="text-success">(?)</span></div>
+    <div class="card-body">
+        <label>
+            Si el consultor, perito o experto no se encuentra en el desplegable del presente formulario podrá
+ingresar los datos del mismo manualmente, siempre previa verificación de que el mismo figura en el
+Registro Oficial de Consultores, Expertos y Peritos accesible desde este <a href="https://
+www.santafe.gov.ar/index.php/web/content/view/full/159535/" target="_blank">link</a>
+Los consultores, peritos o expertos tendrán responsabilidad administrativa por la información técnica
+suministrada.
+        </label>
+        <form action="{{ path('tramiteA7') }}" method="post">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        <div class="row">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">APELLIDO</th>
+                        <th scope="col">PROFESION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Usuario conectado</label>
+                        </td>
+                        <td><label>Perito</label></td>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>Es de aclarar que los precios fijados por los distintos Colegios que agrupan a estos profesionales son de referencia y están sujetos a ser pactados libremente</label>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button onclick="window.history.back()" class="btn btn-outline-dark">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <button onclick="window.history.back()" class="btn btn-outline-dark">Volver</button>
+                    <a href="{{ path('tramiteA8',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    </script>
+{% endblock %}

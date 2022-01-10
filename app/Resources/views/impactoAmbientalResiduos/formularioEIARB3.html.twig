@@ -1,0 +1,103 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO B - 3. PROCESOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB3') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+
+    {# <div class="tabla-pers">
+        <h6>Procesos</h6>
+        <div id="etapaOperativaProcesos">
+            <div>
+                <div class="tabla-sub-pers mb-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Nombre del proceso: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar el nombre principal con el cual se identifica al proceso. (Mantener la misma nomenclatura).">(?)</span></p>
+                            <input type="text" value="" class="form-control" name="EtapaOperativa[proceso][]" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Descripción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Describir concisamente el proceso completo indicado en la fila precedente. Detallar las operaciones que se desarrollan en el mismo. Mencionar, en caso de corresponder, las tecnologías utilizadas, medidas de seguridad, etc. Límite 2600 caracteres. ">(?)</span></p>
+                            <textarea class="form-control" maxlength="2600" name="EtapaOperativa[descripcion][]" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Materias primas, Insumos, sustancias auxiliares, fluídos, agua: <span data-toggle="tooltip" data-placement="right" title="(?) Listar y estimar cuantitativamente (en la unidad que corresponda), los requerimientos de materias primas e insumos que se utilizan en el proceso, o en cada operación del mismo, como así también las sustancias auxiliares, servicios y mano de obra necesarios para llevar adelante ese proceso. Deberá identificarse como mínimo: sustancia, composición, estado físico, características de peligrosidad, capacidad y condiciones de almacenamiento, medidas de seguridad y consumo estimado. Para el uso de energía deberá indicarse además si será adquirida (debiendo adjuntarse la correspondiente prefactibilidad otorgada por el proveedor) o generación propia (debiendo describirse el método de generación, capacidad, combustible) y para el uso, su abastecimiento: público (agua de red) o propio (fuentes: superficial, subterránea, otras (especificar). (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 2600 caracteres. ">(?)</span></p>
+                            <textarea class="form-control" maxlength="2600" name="EtapaOperativa[materia][]" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Productos y subproductos:<span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Listar los productos y subproductos que se obtienen en el proceso, o en cada operación del mismo. Deberán detallarse las características de cada producto, estado físico e indicarse también las condiciones de almacenamiento (capacidad, tipo de envases, contenedores o tanques, condiciones edilicias y de seguridad) y transporte y, en caso de corresponder, indicar la ubicación en plano de la planta. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 875 caracteres.">(?)</span></p>
+                            <textarea class="form-control" maxlength="875" name="EtapaOperativa[producto][]" required></textarea>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a class="btn text-danger" onClick="eliminar(this,'etapaOperativaProcesos')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center pt-3">
+            <a class="btn btn-primary text-light" onClick="agregar('etapaOperativaProcesos')">
+                Agregar proceso
+            </a>
+        </div>
+    </div>
+    <br/> #}
+    <h6>3.1 Capacidad instalada y capacidad ociosa: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="">(?)</span></h6>
+    <div class="row">
+        <div class="col-md-12">
+            <textarea maxlength="1800" class="form-control" name="Proyecto[capacidad]" required>{% if Proyecto != null %}{{Proyecto.definicion}}{% endif %}</textarea>
+        </div>
+    </div>
+    <br/>
+    <h6>3.2 Distribución anual de la producción (estacionalidad): <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar, en ese caso de corresponder, cómo se estima la distribución anual de la producción (estacionalidad). Límite: 3500 caracteres.">(?)</span></h6>
+    <div class="row">
+        <div class="col-md-12">
+            <textarea maxlength="3500" class="form-control" name="Proyecto[anual]" required>{% if Proyecto != null %}{{Proyecto.produccionAnual}}{% endif %}</textarea>
+        </div>
+    </div>
+    <br/>
+    <h6>3.3 Diagrama de distribución de la planta (lay out): <span data-toggle="tooltip"  data-placement="right" title="(?) Anexar en papel y formato digital:planos, imágenes o 
+        diagramas -en una escala que resulte claramente legible- en los cuales se muestre la ubicación y superficie de la planta industrial en relación a la supe.rficietotal del terreno, los 
+        diferentes sectores que integran el predioy la distribución de la planta (indicando áreas productivas, de serviciosy otras complementarias). 
+        Se deberá indicar también en un plano la ubicación de pozos de extracc ión de agua subterránea y de pozos de monitoreo, en  caso de corresponder. 
+        Se deberá anexar también un plano con el sistema de drenajes de planta.
+        Enumerar en el campo debajo,. los nombres detodos los anexos de este inciso, respetando el formato de nombre indicado en la advertencia de lla primera página. Ejemplo:'
+            Plano de Fábrica _ Inciso4.2'; 'Diagrama de Distribución en Planta _ Inciso4.2' ; ...etc." class="text-success">(?)</span></h6>
+        <br/>
+    {% set i = 1 %}
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formularioDivs.js')}}"></script>
+<script src="{{asset('bundles/js/archivoIndividual.js')}}"></script>
+{% endblock %}

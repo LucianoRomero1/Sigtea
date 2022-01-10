@@ -1,0 +1,225 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}3. ACTIVIDAD / SERVICIO QUE BRINDA{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio4') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">Expendio de productos liquidos Combustible<span class="text-success" title="Agregue un item por cada boca de expendio">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-check" type="radio" name="ActividadServicio[combustibleLiquido]" data-tipo="combustibleLiquido" required {% if ActividadServicio is defined and ActividadServicio.combustibleLiquido == 1 %} checked {% endif %}> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-check" type="radio" name="ActividadServicio[combustibleLiquido]" data-tipo="combustibleLiquido" required {% if (ActividadServicio is defined and ActividadServicio.combustibleLiquido == 0) or (ActividadServicio is not defined) %} checked {% endif %}> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="expendiocombustibleLiquido"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Boca expendio N°</th>
+                            <th scope="col">Producto Líquido Combustible</th>
+                            <th scope="col">Caudal <span class="text-success" title="Cantidad de combustible expendido expresado en metros cúbicos por día">(?)</span>(vol / u. de tiempo)</hd>
+                            <th scope="col">Observacion</hd>
+                        </tr>
+                        </thead>
+                        <tbody id="filascombustibleLiquido">
+                            {% if BocaExpendios is defined %}
+                                {% for bocaExpendio in BocaExpendios.combustibleLiquido %}
+                                    <tr>
+                                        <td><input type="number" name="BocaExpendio[combustibleLiquido][bocaExpendio][]" min="0" step="1" value="{{bocaExpendio.bocaExpendio}}"/></td>
+                                        <td><input type="text" name="BocaExpendio[combustibleLiquido][nombreProducto][]" value="{{bocaExpendio.nombreProducto}}"/></td>
+                                        <td><input type="text" name="BocaExpendio[combustibleLiquido][caudal][]" value="{{bocaExpendio.caudal}}"/></td>
+                                        <td><textarea name="BocaExpendio[combustibleLiquido][observacion][]" placeholder="Observacion" rows="3" cols="45">{{bocaExpendio.observacion}}</textarea><a onClick="eliminarFila(this,{{bocaExpendio.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>  
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('combustibleLiquido')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            </br>            
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">Expendio de GNC<span class="text-success" title="Agregue un item por cada boca de expendio">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-check" type="radio" name="ActividadServicio[gnc]" data-tipo="gnc" required {% if ActividadServicio is defined and ActividadServicio.gnc == 1 %} checked {% endif %}> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-check" type="radio" name="ActividadServicio[gnc]" data-tipo="gnc" required {% if (ActividadServicio is defined and ActividadServicio.gnc == 0) or (ActividadServicio is not defined) %} checked {% endif %}> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="expendiognc"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Boca expendio N°</th>
+                            <th scope="col">GNC</th>
+                            <th scope="col">Caudal <span class="text-success" title="Cantidad de combustible expendido expresado en metros cúbicos por día">(?)</span>(vol / u. de tiempo)</hd>
+                            <th scope="col">Observacion</hd>
+                        </tr>
+                        </thead>
+                        <tbody id="filasgnc">
+                            {% if BocaExpendios is defined %}
+                                {% for bocaExpendio in BocaExpendios.gnc %}
+                                    <tr>
+                                        <td><input type="number" name="BocaExpendio[gnc][bocaExpendio][]" min="0" step="1" value="{{bocaExpendio.bocaExpendio}}"/></td>
+                                        <td><input type="text" name="BocaExpendio[gnc][nombreProducto][]" value="{{bocaExpendio.nombreProducto}}"/></td>
+                                        <td><input type="text" name="BocaExpendio[gnc][caudal][]" placeholder="1500 m3/día" value="{{bocaExpendio.caudal}}"/></td>
+                                        <td><textarea name="BocaExpendio[gnc][observacion][]" placeholder="Observacion" rows="3" cols="45">{{bocaExpendio.observacion}}</textarea></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('gnc')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            </br>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">Otro<span class="text-success" title="Agregue un item por cada boca de expendio">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-check" type="radio" name="ActividadServicio[otro]" data-tipo="otro" required {% if ActividadServicio is defined and ActividadServicio.otro == 1 %} checked {% endif %}> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-check" type="radio" name="ActividadServicio[otro]" data-tipo="otro" required {% if (ActividadServicio is defined and ActividadServicio.gnc == 0) or (ActividadServicio is not defined) %} checked {% endif %}> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="expendiootro"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Boca expendio N°</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Caudal <span class="text-success" title="Cantidad de combustible expendido expresado en metros cúbicos por día">(?)</span>(vol / u. de tiempo)</hd>
+                            <th scope="col">Observacion</hd>
+                        </tr>
+                        </thead>
+                        <tbody id="filasotro">
+                            {% if BocaExpendios is defined %}
+                                {% for bocaExpendio in BocaExpendios.otro %}
+                                    <tr>
+                                        <td><input type="number" name="BocaExpendio[otro][bocaExpendio][]" min="0" step="1" value="{{bocaExpendio.bocaExpendio}}"/></td>
+                                        <td><input type="text" name="BocaExpendio[otro][nombreProducto][]" value="{{bocaExpendio.nombreProducto}}"/></td>
+                                        <td><input type="text" name="BocaExpendio[otro][caudal][]" placeholder="1500 m3/día" value="{{bocaExpendio.caudal}}"/></td>
+                                        <td><textarea name="BocaExpendio[otro][observacion][]" placeholder="Observacion" rows="3" cols="45">{{bocaExpendio.nombreProducto}}</textarea></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('otro')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            </br>            
+        </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendio2') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('formularioExpendio2',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/expendioCombustible/formulario3.js')}}"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-check').click(function(){
+                var tipo = $(this).data('tipo');
+                $('#expendio'+tipo).toggle();
+            })
+            {% if ActividadServicio is defined and ActividadServicio.combustibleLiquido == 1 %}
+                $('#expendiocombustibleLiquido').show();
+            {% endif %}
+            {% if ActividadServicio is defined and ActividadServicio.gnc == 1 %}
+                $('#expendiognc').show();
+            {% endif %}
+            {% if ActividadServicio is defined and ActividadServicio.otro == 1 %}
+                $('#expendiootro').show();
+            {% endif %}
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO A - 1. DATOS IDENTIFICATORIOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARA1') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row mb-2">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p for="razonSocial">Nombre Completo / Razón Social <span class="text-danger">(*)</span><span class="text-success">(?)</span></p>
+                <input type="text" class="form-control" id="razonSocial" name="Persona[razonSocial]" required value="{{Persona.RazonSocial ?? null}}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <p for="cuit">CUIT <span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" id="cuit" name="Persona[cuit]" required max="99999999999" min="10000000000" step="1" value="{{Persona.cuit ?? null}}">
+        </div>
+        <div class="col-md-4">
+            <p for="fechaInicio">Fecha Inicio Actividades <span class="text-danger">(*)</span><span class="text-success">(?)</span></p>
+            <div class="form-row">                                        
+            <input type="date" class="form-control" id="fechaInicio" name="Empresa[fechaInicio]" required max="{{ maxDate }}" value="{% if Empresa is defined %}{{ Empresa.FechaInicioActividad|date("Y-m-d") }}{% else %} null {% endif %}">
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <h6>Actividades de la Empresa<span class="text-danger">(*)</span></h6>
+    
+    <div>
+        <div>
+            {% for empresaActividad in EmpresaActividad %}
+            <div class="tabla-sub-pers mb-3 p-3">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="grupo">Grupo</p>
+                            <select class="form-control grupo" id="grupo" name="grupo[]" required onchange="parent.grupo('grupo','actividad','caucm','ambiental')">
+                                <option value="">SELECCIONE UN GRUPO</option>
+                                {% for grupo in grupos %}
+                                        <option {% if empresaActividad.actividad.grupo == grupo.id %} selected {% endif %} value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="actividad">ACTIVIDAD DE EMPRESA</p>                    
+                            <select class="form-control" id="actividad" name="ActividadEmpresa[]" required  onchange="parent.actividad('actividad','caucm','ambiental')">                        
+                            <option value="">SELECCIONE UNA ACTIVIDAD</option>
+                            <option value="{{ empresaActividad.actividad.id }}" selected>{{ empresaActividad.actividad.nombreActividad }}</option>
+                            </select>
+                            <div class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                                <span class='spinner-message'>Cargando actividades...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="prse">PRINCIPAL / SECUNDARIA</p>
+                            <select class="form-control" id="prse" name="prse[]" required>
+                                <option {% if empresaActividad.tipo == '0' %} selected {% endif %} value="0">SELECCIONE UN NIVEL</option>
+                                <option {% if empresaActividad.tipo == '1' %} selected {% endif %} value="1">Principal</option>
+                                <option {% if empresaActividad.tipo == '2' %} selected {% endif %} value="2">Secundaria</option>                        
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="caucm">CÓDIGO CUACM</p>
+                            <input type="text" value="{{empresaActividad.actividad.cuacm}}" class="form-control" id="caucm" readonly name="caucm[]">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="ambiental">ESTANDAR AMBIENTAL</p>
+                            <input type="text" value="{{empresaActividad.actividad.estandar}}" class="form-control" id="ambiental" readonly name="estandarAmbiental[]">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn text-danger" onClick="eliminar(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="tabla-sub-pers mb-3 p-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="grupo">Grupo</p>
+                            <select class="form-control grupo" id="grupo" name="grupo[]" required onchange="parent.grupoUno('grupo','actividad','caucm','ambiental')">
+                                <option value="">SELECCIONE UN GRUPO</option>
+                                {% for grupo in grupos %}
+                                    {% if Grupo is defined and Grupo.grupo == grupo.id %}
+                                        <option value="{{ grupo.id }}" selected>{{ grupo.nombre }}</option>
+                                    {% else %}
+                                        <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="actividad">ACTIVIDAD DE EMPRESA</p>                    
+                            <select class="form-control" id="actividad" name="ActividadEmpresa[]" required  onchange="parent.actividadUno('actividad','caucm','ambiental')">                        
+                            <option value="">SELECCIONE UNA ACTIVIDAD</option>
+                            </select>
+                            <div class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                                <span class='spinner-message'>Cargando actividades...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="prse">PRINCIPAL / SECUNDARIA</p>
+                            <select class="form-control" id="prse" name="prse[]" required>
+                                <option value="0">SELECCIONE UN NIVEL</option>
+                                <option value="1">Principal</option>
+                                <option value="2">Secundaria</option>                        
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="caucm">CÓDIGO CUACM</p>
+                            <input type="text" class="form-control" id="caucm" readonly name="caucm[]">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <p for="ambiental">ESTANDAR AMBIENTAL</p>
+                            <input type="text" class="form-control" id="ambiental" readonly name="estandarAmbiental[]">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn text-danger" onClick="eliminar(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            <div id="filas"></div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <a onClick="agregarFila()" class="btn text-primary">Agregar actividad</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/excel/excelA1.js')}}"></script>
+{% endblock %}

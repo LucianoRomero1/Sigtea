@@ -1,0 +1,31 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 7. VIENTOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL7" action="{{ path('tramiteFL8') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    
+    <div class="row">
+            <div class="col-md-12">
+                <p>DIRECCIÓN DE LOS VIENTOS PREDOMINANTES<span class="text-danger">(*)</span></p>
+                <select class="form-control" name="Viento[direccionPredominante]" >
+                    <option {% if Viento != null and Viento.direccionPredominante == 1 %} selected {% endif %} value="1">NORTE</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 2 %} selected {% endif %} value="2">NORESTE</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 3 %} selected {% endif %} value="3">NOROESTE</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 4 %} selected {% endif %} value="4">SUR</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 5 %} selected {% endif %} value="5">SURESTE</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 6 %} selected {% endif %} value="6">SUROESTE</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 7 %} selected {% endif %} value="7">ESTE</option>
+                    <option {% if Viento != null and Viento.direccionPredominante == 8 %} selected {% endif %} value="8">OESTE</option>
+                </select>
+            </div>
+        </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

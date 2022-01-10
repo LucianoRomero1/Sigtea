@@ -1,0 +1,157 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 7. DENOMINACIÓN Y UBICACIÓN DE LA URBANIZACIÓN <span class="text-success" data-toggle="tooltip" title="Se consignarán los datos de la ubicación real, donde se encuentra emplazado el establecimiento">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU8" action="{{ path('tramiteU9') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="nombreComercial">NOMBRE COMERCIAL DE LOTEO <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" name="Loteo[nombre]" value="{% if Loteo is defined %}{{Loteo.nombre}}{% endif %}" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="calle">CALLE / RUTA <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" id="calle" name="Urbanizacion[calleRuta]" value="{% if Urbanizacion is defined %}{{Urbanizacion.calleRuta}}{% endif %}" required>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <p for="nroKm">N° / Km </p>
+            <input type="text" class="form-control" id="nroKm" name="Urbanizacion[numeroKm]" value="{% if Urbanizacion is defined %}{{Urbanizacion.numeroKm}}{% endif %}" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="entreCalles"> ENTRE CALLES REFERENCIALES <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" id="entreCalles" name="Urbanizacion[entreCalles]" value="{% if Urbanizacion is defined %}{{Urbanizacion.entreCalles}}{% endif %}" required>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"  class="text-top">NÚMERO DE PARTIDA INMOBILIARIA<span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="El número de partida inmobiliaria debe ser ingresado sin guiones ni barra">(?)</span></th>
+                    <th scope="col" colspan="2" class="text-center">COORDENADAS GEOGRÁFICAS: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Ingresar en sistema DMS (grados, minutos y segundos).">(?)</span></th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th>LAT:</th>
+                    <th>LONG:</th>
+                </tr>
+            </thead>
+            <tbody id="filas">
+                {% if PartidaInmobiliaria is defined %}
+                    {% for partida in PartidaInmobiliaria %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input class="form-control" type="text" name="Coordenadas[partida][]" required value="{{partida.numero}}"></td>
+                            <td><input class="form-control" type="text" name="Coordenadas[lat][]" required value="{{partida.latitud}}"></td>
+                            <td><input class="form-control" type="text" name="Coordenadas[long][]" required value="{{partida.longitud}}"></td>
+                            <td>
+                                <a onClick="eliminarFila(this,{{partida.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr> 
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div> 
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila()" class="btn btn-primary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    <br>
+    {% set i = 1 %}
+    <h6>7.1 - Nombre del archivo correspondiente a la foto satelital de ubicación <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="En el mismo se graficarán los límites del establecimiento indicando calles, rutas, cursos de aguas aledaños, así como cualquier otro elemento que sirva de identificación para tal fin. Adjuntar en digital.">(?)</span><br>
+        (Se presenta en formato digital y papel) <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'7.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <p>Provincia: <span class="text-danger">(*)</span></p>
+            <select for="provincia" class="form-control" id="provincia" name="Domicilio[provincia]" onChange="parent.provincia('provincia','departamento')" required>
+                <option value="">SELECCIONE UNA PROVINCIA</option>
+                {% for provincia in provincias %}
+                    {% if Domicilio is defined and Domicilio|length >0 and Domicilio.provincia.id == provincia.id %}
+                        <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                    {% else %}
+                        <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p>Departamento: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="departamento" name="Domicilio[departamento]" required onChange="parent.localidad('departamento','localidad')">
+                {% if Domicilio is defined %}
+                <option value="{{Domicilio.departamento.id}}">{{Domicilio.departamento.nombre}}</option>   
+                {% endif %}
+                <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p>Localidad: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="localidad" name="Domicilio[localidad]" required onChange="parent.departamento('localidad','codigoPostal')">
+                {% if Domicilio is defined %}
+                    <option value="{{Domicilio.localidad.id}}">{{Domicilio.localidad.nombre}}</option> 
+                {% endif %}
+                <option value="">SELECCIONE UNA LOCALIDAD</option>
+            </select>
+        </div>
+    </div>
+    <br>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <p>CP: <span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Domicilio is defined %}{{Domicilio.localidad.codigoPostal}} {% endif %}"  id="codigoPostal" name="Domicilio[cp]" readonly>
+        </div>
+        <div class="col-md-5">
+            <p>LOCALIZACIÓN: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="zona" name="Domicilio[zona]" required>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 1 %} selected {% endif %} value="1">ZONA URBANA</option>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 2 %} selected {% endif %} value="2">ZONA SUBURBANA LOTEADA</option>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 3 %} selected {% endif %} value="3">ZONA SUBURBANA DE MAYOR ÁREA</option>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 4 %} selected {% endif %} value="4">ZONA RURAL LINDERA A PLANTA URBANA</option>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 5 %} selected {% endif %} value="5">ZONA RURAL NO LINDERA</option>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 6 %} selected {% endif %} value="6">ZONA LINDERA A INDUSTRIA</option>
+                <option {% if Domicilio is defined and Domicilio.zonificacion == 7 %} selected {% endif %} value="7">ÁREA DE RESERVA NATURAL PROTEGIDA</option>
+            </select>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/formularioUrbanizacion/formularioU8.js')}}"></script>  
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>  
+{% endblock %}

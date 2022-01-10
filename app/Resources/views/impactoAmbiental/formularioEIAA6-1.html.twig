@@ -1,0 +1,876 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">6.1 PLAN DE GESTIÓN AMBIENTAL <span class="text-success" data-toggle="tooltip" data-placement="right" title="(?) Con base en las conclusiones obtenidas en la etapa anterior (Identificación y valoración de impactos ambientales), se deberá formular un Plan de Gestión ambiental, en el que se indique la gestión a adoptar para cada corriente residual ya identificada y proponga medidas de mitigación a implementar para evitar, minimizar y/o compensar los efectos negativos, o maximizar los positivos. ">(?)</span></div>
+    <div class="card-body">
+        <form id="formularioEIAAA61" action="{{ path('tramiteEIAA61') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        
+        <h6>6.1 Gestión de residuos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Debe incluir la totalidad de los residuos identificados en los puntos 4.3 y 4.4.2">(?)</span></h6>
+        <hr/>
+        <h6>6.1.1 Residuos peligrosos: <span class="text-danger">(*)</span> - Decereto N° 1844/02</h6>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar si se generarán residuos peligrosos en el establecimiento (considerando todas las etapas del proyecto).">(?)</span> </p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if ResiduosPeligrosos|length >0 %}checked{% endif %} onClick="mostrar('residuosPeligrosos')" value="SI" name="ResiduosPeligrosos[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="ocultar('residuosPeligrosos')" value="NO" name="ResiduosPeligrosos[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="residuosPeligrosos" class="tabla-pers">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Número de Generador otorgado por el Ministerio de Medio Ambiente para la confección del manifiesto electrónico
+                        (S/Resolución N° 0040/14) 
+                        <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Tipear el N° de generador que le ha sido asignado a la Firma.">(?)</span> 
+                    </p>
+                    <input type="number" class="form-control" value="{% if ResiduosPeligrosos != null %}{{ResiduosPeligrosos[0].nroGenerador}}{% endif %}" name="ResiduosPeligrosos[nrogenerador]" max="9999" min="1000" step="1"/>
+                </div>
+            </div>
+            <br/>
+            <p>Detalle de la gestión de cada residuo <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá anexar una tabla por cada residuo peliugroso que se genere, no omitiendo ninguno de los residuos identificados en los puntos 4.3 y 4.4.2">(?)</span></p>
+
+            <div id="itemsResiduosPeligrosos">
+                <div>
+                {% for residuoPeligroso in ResiduosPeligrosos %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item: <span data-toggle="tooltip" class="text-success" data-placement="right" title="">(?)</span></p>
+                                <input type="text" placeholder="Ej: Aceite mineral usado" value="{{residuoPeligroso.categoria}}" class="form-control" name="ResiduosPeligrosos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[proceso][]" required>{{residuoPeligroso.procesoGenerador}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Descripción y estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Descripción concisa del residuo y estado físico de la agregación del mismo. Límite: 200 caracteres">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[estado][]" maxlength="200" required>{{residuoPeligroso.estadoFisico}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Categoría sometida a control (Y): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Según Anexo I del Decreto N° 1844/02">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[categoriaY][]" required>{{residuoPeligroso.categoriaResiduoPeligroso.categoria}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Característica de peligrosidad (H): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Según Anexo II del Decreto N° 1844/02">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[categoriaH][]" required>{{residuoPeligroso.categoriaResiduoPeligroso.categoria}}</textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de ese tipo de residuo que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[tiempo][]" required>{{residuoPeligroso.periodoTiempo}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o mediante un Operador de Residuos Peligrosos. (Sólo se admitirán a aquellos Operadores reconocidos por el Ministerio de Medio Ambiente). Límite: 1800 caracteres. ">(?)</span></p>
+                                <textarea maxlength="1800" name="ResiduosPeligrosos[tratamiento][]" class="form-control" required>{{residuoPeligroso.gestion}}</textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosPeligrosos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item: <span data-toggle="tooltip" class="text-success" data-placement="right" title="">(?)</span></p>
+                                <input type="text" placeholder="Ej: Aceite mineral usado" value="" class="form-control" name="ResiduosPeligrosos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[proceso][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Descripción y estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Descripción concisa del residuo y estado físico de la agregación del mismo. Límite: 200 caracteres">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[estado][]" maxlength="200" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Categoría sometida a control (Y): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Según Anexo I del Decreto N° 1844/02">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[categoriaY][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Característica de peligrosidad (H): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Según Anexo II del Decreto N° 1844/02">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[categoriaH][]" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de ese tipo de residuo que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosPeligrosos[tiempo][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o mediante un Operador de Residuos Peligrosos. (Sólo se admitirán a aquellos Operadores reconocidos por el Ministerio de Medio Ambiente). Límite: 1800 caracteres. ">(?)</span></p>
+                                <textarea maxlength="1800" name="ResiduosPeligrosos[tratamiento][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosPeligrosos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsResiduosPeligrosos')">
+                    Agregar residuo
+                </a>
+            </div>
+            <br/>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Descripción del almacenamiento de estos residuos en el establecimiento: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sitio de almacenamiento en el diagrama de distribución de la planta (lay out) y describir las condiciones edilicias y de seguridad del mismo. Anexar la imagen en papel y en digital. Límite: 1800 caracteres. ">(?)</span></p>
+                    <textarea maxlength="1800" name="ResiduosPeligrosos[receptor]" class="form-control" required>{% if ResiduosPeligrosos != null %}{{ResiduosPeligrosos[0].receptor}}{% endif %}</textarea>
+                </div>
+            </div>
+            {% set i = 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'6.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage1 is defined and Storage1 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+        </div>
+        <br/>
+        <hr>
+        <h6> 6.1.2. Residuos no peligrosos industriales o de actividades de servicio<span class="text-danger">(*)</span> - Decreto N° 388/00 </h6>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar si se generarán este tipo de residuos en el establecimiento (considerando todas las etapas del proyecto).">(?)</span> </p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if ResiduosPeligrosos|length >0 %}checked{% endif %} onClick="mostrar('residuosNoPeligrosos')" value="SI" name="ResiduosNoPeligrosos[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="ocultar('residuosNoPeligrosos')" value="NO" name="ResiduosNoPeligrosos[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="residuosNoPeligrosos" class="tabla-pers">
+            <p>Detalle de la gestión de cada residuo <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá agregar una tabla por cada residuo no peligroso que se genere, no omitiendo ninguno de los residuos identificados en los puntos 4.3 y 4.4.2. ">(?)</span></p>
+            <div id="itemsResiduosNoPeligrosos">
+                <div>
+                {% for residuoNoPeligroso in ResiduosNoPeligrosos %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: Aceite mineral usado" value="{{residuoNoPeligroso.categoria}}" class="form-control" name="ResiduosNoPeligrosos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura">(?)</span></p>
+                                <textarea class="form-control" value="" name="ResiduosNoPeligrosos[proceso][]" required>{{residuoNoPeligroso.procesoGenerador}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Residuo formado por: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Clasificación según Anexo B del Decreto N° 2151/14">(?)</span></p>
+                                <textarea class="form-control" value="" name="ResiduosNoPeligrosos[componentes][]" required>{{residuoNoPeligroso.componenteRelevante}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar estado físico de agregación">(?)</span></p>
+                                <textarea class="form-control" value="" name="ResiduosNoPeligrosos[estado][]" required>{{residuoNoPeligroso.estadoFisico}}</textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de ese tipo de residuo que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea class="form-control" value="" name="ResiduosNoPeligrosos[tiempo][]" required>{{residuoNoPeligroso.periodoTiempo}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o mediante un Tratador de Residuos No Peligrosos. (Sólo se admitirán a aquellos Tratadores registrados en el Ministerio de Medio Ambiente). Límite 1800 caracteres.">(?)</span></p>
+                                <textarea maxlength="1800" value="" name="ResiduosNoPeligrosos[tratamiento][]" class="form-control" required>{{residuoNoPeligroso.gestion}}</textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosNoPeligrosos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: Aceite mineral usado" value="" class="form-control" name="ResiduosNoPeligrosos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosNoPeligrosos[proceso][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Residuo formado por: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Clasificación según Anexo B del Decreto N° 2151/14">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosNoPeligrosos[componentes][]" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar estado físico de agregación">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosNoPeligrosos[estado][]" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de ese tipo de residuo que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosNoPeligrosos[tiempo][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o mediante un Tratador de Residuos No Peligrosos. (Sólo se admitirán a aquellos Tratadores registrados en el Ministerio de Medio Ambiente). Límite 1800 caracteres.">(?)</span></p>
+                                <textarea maxlength="1800" name="ResiduosNoPeligrosos[tratamiento][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosNoPeligrosos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsResiduosNoPeligrosos')">
+                    Agregar residuo
+                </a>
+            </div>
+            <br/>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Descripción del almacenamiento de estos residuos en el establecimiento: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sitio de almacenamiento en el diagrama de distribución de la planta (lay out) y describir las condiciones edilicias y de seguridad del mismo. Anexar la imagen en papel y en digital. Límite: 1800 caracteres. ">(?)</span></p>
+                    <textarea maxlength="1800" name="ResiduosNoPeligrosos[receptor]" class="form-control" required>{% if ResiduosNoPeligrosos != null %}{{ResiduosNoPeligrosos[0].receptor}}{% endif %}</textarea>
+                </div>
+            </div>
+            {% set i = 2 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'6.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage2 is defined and Storage2 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+                
+            
+
+        </div>
+        <br/>
+        <h6> 6.1.3. Residuos sólidos asimilables a urbanos<span class="text-danger">(*)</span> - Ley N° 13.055</h6>
+        <br/>
+        <div id="residuosSolidos" class="tabla-pers">
+            <p>Detalle de la gestión de cada residuo <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá completar una tabla por los RSU e insertar una tabla más por cada residuo asimilable a RSU que se genere">(?)</span></p>
+            <div id="itemsResiduosSolidos">
+                <div>
+                {% for residuoSolido in ResiduosSolidos %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item: </p>
+                                <input type="text" placeholder="Ej: RSU" value="{{residuoSolido.categoria}}" class="form-control" name="ResiduosSolidos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Tipo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar RSU o asimilable, especificando el tipo de residuo. Límite: 150 caracteres">(?)</span></p>
+                                <textarea maxlength="150" name="ResiduosSolidos[categoria][]" class="form-control" required>{{residuoSolido.componenteRelevante}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Descripción/Estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Descripción concisa del residuo y estado físico de agregación del mismo. Límite: 200 caracteres.">(?)</span></p>
+                                <textarea maxlength="200" name="ResiduosSolidos[estado][]" class="form-control" required>{{residuoSolido.estadoFisico}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de RSU y asimilables que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación.">(?)</span></p>
+                                <textarea name="ResiduosSolidos[cantidad][]" class="form-control" required>{{residuoSolido.periodoTiempo}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o en una planta de tratamiento o disposición final externa. (Sólo se admitirá que los residuos sean enviados a aquellas plantas registradas en el Ministerio de Medio Ambiente). Límite: 1800 caracteres.">(?)</span></p>
+                                <textarea name="ResiduosSolidos[tratamiento][]" maxlength="1800" class="form-control" required>{{residuoSolido.gestion}}</textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosSolidos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item: </p>
+                                <input type="text" placeholder="Ej: RSU" value="" class="form-control" name="ResiduosSolidos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Tipo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar RSU o asimilable, especificando el tipo de residuo. Límite: 150 caracteres">(?)</span></p>
+                                <textarea maxlength="150" name="ResiduosSolidos[categoria][]" class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Descripción/Estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Descripción concisa del residuo y estado físico de agregación del mismo. Límite: 200 caracteres.">(?)</span></p>
+                                <textarea maxlength="200" name="ResiduosSolidos[estado][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de RSU y asimilables que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación.">(?)</span></p>
+                                <textarea name="ResiduosSolidos[cantidad][]" class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o en una planta de tratamiento o disposición final externa. (Sólo se admitirá que los residuos sean enviados a aquellas plantas registradas en el Ministerio de Medio Ambiente). Límite: 1800 caracteres.">(?)</span></p>
+                                <textarea name="ResiduosSolidos[tratamiento][]" maxlength="1800" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosSolidos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsResiduosSolidos')">
+                    Agregar residuo
+                </a>
+            </div>
+            <br/>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Descripción del almacenamiento de estos residuos en el establecimiento: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sitio de almacenamiento en el diagrama de distribución de la planta (lay out) y describir las condiciones edilicias y de seguridad del mismo. Anexar imagen en papel y en digital. Límite: 1800 caracteres. ">(?)</span></p>
+                    <textarea name="ResiduosSolidos[receptor]" class="form-control" required>{% if ResiduosSolidos|length >0 %}{{ResiduosSolidos[0].receptor}}{% endif %}</textarea>
+                </div>
+            </div>
+            {% set i = 3 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'6.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage3 is defined and Storage3 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+        </div>
+        <br/>
+
+        <h6> 6.1.4. Residuos patológicos o provenientes de catering de buques o aeronaves <span class="text-danger">(*)</span> - Decreto N° 388/00 </h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar si se generarán este tipo de residuos en el establecimiento (considerando todas las etapas del proyecto).">(?)</span> </p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if ResiduosPatologicos|length >0 %}checked{% endif %} onClick="mostrar('residuosPatologicos')" value="SI" name="ResiduosPatologicos[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="ocultar('residuosPatologicos')" value="NO" name="ResiduosPatologicos[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="residuosPatologicos" class="tabla-pers">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Número de Generador otorgado por el Ministerio de Medio Ambiente para la confección del manifiesto electrónico<span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) En caso de contar con un número de Generados de este tipo de residuo (otorgado por el Ministerio de Medio Ambiente, S/ Resolución N° 0234/16), tipear el mismo">(?)</span></p>
+
+                    <input type="text" value="{% if ResiduosPatologicos|length >0 %}{{ResiduosPatologicos[0].nroGenerador}}{% endif %}" name="ResiduosPatologicos[nroGenerador]" placeholder="----" class="form-control"></input>
+                </div>
+            </div>
+            <br/>
+            <p>Detalle de la gestión de estos residuos <span data-toggle="tooltip" class="text-success" data-placement="right" title="Se deberá instar una tabla por cada sector que genere residuos patológicos.">(?)</span></p>
+            <div id="itemsResiduosPatologicos">
+                <div>
+                {% for residuoPatologico in ResiduosPatologicos %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item: </p>
+                                <input type="text" placeholder="Ej: RSU" value="{{residuoPatologico.categoria}}" class="form-control" name="ResiduosPatologicos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Sitio de generación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sector del establecimiento en el cual se generan este tipo de residuos.">(?)</span></p>
+                                <textarea name="ResiduosPatologicos[proceso][]" class="form-control" required>{{residuoPatologico.procesoGenerador}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de residuos patológicos que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea name="ResiduosPatologicos[tiempo][]" class="form-control" required>{{residuoPatologico.periodoTiempo}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Sólo se admitirá que los residuos sean enviados a aquellas plantas habilitadas por el Ministerio de Medio Ambiente. Límite: 1800 caracteres">(?)</span></p>
+                                <textarea name="ResiduosPatologicos[tratamiento][]" maxlength="1800" class="form-control" required>{{residuoPatologico.gestion}}</textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosPatologicos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item: </p>
+                                <input type="text" placeholder="Ej: RSU" class="form-control" name="ResiduosPatologicos[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Sitio de generación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sector del establecimiento en el cual se generan este tipo de residuos.">(?)</span></p>
+                                <textarea name="ResiduosPatologicos[proceso][]" class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Cantidad estimada / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de residuos patológicos que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea name="ResiduosPatologicos[tiempo][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Sólo se admitirá que los residuos sean enviados a aquellas plantas habilitadas por el Ministerio de Medio Ambiente. Límite: 1800 caracteres">(?)</span></p>
+                                <textarea name="ResiduosPatologicos[tratamiento][]" maxlength="1800" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsResiduosPatologicos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsResiduosPatologicos')">
+                    Agregar residuo
+                </a>
+            </div>
+            <br/>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Descripción del almacenamiento de estos residuos en el establecimiento: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sitio de almacenamiento en el diagrama de distribución de la planta (lay out) y describir las condiciones edilicias y de seguridad del mismo. Anexar la imagen en papel y en digital. Límite: 1800 caracteres. ">(?)</span></p>
+                    <textarea name="ResiduosPatologicos[receptor]" class="form-control" required>{% if ResiduosPatologicos|length >0 %}{{ResiduosPatologicos[0].receptor}}{% endif %}</textarea>
+                </div>
+            </div>
+            {% set i = 4 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'6.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage4 is defined and Storage4 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+        </div>
+        <br/>
+        <h6>6.1.5 Otros resiudos <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar si se generarán en el establecimiento otro tipo de residuos no incluidos en los ítems precedentes (considerando todas las etapas del proyecto).">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: </p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if ResiduosOtros|length >0 %}checked{% endif %} onClick="mostrar('otrosResiduos')" value="SI" name="ResiduosOtros[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="ocultar('otrosResiduos')" value="NO" name="ResiduosOtros[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="otrosResiduos" class="tabla-pers">
+            <div id="itemsOtrosResiduos">
+                <div>
+                {% for residuoOtro in ResiduosOtros %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: RSU" value="{{residuoOtro.categoria}}" class="form-control" name="ResiduosOtros[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Tipo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar el tipo de residuo. Límite: 150 caracteres.">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosOtros[componentes][]" maxlength="150" required>{{residuoOtro.componenteRelevante}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura.">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosOtros[proceso][]" required>{{residuoOtro.procesoGenerador}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Descripción / Estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Descripción concisa del residuo y estado físdico de agregación del mismo. Límite: 200 caracteres.">(?)</span></p>
+                                <textarea maxlength="200" class="form-control" name="ResiduosOtros[estado][]" required>{{residuoOtro.estadoFisico}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Cantidad / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de los residuos especificados que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosOtros[tiempo][]" required>{{residuoOtro.periodoTiempo}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o en una planta de tratamiento o disposición final externa. (Sólo se admitirá que los residuos sean enviados a aquellas plantas registradas en el Ministerio de Medio Ambiente). Límite: 1800 caracteres. ">(?)</span></p>
+                                <textarea maxlength="1800" name="ResiduosOtros[tratamiento][]" class="form-control" required>{{residuoOtro.gestion}}</textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsOtrosResiduos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: RSU" value="" class="form-control" name="ResiduosOtros[item][]" required />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Tipo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar el tipo de residuo. Límite: 150 caracteres.">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosOtros[componentes][]" maxlength="150" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura.">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosOtros[proceso][]" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Descripción / Estado de agregación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Descripción concisa del residuo y estado físdico de agregación del mismo. Límite: 200 caracteres.">(?)</span></p>
+                                <textarea maxlength="200" class="form-control" name="ResiduosOtros[estado][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Cantidad / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de los residuos especificados que se estima se generará en un determinado tiempo (Por ej. kg/mes). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <textarea class="form-control" name="ResiduosOtros[tiempo][]" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta (describiendo detalladamente el tratamiento), o en una planta de tratamiento o disposición final externa. (Sólo se admitirá que los residuos sean enviados a aquellas plantas registradas en el Ministerio de Medio Ambiente). Límite: 1800 caracteres. ">(?)</span></p>
+                                <textarea maxlength="1800" name="ResiduosOtros[tratamiento][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsOtrosResiduos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsOtrosResiduos')">
+                    Agregar residuo
+                </a>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <h6>6.2 Gestión de efluentes líquidos <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Debe incluir la totalidad de los efluentes líquidos identificados en los puntos 4.3 y 4.4.2">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: </p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if EfluentesLiquidos|length >0 %}checked{% endif %} onClick="mostrar('efluentesLiquidos')"  value="SI" name="EfluentesLiquidos[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="ocultar('efluentesLiquidos')" value="NO" name="EfluentesLiquidos[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="efluentesLiquidos" class="tabla-pers">
+            <p>Detalle de la gestión de efluentes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá insertar una tabla por cada efluente identificado, no omitiendo ninguno de los efluentes líquidos identificados en los puntos 4.3 y 4.4.2">(?)</span></p>
+            <div id="itemsEfluentesLiquidos">
+                <div>
+                {% for Efluente in EfluentesLiquidos %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: Efluentes líquidos del lavado de xxx" value="{{Efluente.categoria}}" class="form-control" name="EfluentesLiquidos[nombre][]" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Descarga: </p>
+                                <input type="text" class="form-control" value="{{Efluente.descarga}}" name="EfluentesLiquidos[descarga][]" required></input>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Caudal estimado: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Volumen de cada efluente que se estima se generará en un determinado tiempo (Por ej. m3/h). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <input type="text" value="{{Efluente.caudal}}"  name="EfluentesLiquidos[caudal][]" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura.">(?)</span></p>
+                                <textarea class="form-control" name="EfluentesLiquidos[proceso][]" required>{{Efluente.procesoGenerador}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Parámetros relevantes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar caracterización del efluente. (Los parámetros relevantes deberán ser monitoreados a la salida del tratamiento, lo que deberá estar plasmado en el Programa de monitoreo del punto 6.6). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="EfluentesLiquidos[relevante][]" class="form-control" required>{{Efluente.componenteRelevante}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta, describiendo el tratamiento (neutralización, decantación, oxidación, reducción, biológico, otros (especificar), ninguno) y adjuntando en el ftem subsiguiente la documentación correspondiente, o mediante un tratador externo. En el último caso, sólo se admitirá que los líquidos sean enviados a aquellas plantas aprobadas por el Ministerio de Medio Ambiente. Límite: 500 caracteres. ">(?)</span></p>
+                                <textarea maxlength="500" name="EfluentesLiquidos[tratamiento][]" class="form-control" required>{{Efluente.tratamiento}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Punto de vuelco / Cuerpo de receptor: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el destino de los líquidos de salida del tratamiento (sistema cloacal, red pluvial, zanjas a cielo abierto, ríos/ arroyos (especificar), otros (especificar). Indicar Título (S/ Resolución N° 1089/82). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="EfluentesLiquidos[receptor][]" class="form-control" required>{{Efluente.receptor}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsEfluentesLiquidos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: Efluentes líquidos del lavado de xxx" value="" class="form-control" name="EfluentesLiquidos[nombre][]" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Descarga: </p>
+                                <input type="text" class="form-control" name="EfluentesLiquidos[descarga][]" required></input>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Caudal estimado: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Volumen de cada efluente que se estima se generará en un determinado tiempo (Por ej. m3/h). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <input type="text" name="EfluentesLiquidos[caudal][]" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura.">(?)</span></p>
+                                <textarea class="form-control" name="EfluentesLiquidos[proceso][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Parámetros relevantes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar caracterización del efluente. (Los parámetros relevantes deberán ser monitoreados a la salida del tratamiento, lo que deberá estar plasmado en el Programa de monitoreo del punto 6.6). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="EfluentesLiquidos[relevante][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Tratamiento previsto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Aclarar si se realizará en la misma planta, describiendo el tratamiento (neutralización, decantación, oxidación, reducción, biológico, otros (especificar), ninguno) y adjuntando en el ftem subsiguiente la documentación correspondiente, o mediante un tratador externo. En el último caso, sólo se admitirá que los líquidos sean enviados a aquellas plantas aprobadas por el Ministerio de Medio Ambiente. Límite: 500 caracteres. ">(?)</span></p>
+                                <textarea maxlength="500" name="EfluentesLiquidos[tratamiento][]" class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Punto de vuelco / Cuerpo de receptor: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el destino de los líquidos de salida del tratamiento (sistema cloacal, red pluvial, zanjas a cielo abierto, ríos/ arroyos (especificar), otros (especificar). Indicar Título (S/ Resolución N° 1089/82). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="EfluentesLiquidos[receptor][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsEfluentesLiquidos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsEfluentesLiquidos')">
+                    Agregar efluente
+                </a>
+            </div>
+            <br/>
+            <p>Documentación establecida en Artículo 21° de la Resolución N° 1089/82 de la ex- DiPOS, a fin de tramitar la
+            Autorización Precaria de Volcamiento. Anexarla en papel y en digital.</p>
+            {% set i = 5 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'6.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage5 is defined and Storage5 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA5',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA5',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+{# <script src="{{asset('bundles/js/impactoAmbiental/formulario6.js')}}"></script> #}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioDivs.js')}}"></script>
+{% endblock %}

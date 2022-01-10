@@ -1,0 +1,149 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO B</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">6. RIESGO PRESUNTO </div>
+    <div class="card-body">
+        <form action="{{ path('tramiteB6') }}" method="post">
+        {# {% if idtramite is definedd %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <input type="hidden" name="idPlanta" value="{{idPlanta}}">
+        {# {% endif %} #}
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existen fuentes móviles o fijas que pudieran generar ruidos por encima de lo permitido por las normas aplicables? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[fuentesMoviles]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.fuentesMoviles == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[fuentesMoviles]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.fuentesMoviles == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Posee la empresa aparatos sometidos a presión? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[aparatosSometidos]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.aparatoSometido == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[aparatosSometidos]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.aparatoSometido == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿La empresa manipula sustancias químicas? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[sustanciasQuimicas]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.sustanciaQuimica == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[sustanciasQuimicas]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.sustanciaQuimica == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existe en la empresa riesgo de explosión? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[explosion]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.explosion == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[explosion]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.explosion == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existe en la empresa riesgo de incendio? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[incendio]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.incendio == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[incendio]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.incendio == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existe algún riesgo no mencionado anteriormente? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" onClick="mostrarObservaciones()" name="RiesgoPresunto[otros]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.otro == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" onClick="ocultarObservaciones()" name="RiesgoPresunto[otros]" required {{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.otro == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="observaciones" class="row" style="display:none;">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>Observaciones:</label>
+                    <textarea type="text" class="form-control" name="RiesgoPresunto[observaciones]">{{ (RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.observaciones != null ) ? RiesgoPresunto.observaciones }}</textarea>
+                </div>
+            </div>
+        </div>
+        
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('tramiteB4') }} data-idtramite="{{idTramite}}" data-idplanta="{{idPlanta}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteB4',{'idTramite': idTramite ?? 0},{'rol':'admin'},{'diPlanta': idPlanta ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteB7',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+        {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+            $('input, select').attr('readonly',true);
+            $('input, select').prop('required',false);
+        {% endif %}
+        $(document).ready(function () {
+            {% if RiesgoPresunto is defined and RiesgoPresunto != null and RiesgoPresunto.observaciones != null %}
+                mostrarObservaciones();
+            {% endif %}
+        })
+
+        function mostrarObservaciones(){
+            $('#observaciones').show();
+        }
+        function ocultarObservaciones(){
+            $('#observaciones').hide();
+        }
+    </script>
+{% endblock %}

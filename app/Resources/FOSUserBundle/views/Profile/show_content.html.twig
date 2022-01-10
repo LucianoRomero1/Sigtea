@@ -1,0 +1,22 @@
+{% trans_default_domain 'FOSUserBundle' %}
+<div class = "container-fluid login-div">
+    <div class="login-div-purple">
+        <a href="{{path('misTramites')}}" class="text-white"><i class="fas fa-arrow-circle-left float-left"></i></a>
+        <p class="d-inline text-center">Datos de tu perfil</p>
+    </div>
+    <div>
+        <label>{{ 'profile.show.username'|trans }}: </label>
+        <b>{{ user.username }}</b>
+    </div>
+      <div>
+        <label>{{ 'profile.show.email'|trans }}: </label>
+        <b>{{ user.email }}</b>
+    </div>
+    <br>
+    <div class="">
+        <a class="text-info " href ="{{path('fos_user_profile_edit')}}"> Editar perfil <i class="ml-1 fas fa-user-edit"></i></a>
+        <a class="text-info float-right" href ="{{path('fos_user_change_password')}}"> Cambiar contraseña <i class="ml-1 fas fa-user-lock"></i></a>
+    </div>
+    <br>
+</div>
+

@@ -1,0 +1,30 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 10. RIESGO HÍDRICO <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Determinado por el Certificado de Zonificación emitido por el Ministerio de Infraestructura y Transporte.">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU11" action="{{ path('tramiteU12') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    
+    <ul style="list-style:none; ">  
+        <li>
+            <input type="radio" id="" name="Urbanizacion[riesgo]" {% if Urbanizacion is defined and Urbanizacion != null and Urbanizacion.riesgoHidrico != null %}checked{% endif %} value="1" required > 
+            <label for="">Zona I (Cuerpos de agua permanentes, naturales y/o artificiales).</label><br>
+        </li>
+        <li>
+            <input type="radio" id="" name="Urbanizacion[riesgo]" {% if Urbanizacion is defined and Urbanizacion != null and Urbanizacion.riesgoHidrico != null %}checked{% endif %} value="2" >
+            <label for="">Zona II (Vías de evacuación de crecidas y áreas de almacenamiento).</label><br>
+        </li>
+        <li>
+            <input type="radio" id="" name="Urbanizacion[riesgo]" {% if Urbanizacion is defined and Urbanizacion != null and Urbanizacion.riesgoHidrico != null %}checked{% endif %} value="3" >
+            <label for="">Zona III (Zonas no incluídas en las Zonas I y II).</label><br>
+        </li>
+    </ul>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

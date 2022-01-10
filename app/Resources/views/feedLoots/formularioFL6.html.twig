@@ -1,0 +1,62 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 6. AGUAS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL6" action="{{ path('tramiteFL7') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    {# <div class="row">
+        <table class="table text-center" >
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">FUENTE DE ABASTECIMIENTO DE AGUA</th>
+                    <th scope="col">PROFUNDIDAD CAPA FREÁTICA</th>
+                    <th scope="col">DISTANCIA A PUNTO DE BOMBEO PARA CONSUMO HUMANO</th>
+                </tr>
+            </thead>
+            <tbody id="filas">
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="text" class="form-control" name="Recurso[tipo][]"  value=""></td>
+                    <td><input type="text" class="form-control" name=""  value=""></td>
+                    <td class="media">
+                        <input type="text" class="form-control" name=""  value="">
+                        <a onClick="eliminarFila(this)" class="btn text-danger mt-2"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila()" class="btn btn-secondary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    <br> #}
+    <div class="row">
+        <div class="col-md-12">
+            <p>FUENTE DE ABASTECIMIENTO DE AGUA<span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Topografia != null %}{{Topografia.abastecimientoAgua}}{% endif %}"   name="Topografia[abastecimientoAgua]">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <p>PROFUNDIDAD DE CAPA FREÁTICA (metros)<span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Topografia != null %}{{Topografia.profundidad}}{% endif %}"   name="Topografia[profundidad]">
+        </div>
+        <div class="col-md-6">
+            <p>DISTANCIA A PUNTO DE BOMBEO DE AGUA<span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Topografia != null %}{{Topografia.distanciaBombeo}}{% endif %}"   name="Topografia[distanciaBombeo]">
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/feedLoots/formularioFL6.js')}}"></script>   
+{% endblock %}

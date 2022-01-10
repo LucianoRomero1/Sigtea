@@ -1,0 +1,45 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 11. SERVICIOS <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Tildar todas las opciones que correspondan. Lo marcado se debe sustentar con las factibilidades técnicas emitidas por las autoridades competentes.">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU12" action="{{ path('tramiteU13') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <ul style="list-style:none; ">  
+        <li>
+            <input type="checkbox" id="todos"  name="Factibilidad[todos]" value="todos" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.recoleccionRsu != 1 and Factibilidad.cloacasRed != 1 and Factibilidad.gas != 1 and Factibilidad.energiaElectrica != 1 and Factibilidad.aguaPotable != 1  and Factibilidad.transportePublico != 1 %}checked{% endif %}> 
+            <label for="">Factibilidad de todos los servicios.</label><br>
+        </li>
+        <li>
+            <input type="checkbox" class="servicios"  name="Factibilidad[rsu]" value="rsu" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.recoleccionRsu == 1 %}checked{% endif %} >
+            <label for="">Sin recolección de RSU.</label><br>
+        </li>
+        <li>
+            <input type="checkbox" class="servicios"  name="Factibilidad[cloacas]" value="cloacas" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.cloacasRed == 1 %}checked{% endif %}>
+            <label for="">Sin factibilidad Cloacales por red.</label><br>
+        </li>
+        <li>
+            <input type="checkbox" class="servicios"  name="Factibilidad[gas]" value="gas" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.gas == 1 %}checked{% endif %}>
+            <label for="">Sin factibilidad de Gas.</label><br>
+        </li>
+        <li>
+            <input type="checkbox" class="servicios"  name="Factibilidad[electrica]" value="electrica" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.energiaElectrica == 1%}checked{% endif %}>
+            <label for="">Sin factibilidad de Energía Eléctrica.</label><br>
+        </li>
+        <li>
+            <input type="checkbox" class="servicios"  name="Factibilidad[agua]" value="agua" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.aguaPotable == 1 %}checked{% endif %}>
+            <label for="">Sin factibilidad de Agua Potable por red.</label><br>
+        </li>
+        <li>
+            <input type="checkbox" class="servicios"  name="Factibilidad[transporte]" value="transporte" {% if Factibilidad is defined and Factibilidad != null and Factibilidad.transportePublico == 1 %}checked{% endif %}>
+            <label for="">Sin factibilidad de Transporte Público.</label><br>
+        </li>
+    </ul>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/formularioUrbanizacion/formularioU12.js')}}"></script>   
+{% endblock %}

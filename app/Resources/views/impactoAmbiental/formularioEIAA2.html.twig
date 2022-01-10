@@ -1,0 +1,124 @@
+{# {% extends 'default/index.html.twig' %} #}
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block contenctForms %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">2. PROFESIONALES INTERVINIENTES RESPONSABLES DEL ESTUDIO <span data-toggle="tooltip" data-placement="right"  title="El estudio de Impacto Ambiental, debe ser elaborado y estar firmado por un profesional consultor inscripto en el 'Registro Oficial de Consultores, Expertos Y Peritos en Materia Ambirntal' del Ministerio de Medio Ambiente o grupo de consultores ( debiendo como mínimo el 50% de sus integrantes encontrarse inscriptos en el citado Registro), los cuales tendrán responsabilidad administrativa por la información técnica que representen. En el caso de no estar enla lista el profesional, ingresarlo directamente en el campo." class="text-success">(?)</span></div>
+    <div class="card-body">
+        <p class="text-secondary">
+            Si el consultor, perito o experto no se encuentra en el desplegable del presente formulario podrá ingresar
+            los datos del mismo manualmente     , siempre previa verificación de que el mismo figura en el Registro
+            Oficial de Consultores, Expertos y Peritos accesible desde este <a href="https://www.santafe.gov.ar/index.php/web/content/view/full/159535/">link</a>.
+            <br/>
+            Los consultores, peritos o expertos tendrán responsabilidad administrativa por la información técnica
+            suministrada.
+        </p>
+        <br/>
+        <form id="formularioEIAAA2" action="{{ path('tramiteEIAA2') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        <h6>Profesionales</h6>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Nombre y apellido <span class="text-danger">(*)</span></th>
+                    <th scope="col">Profesión</th>
+                    <th scope="col">N° de registro</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="tablaPeritos">
+            {% set i = 1 %}
+            {% if Peritos is defined %}
+                {% for perito in Peritos %}
+                <tr id="persona{{i}}">
+                    <th scope="row">{{i}}</th>
+                    <td>
+                        <select id="personas" class="form-control" name="Perito[persona][]">
+                            <option>Seleccione una opción</option>
+                            {% if PersonasForm|length != 0 %}
+                                {% for persona in PersonasForm %}
+                                <option value="{{persona.cuit}}" {% if perito.persona.cuit == persona.cuit %} selected {% endif %} >{{persona.razonSocial}}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" value="{{perito.profesion}}" class="form-control" name="Perito[profesion][]" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" value="{{perito.firma}}" name="Perito[firma][]" />
+                    </td>
+                    <td>
+                        <a class="btn text-danger" onClick="eliminarFila({{i}})">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr> 
+                {% set i = i + 1 %}
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <select id="personas" class="form-control" name="Perito[persona][]">
+                            <option>Seleccione una opción</option>
+                            {% for persona in PersonasForm %}
+                            <option value="{{persona.cuit}}">{{persona.razonSocial}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Perito[profesion][]" required />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" name="Perito[firma][]" required />
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr> 
+            {% endif %}
+            </tbody>
+        </table>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <a onclick="agregarFila({{i}})" class="btn text-primary">Agregar fila</a>
+            </div>
+        </div>
+        <hr/>
+        <p class="text-secondary">
+            Es de aclarar que los precios fijados por los distintos Colegios que agrupan a estos profesionales son de
+            referencia y están sujetos a ser pactados libremente.
+        </p>
+        {# <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('formularioImpactoAmbiental',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA2',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div> #}
+        {# </form> #}
+    {# </div> #}
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario2.js')}}"></script>
+{% endblock %}

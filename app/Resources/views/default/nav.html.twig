@@ -1,0 +1,84 @@
+<nav class="navbar navbar-expand-md navbar-light fixed-top">
+    <a class="navbar-brand" href="{{path('tramites')}}"><img src="https://www.santafe.gob.ar/assets/standard/images/gob-santafe.png"></a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">            
+        {% if is_granted('ROLE_ADMIN') %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Administración Trámite
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ path('admin/listadoTramite') }}">Listado de Trámites</a>                
+                <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ path('admin/listaUsuarios') }}">Listado Usuarios</a>
+                    <a class="dropdown-item" href="{{path('fos_user_registration_register')}}">Crear Usuario</a>
+                </div>
+            </li>            
+        {% else %}
+            <ul id="nav">
+                <li><a class="nav-link" href="{{ path('misTramites') }}">Mis Tramites <span class="sr-only">(current)</span></a></li>
+                <li><a href="#" class='main-item'>Nuevo trámite</a>
+                    <ul>
+                        <li><a href="#" class="sub-item">Formulario de presentación</a>
+                            <ul>
+                                <li><a href="{{ path('formularioIndustriasPresentacion') }}" class="sub-item">Industrias en General y otras actividades Resolución N°403/16</a></li>
+                                <li><a href="#" class="sub-item">Estación de servicio »</a>
+                                    <ul>
+                                        <li><a href="{{ path('formularioExpendioCombustiblePresentacion') }}" class="sub-item">A instalarse</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('formularioFeedLotsPresentacion')}}" class="sub-item">Feed Lots (bovino) Resolución N° 023/09</a></li>
+                                <li><a href="{{ path('formularioUrbanizacionPresentacion') }}" class="sub-item">Loteo con fines de urbanización Resolución N° 350/17</a></li>
+                                <li><a href="{{ path('formularioAcopioGranosEstudioImpactoAmbiental') }}" class="sub-item">Acopios de granos Resolución N° 177/03</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" class="sub-item">Estudios de impacto ambiental</a>
+                            <ul>
+                                <li><a href="{{ path('formularioIndustriasEstudioImpactoAmbiental') }}" class="sub-item">Industrias en General y otras actividades Resolución N°403/16</a></li>
+                                <li><a href="#" class="sub-item">Estación de servicio ></a>
+                                    <ul>
+                                        <li><a href="{{ path('formularioExpendioCombustibleEsIA') }}" class="sub-item">A instalarse</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('formularioFeedLotsInformeAmbientalCumplimiento')}}" class="sub-item">Feed Lots (bovino) Resolución N° 023/09</a></li>
+                                <li><a href="{{ path('formularioUrbanizacionEstudioImpactoAmbiental') }}" class="sub-item">Loteo con fines de urbanización Resolución N° 350/17</a></li>
+                                <li><a href="{{ path('formularioAcopioGranosEsIA')}}" class="sub-item">Acopios de granos Resolución N° 177/03</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" class="sub-item">Certificación de aptitud ambiental</a>
+                            <ul>
+                                <li><a href="{{ path('formularioIndustriasInformeAmbientalCumplimiento') }}" class="sub-item">Industrias en General y otras actividades Resolución N°403/16</a></li>
+                                <li><a href="#" class="sub-item">Estación de servicio »</a>
+                                    <ul>
+                                        <li><a href="{{ path('formularioAcopioGranosIAC') }}" class="sub-item">A instalarse</a></li>                                        
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('formularioFeedLotsInformeAmbientalCumplimiento') }}" class="sub-item">Feed Lots (bovino) Resolución N° 023/09</a></li>
+                                <li><a href="{{ path('formularioc1') }}" class="sub-item">Loteo con fines de urbanización Resolución N° 350/17</a></li>
+                                <li><a href="{{ path('formularioAcopioGranosIAC') }}" class="sub-item">Acopios de granos Resolución N° 177/03</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" class="sub-item">Cambio de titularidad del emprendimiento</a>
+                            <ul>
+                                <li><a href="{{ path('formularioIndustriasPresentacion') }}" class="sub-item">Industrias en General y otras actividades Resolución N°403/16</a></li>
+                                <li><a href="#" class="sub-item">Estación de servicio »</a>
+                                    <ul>
+                                        <li><a href="{{ path('formularioExpendioCombustiblePresentacion')}}" class="sub-item">En funcionamiento</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('formularioFeedLotsPresentacion')}}" class="sub-item">Feed Lots (bovino) Resolución N° 023/09</a></li>
+                                <li><a href="{{ path('formularioUrbanizacionPresentacion')}}" class="sub-item">Loteo con fines de urbanización Resolución N° 350/17</a></li>
+                                <li><a href="{{ path('formularioAcopioGranosEstudioImpactoAmbiental')}}" class="sub-item">Acopios de granos Resolución N° 177/03</a></li>
+                            </ul>
+                        </li>                        
+                    </ul>
+                </li>
+            </ul>
+        {% endif %}
+        </ul>                    
+        <ul class="list-inline custom-icon-middle">            
+            <li class="list-inline-item"><a href="{{ path('login') }}" title="Salir"><i class="material-icons">exit_to_app</i></a>
+            </li>
+        </ul>
+    </div>
+</nav>

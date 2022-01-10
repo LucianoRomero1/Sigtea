@@ -1,0 +1,19 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <div class = "container-fluid login-div">
+        <div class="login-div-purple">
+            Cuenta creada
+        </div>
+        <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+        {% if targetUrl %}
+        <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
+        {% endif %}
+        <div class ="mt-2 text-center">
+            <a class="text-info" href="{{path('fos_user_security_login')}}">Volver al login<i class="fas fa-user-circle"></i></a>
+        </div>
+        <br>
+    </div>
+{% endblock fos_user_content %}

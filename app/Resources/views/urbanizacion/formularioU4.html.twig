@@ -1,0 +1,50 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 4. AUTORIDADES SOCIETARIAS - NÓMINA DEL DIRECTORIO <span class="text-success" data-toggle="tooltip" title="Se deberán especificar los datos de los integrantes del directorio de la empresa, gerentes o socios. En caso de ser necesarias más casillas que las asignadas, agregar filas al formulario, o adjuntar en hoja separada indicando el N° al que se hace referencia">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU4" action="{{ path('tramiteU5') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <table class="table text-center" >
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">APELLIDO NOMBRE</th>
+                    <th scope="col">CUIT</th>
+                    <th scope="col">CARGO ASIGNADO</th>
+                </tr>
+            </thead>
+            <tbody id="filas">
+                {% if Representantes is defined %} 
+                           
+                    {% for representante in Representantes %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="Persona[razonSocial][]" required value="{{representante.Representante.Persona.razonSocial}}"></td>
+                            <td><input type="number" class="form-control" name="Persona[cuit][]" required value="{{representante.Representante.Persona.cuit}}" max="99999999999" min="10000000000" step="1"></td>
+                            <td class="media">
+                                <input type="text" class="form-control" name="Representante[cargo][]" required value="{{representante.Representante.cargo}}">
+                                <a  onClick="eliminarFila(this,{{representante.id}})" class="btn text-danger mt-2"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>  
+                    {% endfor %}
+                {% endif %} 
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila()" class="btn btn-primary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    <br>
+    
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/formularioUrbanizacion/formularioU4.js')}}"></script>    
+{% endblock %}

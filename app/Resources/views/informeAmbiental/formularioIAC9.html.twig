@@ -1,0 +1,601 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %}FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 9. PLAN DE GESTIÓN AMBIENTAL (PGA) {% endblock %}
+
+{% block contenctForms %}
+  <div class="card-body">
+    <form id="formularioIAC9" action="tramiteIAC10" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <p class="alert alert-danger"><strong>Atención</strong>: Para cada tipo de Residuo, Efluente y Emisión identificado en el punto 8, se generará
+        automáticamente una tabla para detallar su gestión. Si desea gestionar un nuevo Residuo, Efluente o
+        Emisión debe primero agregarlo en el punto 8.</p>
+        <h6 class="titulos">9.1 RESIDUOS</h6>
+        {% set i = 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h6 class="titulos">9.1.1 RESIUDOS SOLIDOS URBANOS (RSU) <span class="text-success" data-toggle="tooltip" title="Para cada tipo de residuo RSU identificado en el punto 8.1.1, indicar el nombre o razón social del transportista">(?)</h6>
+            <table class="table" id="tablaResiduos">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Gestión y almacenamiento interno</th>
+                        <th scope="col">Empresa transportista</th>
+                        <th scope="col">Tratamiento / Disposición final</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>  
+                {% for residuo in ResiduosRsu %}
+                    {% if residuo.gestion != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosRsu[gestion][]" value="{{residuo.gestion}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosRsu[empresaTransportista][]" value="{{TratamientoResiduosRsu[loop.index - 1].empresaTransportista}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosRsu[disposicionFinal][]" value="{{TratamientoResiduosRsu[loop.index - 1].disposicionFinal}}" required/></td> 
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosRsu[gestion][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosRsu[empresaTransportista][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosRsu[disposicionFinal][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div {% if ResiduosPeligrosos == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.1.2 GESTIÓN DE RESIDUOS PELIGROSOS <span class="text-success" data-toggle="tooltip" title="Para cada tipo de rr.pp identificado en el punto 8.1.2, indicar el nombre o razón social del transportista y del operador de residuos peligrosos elegido para su tratamiento o disposición final. Solo se admitirán operadores reconocidos por le Ministerio de Medio Ambiente">(?)</span></h6>
+            <table class="table" id="tablaResiduosPeligrosos">
+                <thead>
+                    <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Gestión y almacenamiento interno</th>
+                    <th scope="col">Empresa transportista</th>
+                    <th scope="col">Operador / Almacenador transitorio</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for residuo in ResiduosPeligrosos %}
+                    {% if residuo.gestion != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosPeligrosos[gestion][]" value="{{residuo.gestion}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPeligrosos[empresaTransportista][]" value="{{TratamientoResiduosPeligrosos[loop.index - 1].empresaTransportista}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPeligrosos[disposicionFinal][]"  value="{{TratamientoResiduosPeligrosos[loop.index - 1].disposicionFinal}}" required/></td> 
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosPeligrosos[gestion][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPeligrosos[empresaTransportista][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPeligrosos[disposicionFinal][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div {% if ResiduosIndustriales == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.1.3 GESTIÓN DE RESIDUOS NO PELIGROSOS O ACT. SERVICIO <span class="text-success" data-toggle="tooltip" title="Para cada tipo de residuo industrial identificado en el punto 8.1.3, indicar el nombre o razón social del transportista y del tratador elegido para su tratamiento o disposición final. Solo se admitirán tratadores registrados por el Ministerio de Medio Ambiente">(?)</span></h6>
+            <table class="table" id="tablaResiduosIndustriales">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Gestión y almacenamiento interno</span></th>
+                        <th scope="col">Empresa transportista</th>
+                        <th scope="col">Tratador</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for residuo in ResiduosIndustriales %}
+                    {% if residuo.gestion != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosIndustriales[gestion][]" value="{{residuo.gestion}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosIndustriales[empresaTransportista][]" value="{{TratamientoResiduosIndustriales[loop.index - 1].empresaTransportista}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosIndustriales[disposicionFinal][]"  value="{{TratamientoResiduosIndustriales[loop.index - 1].empresaTransportista}}" required/></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosIndustriales[gestion][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosIndustriales[empresaTransportista][]" /required></td>
+                        <td><input type="text" class="form-control" name="ResiduosIndustriales[disposicionFinal][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div {% if ResiduosPatologicos == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.1.4 GESTIÓN DE RESIDUOS PATOLÓGICOS</h6>
+            <table class="table" id="tablaResiduosPatologicos">
+                <thead>
+                    <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Gestión y almacenamiento interno</th>
+                    <th scope="col">Empresa transportista</th>
+                    <th scope="col">Empresa de tratamiento o disposición final</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for residuo in ResiduosPatologicos %}
+                    {% if residuo.gestion != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosPatologicos[gestion][]" value="{{residuo.gestion}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPatologicos[empresaTransportista][]" value="{{TratamientoResiduosPatologicos[loop.index - 1].empresaTransportista}}" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPatologicos[disposicionFinal][]"  value="{{TratamientoResiduosPatologicos[loop.index - 1].empresaTransportista}}" required/></td> 
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="ResiduosPatologicos[gestion][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPatologicos[empresaTransportista][]" required/></td>
+                        <td><input type="text" class="form-control" name="ResiduosPatologicos[disposicionFinal][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div {% if OtrosResiduos == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.1.5 GESTIÓN DE OTROS RESIDUOS</h6>
+            <table class="table" id="tablaOtrosResiduos">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Gestión y almacenamiento interno</th>
+                        <th scope="col">Empresa transportista</th>
+                        <th scope="col">Empresa de tratamiento o disposición final</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for residuo in OtrosResiduos %}
+                    {% if residuo.gestion != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="OtrosResiduos[gestion][]" value="{{residuo.gestion}}" required/></td>
+                        <td><input type="text" class="form-control" name="OtrosResiduos[empresaTransportista][]" value="{{TratamientoOtrosResiduos[loop.index - 1].empresaTransportista}}"/ required></td>
+                        <td><input type="text" class="form-control" name="OtrosResiduos[disposicionFinal][]"  value="{{TratamientoOtrosResiduos[loop.index - 1].empresaTransportista}}" required/></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="OtrosResiduos[gestion][]" required/></td>
+                        <td><input type="text" class="form-control" name="OtrosResiduos[empresaTransportista][]" required/></td>
+                        <td><input type="text" class="form-control" name="OtrosResiduos[disposicionFinal][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h6 class="titulos">9.2 EFLUENTES</h6>
+        {% set i = i + 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage2 is defined and Storage2 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <div {% if EfluentesIndustriales == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.2.1 GESTIÓN DE EFLUENTES INDUSTRIALES</h6>
+            <table class="table" id="tablaEfluentesIndustriales">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Descarga <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Continua - Discontínua">(?)</span></th>
+                        <th scope="col">Tratamiento <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Se realiza en la misma planta, describiendo el sistema de tratamiento y adjuntando en Anexo la documentación correspondiente, o mediante un tratador externo. En el último caso solo se admitirá que los líquidos sean enviados a aquellas plantas aprobadas por el Ministerio de Medio Ambiente">(?)</span></th>
+                        <th scope="col">Punto de vuelco/Cuerpo receptor <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Indicar el destino de los líquidos de salida del tratamiento (sistema cloacal), red pluvial, canal a cielo abierto, rio/ arroyo (especificar), Indicar Título (S/ Resolución N° 1089/82 -ex DiPOS)">(?)</span></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for efluente in EfluentesIndustriales %}
+                    {% if efluente.tratamiento != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>
+                            <select type="text" class="form-control" name="EfluentesIndustriales[descarga][]" required>
+                                <option {% if efluente.descarga == 0 %}selected{% endif %} value="0">Contínua</option>
+                                <option {% if efluente.descarga == 1 %}selected{% endif %} value="1">Discontínua</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="EfluentesIndustriales[tratamiento][]"  value="{{efluente.tratamiento}}" required/></td>
+                        <td><input type="text" class="form-control" name="EfluentesIndustriales[receptor][]" value="{{efluente.receptor}}" required/></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>
+                            <select type="text" class="form-control" name="EfluentesIndustriales[descarga][]" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="0">Contínua</option>
+                                <option value="1">Discontínua</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="EfluentesIndustriales[tratamiento][]" required/></td>
+                        <td><input type="text" class="form-control" name="EfluentesIndustriales[receptor][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div {% if EfluentesSanitarios == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.2.2 GESTIÓN DE EFLUENTES SANITARIOS</h6>
+            <table class="table" id="tablaEfluentesSanitarios">
+                <thead>
+                    <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Tratamiento <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Si se realiza en la misma planta -describiendo el sistema de tratamiento y adjuntando en Anexo la documentación correspondiente-, si se encuentra conectado a la red colectora cloacal -adjuntando en Anexo la correspondiente constancia de admisión por parte del prestador del servicio-, o mediante un tratador externo -admitiéndose que sean enviados a aquellas plantas aprobadas por el Ministerio de Medio Ambiente-. En el último caso deberá indicarse además la empresa transportista, cantidad de servicios por mes y deberá adjuntarse la documentación probatoria del destino final">(?)</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for efluente in EfluentesSanitarios %}
+                    {% if efluente.tratamiento != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="EfluentesSanitarios[tratamiento][]"  value="{{efluente.tratamiento}}" required/></td>
+                    </tr>    
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="EfluentesSanitarios[tratamiento][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h6 class="titulos">9.3 EMISIONES</h6>
+        {% set i = i + 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage3 is defined and Storage3 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <div {% if EmisionesPuntuales == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.3.1 GESTIÓN DE EMISIONES PUNTUALES</h6>
+            <table class="table" id="tablaEmisionesPuntuales">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Funcionamiento <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Continuo - Intermitente">(?)</span></th>
+                        <th scope="col">Tratamiento <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Describir los procesos implementados para el tratamiento de la emisión. En Anexo adjuntar descripción de las características físicas y operativas de los equipos intervinientes y su ficha técnica, de corresponder">(?)</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for emision in EmisionesPuntuales %}
+                    {% if emision.tratamiento != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>
+                            <select type="text" class="form-control" name="EmisionesPuntuales[funcionamiento][]" required>
+                                <option {% if emision.funcionamiento == 0 %}selected{% endif %} value="0">Contínua</option>
+                                <option {% if emision.funcionamiento == 1 %}selected{% endif %} value="1">Discontínua</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="EmisionesPuntuales[tratamiento][]" value="{{emision.tratamiento}}" required/></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>
+                            <select type="text" class="form-control" name="EmisionesPuntuales[funcionamiento][]" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="0">Contínua</option>
+                                <option value="1">Intermitente</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="EmisionesPuntuales[tratamiento][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div {% if EmisionesDifusas == null %}style="display:none;"{% endif %}>
+            <h6 class="titulos">9.3.2 GESTIÓN DE EMISIONES DIFUSAS</h6>
+            <table class="table" id="tablaEfluentesDifusas">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Tratamiento/Mitigación <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="En el caso de haber implementado algún sistema o proceso dpara la gestión de la emisión difusa, deberá detallarse en Anexo">(?)</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for emision in EmisionesDifusas %}
+                    {% if emision.tratamiento != null %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="EmisionesDifusas[tratamiento][]" value="{{emision.tratamiento}}" required/></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="EmisionesDifusas[tratamiento][]" required/></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <h6 class="titulos">9.4 ANÁLISIS DE RIESGO (según Resolución N° 0306/14)</h6>
+        <div>
+            <h6 class="titulos">9.4.1 Caracterización del nivel de riesgo </span><span class="text-success" data-toggle="tooltip" title="Seguir Anexo I de la Resolución N° 306/14. Anexar documentación en papel y digital">(?)</span></h6>
+            {% set i = i + 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage4 is defined and Storage4 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h6 class="titulos">9.4.2 Presentación del Estudio de Análisis de Riesgo </span><span class="text-success" data-toggle="tooltip" title="Según se establece en Artículos 4 y 5 y Anexo II de la Resolución N° 306/14. Anexar documentación en papel y en digital">(?)</span></h6>
+            {% set i = i + 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage5 is defined and Storage5 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h6 class="titulos">9.4.3 Cronograma de presentación del Estudio de Análisis de Riesgo <span class="text-danger">(*) </span></h6>
+            {% set i = i + 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage6 is defined and Storage6 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage6.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h6 class="titulos">9.4.4 Plano de riesgo de la planta, con indicación de los sectores de distinto riesgo <span class="text-danger">(*)</span></h6>
+            {% set i = i + 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage7 is defined and Storage7 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage7.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h6 class="titulos">9.4.5 Plan de Contingencias y gerenciamiento del riesgo <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Según se establece en Artículo 6 y Anexo III de la Resolución N° 306/14 Anexar documentación en papel y digital">(?)</span></h6>
+            {% set i = i + 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage8 is defined and Storage8 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage8.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+        <h6 class="titulos">9.5 DECLARACIÓN DE SITIOS CONTAMINADOS / PASIVOS AMBIENTALES <span class="text-danger">(*)</span></h6>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="SitiosContaminados[check]" id="sitiosContaminados_si" value="Si" {% if SitiosContaminados != null %}checked{% endif %}>
+                <label class="form-check-label" for="sitiosContaminados_si">Si</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="SitiosContaminados[check]" id="sitiosContaminados_no" value="No" {% if SitiosContaminados == null %}checked{% endif %}>
+                <label class="form-check-label" for="sitiosContaminados_no">No</label>
+            </div>
+        </div>
+        <div id="div_sitios_contaminados" {% if SitiosContaminados == null %}style="display:none;"{% else %}style="display:block;"{% endif %}>
+            <table class="table table-responsive" id="tablaContaminados">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>UBICACIÓN GEOREFERENCIAL </th>
+                        <th>DESCRIPCIÓN</th>
+                        <th>PARÁMETROS DE INTERÉS </th>
+                        <th>PLAN DE MONITOREO</th>
+                        <th>PLAN DE REMEDIACIÓN</th>
+                        <th colspan="2" class="text-center">ANEXOS - ARCHIVOS</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sitio in SitiosContaminados %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><textarea name="SitiosContaminados[ubicacionGeoreferencial][]" rows="6">{{sitio.ubicacionGeoreferencial}}</textarea></td>
+                        <td><textarea name="SitiosContaminados[descripcion][]" rows="6">{{sitio.descripcion}}</textarea></td>
+                        <td><textarea name="SitiosContaminados[parametrosInteres][]" rows="6">{{sitio.parametrosIntereses}}</textarea></td>
+                        <td><textarea name="SitiosContaminados[planMonitoreo][]" rows="6">{{sitio.planMonitoreo}}</textarea></td>
+                        <td><textarea name="SitiosContaminados[planRemediacion][]" rows="6">{{sitio.planRemediacion}}</textarea></td>
+                        <td><input name="SitiosContaminados[archivosPm][]" type="file" accept=".pdf"/><span class='text-success'>{{ImagenesContaminados.archivosPm[loop.index - 1]}}</span></td>
+                        <td><input name="SitiosContaminados[archivosPr][]" type="file" accept=".pdf"/><span class='text-success'>{{ImagenesContaminados.archivosPr[loop.index - 1]}}</span></td></td>
+                        <td>
+                            <button onClick="eliminarFilaBd2(this, 'tablaContaminados', {{sitio.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                    </t d>    
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td><textarea name="SitiosContaminados[ubicacionGeoreferencial][]" rows="6"></textarea></td>
+                        <td><textarea name="SitiosContaminados[descripcion][]" rows="6"></textarea></td>
+                        <td><textarea name="SitiosContaminados[parametrosInteres][]" rows="6"></textarea></td>
+                        <td><textarea name="SitiosContaminados[planMonitoreo][]" rows="6"></textarea></td>
+                        <td><textarea name="SitiosContaminados[planRemediacion][]" rows="6"></textarea></td>
+                        <td><input name="SitiosContaminados[archivosPm][]" type="file" accept=".pdf" /></td>
+                        <td><input name="SitiosContaminados[archivosPr][]" type="file" accept=".pdf" /></td></td>
+                        <td>
+                            <button onClick="eliminarFila(this, 'tablaContaminados')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button onClick="agregarFila('tablaContaminados')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                </div>
+            </div>
+        </div>
+        <h6 class="titulos">9.6 PLAN de IMPLEMENTACIÓN de PLAN PRODUCCIÓN MAS LIMPIA, EFICIENCIA ENERGÉTICA, USO ENERGÍAS
+        ALTERNATIVAS, AHORRO DE USO RECURSOS NATURALES, ETC.</h6>
+        {% set i = 1 + 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage9 is defined and Storage9 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage9.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <h6 class="titulos">9.7 MARCO LEGAL, ADMINISTRATIVO Y POLÍTICO <span class="text-success" data-toggle="tooltip" title="Análisis del marco legal ambiental relevante y aplicable en el que se encuadra específicamente la actividad. Aquí se debe incluir tanto el marco normativo nacional, provincial y municipal o comunal, como también exigencias propias de la actividad (por ej. por aparatos sometidos a presión, almacenamiento de combustibles, depósito de agroquímicos, almacenamiento de sustancias químicas nomencladas, de sustancias inflamables, etc.) Insertar una fila por cada norma citada">(?)</span></h6>
+        <table class="table" id="tablaLegal">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tipo de norma y N° </th>
+                    <th scope="col">Tema</th>
+                    <th scope="col">Aplicación específica del proyecto / Cumplimiento <span class="text-success" data-toggle="tooltip" title="Jurisdicción: Nacional / Provincial / Municipal / etc... Aplicación especifica del proyecto: Cite las implicancias y articulado de la ley relacionadas al proyecto que deberán cumplirse.
+                    Cumplimiento: Se refiere al resumen de medidas, técnicas, procedimientos a aplicar para cumplir con cada normativa. (Ej: Medición calidad de Aire, Monitoreo cada 6 meses, Destino final de residuos peligrosos a Operadores habilitados...)">(?)</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for marco in MarcoLegal %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td><input type="text" class="form-control"  name="MarcoLegal[tipoNorma][]" value="{{marco.tipoNorma}}"/></td>
+                    <td><input type="text" class="form-control"  name="MarcoLegal[tema][]" value="{{marco.tema}}"/></td>
+                    <td><input type="text" class="form-control"  name="MarcoLegal[aplicacionEspecifica][]" value="{{marco.aplicacionEspecifica}}"/></td>
+                    <td>
+                        <button onClick="eliminarFilaBd(this, 'tablaLegal', {{marco.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="text" class="form-control"  name="MarcoLegal[tipoNorma][]" required></td>
+                    <td><input type="text" class="form-control"  name="MarcoLegal[tema][]" required></td>
+                    <td><input type="text" class="form-control"  name="MarcoLegal[aplicacionEspecifica][]" required></td>
+                    <td>
+                        <button onClick="eliminarFila(this, 'tablaLegal')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button onClick="agregarFila('tablaLegal')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/informeAmbiental/formularioIAC9.js')}}"></script>
+{% endblock %}

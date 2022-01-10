@@ -1,0 +1,181 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO B</h4></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">
+        7. RESUMEN DE ANEXOS A PRESENTAR EN VENTANILLA JUNTO CON ESTE FORMULARIO (Se presenta en papel y en formato digital)
+    </div>
+
+    <div class="card-body">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <input type="hidden" name="idPlanta" value="{{idPlanta}}">
+        {# {% endif %} #}
+        <div class="row">
+            <div class="col-md-12">
+                <label>
+                    Formato digital: CD - DVD - Pen Drive </br> 
+                    Formato de archivo: un archivo pdf por cada ítem. Para más información haga click 
+                    <a href="https://www.santafe.gob.ar/index.php/tramites/modul1/index?m=descripcion&id=233492">aquí</a>
+                </label>
+            </div>
+        </div>
+        <div class="container-fluid text-center pad">
+            <button type="button" class="btn btn-primary text-light" data-toggle="modal" data-target="#exampleModalLong">
+                Ver/subir archivos
+            </button>
+        </div>
+        {# COMIENZA MODAL #}
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Subir archivos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pad">
+                        <form method="post" id="formArchivos" enctype="multipart/form-data">
+
+                            <h6>1- Foto satelital de ubicación: <span class="text-danger">(*)</span></h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input id="archivo1" class="p-top mb-1" type="file" /> 
+                                    <a id="button1" onclick="subirArchivo(1,'7.1')"  class="btn btn-info text-light">Subir</a>
+                                </div>
+                                <div id="nombreArchivo1" class="col-md-6 p-top">
+                                    {% if Storage1 is defined and Storage1 != null %}
+                                        <div>
+                                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                                        </div>
+                                    {% endif %}
+                                    <div id="spinner1" class='spinner form-row'>
+                                        <div class="three-quarters-loader"></div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <hr/>
+                            {# ########### #}
+
+                            <h6>2- Diagrama de Proceso Productivo: <span class="text-danger">(*)</span></h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input id="archivo2" class="p-top mb-1" type="file" /> 
+                                    <a id="button2" onclick="subirArchivo(2,'7.2')"  class="btn btn-info text-light">Subir</a>
+                                </div>
+                                <div id="nombreArchivo2" class="col-md-6 p-top">
+                                    {% if Storage2 is defined and Storage2 != null %}
+                                        <div>
+                                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                                        </div>
+                                    {% endif %}
+                                    <div id="spinner2" class='spinner form-row'>
+                                        <div class="three-quarters-loader"></div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <hr/>
+                            {# ########### #}
+
+                            <h6>3- Layout de la planta y/o Layout de máquinas y equipos: <span class="text-danger">(*)</span></h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input id="archivo3" class="p-top mb-1" type="file" /> 
+                                    <a id="button3" onclick="subirArchivo(3,'7.3')"  class="btn btn-info text-light">Subir</a>
+                                </div>
+                                <div id="nombreArchivo3" class="col-md-6 p-top">
+                                    {% if Storage3 is defined and Storage3 != null %}
+                                        <div>
+                                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                                        </div>
+                                    {% endif %}
+                                    <div id="spinner3" class='spinner form-row'>
+                                        <div class="three-quarters-loader"></div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <hr/>
+                            {# ########### #}
+
+                            <h6>4- Relevamiento fotográfico (Entorno inmediato, estado del predio): <span class="text-danger">(*)</span></h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input id="archivo4" class="p-top mb-1" type="file" /> 
+                                    <a id="button4" onclick="subirArchivo(4,'7.4')"  class="btn btn-info text-light">Subir</a>
+                                </div>
+                                <div id="nombreArchivo4" class="col-md-6 p-top">
+                                    {% if Storage4 is defined and Storage4 != null %}
+                                        <div>
+                                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                                        </div>
+                                    {% endif %}
+                                    <div id="spinner4" class='spinner form-row'>
+                                        <div class="three-quarters-loader"></div>
+                                    </div>
+                                </div>
+                            </div> 
+                            {# ########### #}
+
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {# FIN DEL MODAL #}
+
+        <form action="{{ path('tramiteB7') }}" method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <label><span class="text-danger">(*)</span> Los emprendimientos o actividades listadas en el Anexo D de la Resolución Provincial 403/16 del Ministerio de Medio Ambiente con el Standard 1 se considerarán como Categoría 1 y quedarán eximidos de la firma del Perito y/o Representante Técnico. Para el Standard 2 y 3 sí es requerida la firma del Perito/Experto del Registro Oficial de Consultores, Expertos y Peritos, accesible del siguiente <a href="https://www.santafe.gov.ar/index.php/web/content/view/full/159535/">Link</a>. Es de aclarar que los precios fijados por los distintos Colegios que agrupan a estos profesionales son de referencia y están sujetos a ser pactados libremente.</label>
+                    </div>
+                </div>
+            </div>
+            </br>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    {% if rol is empty %}
+                        <button class="btn btn-outline-dark" data-url={{ path('tramiteB5') }} data-idtramite="{{idTramite}}" data-idplanta="{{idPlanta}}">Volver</button>
+                        {% if userSession.Roles[0] != 'ROLE_ADMIN' %}
+                            <input type="submit" class="btn btn-success" value="Guardar y Salir" />                    
+                        {% endif %}
+                        <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                    {% else %}
+                        <a href="{{ path('/tramiteB5',{'idTramite': idTramite ?? 0},{'rol':'admin'},{'diPlanta': idPlanta ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                        <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                        <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Salir</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    </script>
+{% endblock %}

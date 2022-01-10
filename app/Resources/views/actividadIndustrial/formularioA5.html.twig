@@ -1,0 +1,79 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO A</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">5. ADMINISTRADORES/REPRESENTANTES <span class="text-success">(?)</span></div>
+    <div class="card-body">
+        <form action="{{ path('tramiteA5') }}" method="post">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        <div class="row">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">APELLIDO NOMBRE</th>
+                        <th scope="col">CUIT</th>
+                        <th scope="col">CARGO ASIGNADO</th>
+                    </tr>
+                </thead>
+                <tbody id="filas">                  
+                    {% if Representantes is defined %}    
+                        {% for representante in Representantes %}
+                            <tr>
+                                <td><input type="text" name="Persona[razonSocial][]" required value="{{representante.Representante.Persona.razonSocial}}"></td>
+                                <td><input type="number" name="Persona[cuit][]" required value="{{representante.Representante.Persona.cuit}}" max="99999999999" min="10000000000" step="1"></td>
+                                <td>
+                                    <input type="text" name="Representante[cargo][]" required value="{{representante.Representante.cargo}}">
+                                    <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>  
+                        {% endfor %}
+                    {% endif %} 
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila()" class="btn btn-secondary text-light">Agregar Fila</a>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('tramiteA3') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteA3',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteA6',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/formularioA5.js')}}"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    </script>
+{% endblock %}

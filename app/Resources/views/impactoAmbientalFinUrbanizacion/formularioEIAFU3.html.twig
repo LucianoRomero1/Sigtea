@@ -1,0 +1,35 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 3. UBICACIÓN {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU3') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <h6>3 - Localización, con su georeferenciación. En un plano/imagen satelital, a escala donde se pueda evaluar la inserción de la nueva urbanización en su medio ambiente.<br>
+        Indicar la conectividad <span class="text-danger">(*)</span>
+    </h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo1" class="p-top" type="file" accept=".pdf"/> 
+            <a id="button1" onclick="subirArchivo(1,3)"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo1" class="col-md-6 p-top">
+            {% if Storage is defined and Storage != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner1" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/archivoIndividual.js')}}"></script>
+{% endblock %}

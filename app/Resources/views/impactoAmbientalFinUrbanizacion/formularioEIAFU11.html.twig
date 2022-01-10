@@ -1,0 +1,64 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 11. CIERRE DE FORMULARIO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU11') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <h6>Declaro que la información volcada en la presente documentación es veraz y real, según los términos de
+    los Artículos 4° y 10° del Decreto N° 0101/03.</h6>
+
+    <div>
+        <div>
+            <div class="tabla-pers mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Firma de titular o responsable: </p>
+                        <input type="text" class="form-control" name="" required> 
+                    </div>
+                    <div class="col-md-6">
+                        <p>Aclaración: </p>
+                        <input type="text" class="form-control" name="" required> 
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Documento: </p>
+                        <input type="text" class="form-control" name="" required> 
+                    </div>
+                    <div class="col-md-6">
+                        <p>Cargo: </p>
+                        <input type="text" class="form-control" name="" required> 
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Fecha: </p>
+                        <input type="text" class="form-control" name="" required> 
+                    </div>
+                    <div class="col-md-6">
+                        <p>Representante técnico: </p>
+                        <input type="text" class="form-control" name="" required> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>N° de matrícula registro oficial de consultores expertos y peritos: </p>
+                        <textarea class="form-control" name="" required></textarea> 
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

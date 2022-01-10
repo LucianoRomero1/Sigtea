@@ -1,0 +1,31 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 6. REPRESENTANTE LEGAL <span class="text-success" data-toggle="tooltip" title="Incluir los datos correspondientes al representante legal de la empresa">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU6" action="{{ path('tramiteU8') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+    <div class="row">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">APELLIDO NOMBRE</th>
+                    <th scope="col">CUIT</th>
+                </tr>
+            </thead>
+            <tbody>                        
+                <tr>
+                    <td><input type="text" class="form-control" name="Persona[razonSocial]" required value="{% if Representantes is defined %}{{Representantes.Representante.Persona.razonSocial}}{% endif %}"></td>
+                    <td><input type="number" class="form-control" name="Persona[cuit]" required value="{% if Representantes is defined %}{{Representantes.Representante.Persona.cuit}}{% endif %}" max="99999999999" min="10000000000" step="1"></td>
+                </tr>  
+            </tbody>
+        </table>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

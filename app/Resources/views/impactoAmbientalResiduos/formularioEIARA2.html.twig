@@ -1,0 +1,86 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO A - 2. DOMICILIO LEGAL {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARA2') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-8">
+            <p>Calle: <span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Domicilio != null %}{{Domicilio.calle}}{% endif %}" name="Domicilio[calle]" required />
+        </div>
+        <div class="col-md-2">
+            <p>N°: <span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Domicilio != null %}{{Domicilio.numero}}{% endif %}" name="Domicilio[numero]" required />
+        </div>
+        <div class="col-md-1">
+            <p>Piso: </p>
+            <input type="text" class="form-control" value="{% if Domicilio != null %}{{Domicilio.piso}}{% endif %}" name="Domicilio[piso]" required />
+        </div>
+        <div class="col-md-1">
+            <p>Depto: </p>
+            <input type="text" class="form-control" value="{% if Domicilio != null %}{{Domicilio.depto}}{% endif %}" name="Domicilio[depto]" required />
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-4">
+            <p>Provincia: <span class="text-danger">(*)</span></p>
+            <select for="provincia" class="form-control" id="provincia" name="Domicilio[provincia]" onChange="parent.provincia('provincia','departamento')" required>
+                <option value="">SELECCIONE UNA PROVINCIA</option>
+                {% for provincia in provincias %}
+                    {% if Domicilio != null and Domicilio|length >0 and Domicilio.provincia.id == provincia.id %}
+                        <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                    {% else %}
+                        <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p>Departamento: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="departamento" name="Domicilio[departamento]" required onChange="parent.localidad('departamento','localidad')">
+                {% if Domicilio != null %}
+                <option value="{{Domicilio.departamento.id}}">{{Domicilio.departamento.nombre}}</option>   
+                {% endif %}
+                <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                    
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p>Localidad: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="localidad" name="Domicilio[localidad]" required onChange="parent.departamento('localidad','codigoPostal')">
+                
+                {% if Domicilio != null %}
+                    <option value="{{Domicilio.localidad.id}}">{{Domicilio.localidad.nombre}}</option> 
+                {% endif %}
+                <option value="">SELECCIONE UNA LOCALIDAD</option>
+            </select>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-3">
+            <p>CP: <span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Domicilio != null %}{{Domicilio.localidad.codigoPostal}} {% endif %}"  id="codigoPostal" name="Domicilio[cp]" readonly>
+        </div>
+        <div class="col-md-3">
+            <p>Teléfono / Fax: <span class="text-danger">(*)</span></p>
+            <input type="text" value="{% if Domicilio != null %}{{Domicilio.telefono}} {% endif %}" class="form-control" name="Domicilio[telefono]" required />
+        </div>
+        <div class="col-md-6">
+            <p>Email: <span data-toggle="tooltip" data-placement="right"  title="Este mail recibirá notificaciones legales" class="text-danger">(*)</span></p>
+            <input type="email"  value="{% if Domicilio != null %}{{Domicilio.email}} {% endif %}" class="form-control" name="Domicilio[email]" required />
+        </div>
+    </div>
+    <br/>
+    <hr/
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>
+{% endblock %}

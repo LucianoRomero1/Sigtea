@@ -1,0 +1,151 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO B - 5. RESIDUOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB6') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+
+    <div class="tabla-pers">
+        <h6>
+            EFLUENTES
+        </h6>
+        <table id="tablaEfluentes" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Componente relevante</th>
+                    <th scope="col">Proceso que lo genera</th>
+                    <th scope="col">Cantidad anual</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for efluente in Efluentes %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>
+                        <input type="text" value="{{efluente.componenteRelevante}}" class="form-control" name="Efluentes[componente][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{efluente.procesoGenerador}}" class="form-control" name="Efluentes[proceso][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{efluente.unidad}}" class="form-control" name="Efluentes[cantidad][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaEfluentes')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="text" class="form-control" name="Efluentes[componente][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Efluentes[proceso][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Efluentes[cantidad][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaEfluentes')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <div class="text-center">
+                <a class="btn btn-primary text-white" onClick="agregarFila('tablaEfluentes', 1)">Agregar efluente</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="tabla-pers">
+        <h6>
+            EMISIONES
+        </h6>
+        <table id="tablaEmisiones" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Componente relevante</th>
+                    <th scope="col">Proceso que lo genera</th>
+                    <th scope="col">Cantidad anual</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for emision in Emisiones %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>
+                        <input type="text" value="{{emision.componenteRelevante}}" class="form-control" name="Emisiones[componente][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{emision.procesoGenerador}}" class="form-control" name="Emisiones[proceso][]" required />
+                    </td>
+                    <td>
+                        <input type="text" value="{{emision.emision}}" class="form-control" name="Emisiones[cantidad][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaEmisiones')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                    
+                </tr>
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="text" class="form-control" name="Emisiones[componente][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Emisiones[proceso][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Emisiones[cantidad][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaEmisiones')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <div class="text-center">
+                <a class="btn btn-primary text-white" onClick="agregarFila('tablaEmisiones', 1)">Agregar emisión</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    
+    
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

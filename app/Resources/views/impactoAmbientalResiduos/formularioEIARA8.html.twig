@@ -1,0 +1,153 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO A - 8. INFORMACIÓN QUE SE ADJUNTA {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARA8') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    {% set i = 1 %}
+    <h6>8.1 Contrato social o estatutos inscriptos <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <h6>8.2 Actas societarias <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage2 is defined and Storage2 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <h6>8.3 Copia de Doc. de identidad <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage3 is defined and Storage3 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    {% set i = i + 1 %}
+    <h6>8.4 Constancia de N° de CUIT <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage4 is defined and Storage4 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    {% set i = i + 1 %}
+    <h6>8.5 Impuesto inmobiliario  <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage5 is defined and Storage5 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    {% set i = i + 1 %}
+    <h6>8.6 Habilitación correspondiente  <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage6 is defined and Storage6 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage6.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    {% set i = i + 1 %}
+    <h6>8.7 Otro  <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'8.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage7 is defined and Storage7 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage7.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>
+<script src="{{asset('bundles/js/archivoIndividual.js')}}"></script>
+{% endblock %}

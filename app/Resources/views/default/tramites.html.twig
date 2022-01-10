@@ -1,0 +1,547 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+
+    <div class="m-top p-2">
+        <div class="text-center mb-2">
+            <h3 class="text-dark">Trámites</h3>
+        </div>
+        <div class="input-group rounded">
+            <input type="text" class="form-control" id="buscarTramite" placeholder="Buscar trámite" aria-label="Search" aria-describedby="search-addon" />
+
+            <span class="input-group-text border-0" id="search-addon">
+                <i class="fas fa-search"></i>
+            </span>
+
+        </div>
+    </div>
+    <div class="row pad" style="display:none">
+        {% for tramite in listaTramites %}
+            <div class="col-12 col-sm-4 tramites">
+                <div class="card m-top card-shadow">
+                    <div class="card-body">
+                        <div class="card-title title-width">
+                            <p>{{tramite.descripcion}}</p>
+                        </div>
+                        <div class="card-link media">
+
+                            <a href="{{tramite.url}}"><i class="fas fa-search icon-margin" title="ver"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+        <div class="col-12 col-sm-4 tramiteNoEncontrado">
+            <div class="card m-top card-shadow">
+                <div class="card-body">
+                    <div class="card-title title-width">
+                        <p>No se encontraron tramites para su búsqueda</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="background-color: white;"class="p-2 mb-3 modulos">
+        <div id="accordion" class="mt-2 mb-2">
+            <div class="card card-modulos">
+                <div class="card-header bg-white" id="headingDiag">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed text-dark" data-toggle="collapse" data-target="#collapseDiag" aria-expanded="false" aria-controls="collapseDiag">
+                            Diagrama de Flujo para la presentación de los trámites
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseDiag" class="collapse text-center" aria-labelledby="headingDiag" data-parent="#accordion">
+                    <div class="row pad" style="display: flex;">
+                           <div class="text-center mt-2 mb-2">
+                            <img src="../bundles/img/secuencia.PNG" width="800">
+                        </div>
+                            
+                        </div>
+                </div>
+            </div>
+            <div class="card card-modulos">
+                <div class="card-header bg-white" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link text-dark" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Módulo I: Formulario de presentación
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="row pad" style="display: flex;">
+        
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                         <div class="card-content white-text">
+                                            <h5 class="card-title">Industrias y otras actividades sin normativa específica.</h5>
+                                            <p class="flow-text">Resolución N°403/16</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="{{ path('formularioIndustriasPresentacion')}}">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Estaciones de Servicio</h5>
+                                            <p>"A Instalarse"  Resolución N°403/16</p>
+                                        </div>
+                                        
+                                        <div class="card-link media">
+                                            <a href="{{ path('formularioExpendioCombustiblePresentacion')}}">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Estaciones de Servicio</h5>
+                                            <p>"En funcionamiento" Resolución N°187/17</p>
+                                        </div>
+                                        
+                                        <div class="card-link media">
+                                            <a href="#">Ir a Módulo III</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Feed Lots (Bovino).</h5>
+                                            <p>Resolución Nº 023/09</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="{{ path('formularioFeedLotsPresentacion')}}">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Loteos con fines de Urbanización.</h5>
+                                            <p>Resolución N° 350/17</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="{{ path('formularioUrbanizacionPresentacion') }}">Inicar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Acopios de Granos.</h5>
+                                            <p>Resolución N°177/03</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="{{ path('formularioAcopioGranosEstudioImpactoAmbiental') }}">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+            <div class="card card-modulos">
+                <div class="card-header bg-white" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed text-dark" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Módulo II: Estudios de impacto ambiental (Aplica a actividades Nuevas)
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="row pad" style="display: flex;">
+        
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Industrias y otras actividades sin normativa específica.</h5>
+                                            <p class="flow-text">Resolución N°403/16</p>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 2 y 3</h5>
+                                            <div class="card-body">
+                                              <p class="card-text">EsIA</p>
+                                              <a href="{{ path('formularioIndustriasEstudioImpactoAmbiental') }}">Iniciar trámite</a>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Estaciones de Servicio</h5>
+                                            <p>"A Instalarse"  Resolución N°403/16</p>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 2</h5>
+                                            <div class="card-body">
+                                              <p class="card-text">EsIA</p>
+                                              <a href="{{ path('formularioExpendioCombustibleEsIA')}}">Iniciar trámite</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Feed Lots (Bovino).</h5>
+                                            <p>Resolución Nº 023/09</p>
+                                            
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Capacidad superior a 200 animales</h5>
+                                            <div class="card-body">
+                                              <p class="card-text">EsIA</p>
+                                              <a href="{{ path('formularioFeedLotsInformeAmbientalCumplimiento')}}">Iniciar trámite</a>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Loteos con fines de Urbanización.</h5>
+                                            <p>Resolución N° 350/17</p>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 2</h5>
+                                            <div class="card-body">
+                                              <p class="card-text">EsIA</p>
+                                              <a href="{{ path('formularioUrbanizacionEstudioImpactoAmbiental') }}">Iniciar trámite</a>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Acopios de Granos.</h5>
+                                            <p>Resolución N°177/03</p>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Ubicadas en Zonas Suburbana, Rural, Industrial o mixta, quedan eximidas aquellas plantas ubicadas en zona rural o industrial a más de 500 metros de la Zona Urbana o Suburbana con  capacidad total  mayor a 10.000 Ton</h5>
+                                            <div class="card-body">
+                                              <p class="card-text">EsIA</p>
+                                              <a href="{{ path('formularioAcopioGranosEsIA')}}">Iniciar trámite</a>
+                                            </div>
+                                        </div> 
+                                   </div>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+            <div class="card card-modulos">
+                <div class="card-header bg-white" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed text-dark" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Módulo III: Certificación de aptitud ambiental
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="row pad" style="display: flex;">
+        
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Industrias y otras actividades sin normativa específica.</h5>
+                                            <p class="card-text">Resolución N°403/16</p>                                            
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 1</h5>
+                                            <div class="card-body">
+                                              <p class="card-text">Declaración Jurada</p>
+                                              <a href="#">Iniciar trámite</a>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                        <h5 class="card-header">Categoría 2 y 3</h5>
+                                        <div class="card-body">
+                                          <p class="card-text">Primer CAA o Mantiene Condiciones Declaradas en el CAA anterior</p>
+                                          <p class="card-text">IAC</p>
+                                          <a href="{{ path('formularioIndustriasInformeAmbientalCumplimiento') }}">Iniciar trámite</a>
+                                        </div>
+                                        <div class="card-body">
+                                          <p class="card-text"> Prevee realizar cambios a los declarados en el Certificado anterior</p>
+                                          <a href="#">Ir a Módulo I</a>
+                                        </div>
+                                      </div>
+                                                                            
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Estaciones de Servicio</h5>
+                                            <p>"A Instalarse"  Resolución N°403/16</p>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 2 </h5>
+                                            <div class="card-body">
+                                                <p class="card-text">IAC</p>
+                                                <a href="{{ path('formularioExpendioCombustibleEsIA') }}">Iniciar trámite</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                    <div class="card m-top card-shadow">
+                                        <div class="card-body">
+                                            <div class="card-content white-text">
+                                                <h5 class="card-title">Estaciones de Servicio</h5>
+                                                <p>"En funcionamiento" Resolución N°187/17</p>
+                                            </div>
+
+                                            <div class="card">
+                                                <h5 class="card-header">Categoría 2 </h5>
+                                                <div class="card-body">
+                                                  <p class="card-text">Mantiene Condiciones Declaradas en el CAA anterior</p>
+                                                  <p class="card-text">IAC</p>
+                                                  <a href="{{ path('formularioExpendioCombustibleEsIA') }}">Iniciar trámite</a>
+                                                </div>
+                                                <div class="card-body">
+                                                  <p class="card-text">Prevee realizar cambios a los declarados en el Certificado anterior</p>
+                                                  <a href="#">Ir a Módulo I</a>
+                                                </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Feed Lots (Bovino).</h5>
+                                            <p>Resolución Nº 023/09</p>
+                                        </div>
+                                        <div class="card">
+                                        <h5 class="card-header">Menos de 200 Animales</h5>
+                                        <div class="card-body">
+                                          <p class="card-text">Declaración Jurada</p>
+                                          <a href="#">Iniciar trámite</a>
+                                        </div>
+                                      </div>
+                                        <div class="card">
+                                        <h5 class="card-header">Capacidad superior a 200 animales</h5>
+                                        <div class="card-body">
+                                          <p class="card-text"> Primer CAA o Mantiene Condiciones Declaradas en el CAA anterior</p>
+                                          <a href="{{ path('formularioFeedLotsInformeAmbientalCumplimiento') }}">Iniciar trámite</a>
+                                        </div>
+                                        <div class="card-body">
+                                          <p class="card-text"> Prevee realizar cambios a los declarados en el Certificado anterior</p>
+                                          <a href="{{ path('formularioFeedLotsInformeAmbientalCumplimiento')}}">Ir al Módulo I</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Loteos con fines de Urbanización.</h5>
+                                            <p>Resolución N° 350/17</p>
+                                        </div> 
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 1</h5>
+                                            <div class="card-body">
+                                                <p class="card-text">Declaración Ambiental y Fin de Obra</p>
+                                                <a href="{{ path('formularioc1')}}">Iniciar trámite</a>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Categoría 2</h5>
+                                            <div class="card-body">
+                                                <p class="card-text"> PGA</p>
+                                                <a href="{{ path('formularioc1')}}">Iniciar trámite</a>
+                                            </div>                                       
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Acopios de Granos.</h5>
+                                            <p>Resolución N°177/03</p>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Zona Urbana</h5>
+                                            <div class="card-body">
+                                                <p class="card-text">IAC</p>
+                                                <a href="{{ path('formularioAcopioGranosIAC')}}">Iniciar trámite</a>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Zonas rurales, mixtas, o industriales  a MENOS de 500 metros de Zonas Urbanas y Suburbana</h5>
+                                            <div class="card-body">
+                                                <p class="card-text"> IAC</p>
+                                                <a href="{{ path('formularioAcopioGranosIAC')}}">Iniciar trámite</a>
+                                            </div>                                       
+                                        </div>
+                                        <div class="card">
+                                            <h5 class="card-header">Zonas rurales, mixtas, o industriales a MAS de 500 metros de Zonas Urbanas y Suburbana y capacidad total  mayor a10.000 Ton</h5>
+                                            <div class="card-body">
+                                                <p class="card-text"> IAC</p>
+                                                <a href="{{ path('formularioAcopioGranosIAC')}}">Iniciar trámite</a>
+                                            </div>                                       
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+            <div class="card card-modulos">
+                <div class="card-header bg-white" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed text-dark" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Módulo IV: Cambio de titularidad del emprendimiento
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="row pad" style="display: flex;">
+        
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                         <div class="card-content white-text">
+                                            <h5 class="card-title">Industrias y otras actividades sin normativa específica.</h5>
+                                            <p class="flow-text">Resolución N°403/16</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="#">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Estaciones de Servicio</h5>
+                                            <p>"En funcionamiento" Resolución N°187/17</p>
+                                        </div>
+                                        
+                                        <div class="card-link media">
+                                            <a href="#">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Feed Lots (Bovino).</h5>
+                                            <p>Resolución Nº 023/09</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="#">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Loteos con fines de Urbanización.</h5>
+                                            <p>Resolución N° 350/17</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="#">Inicar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-4 tramites" style="display: block;">
+                                <div class="card m-top card-shadow">
+                                    <div class="card-body">
+                                        <div class="card-content white-text">
+                                            <h5 class="card-title">Acopios de Granos.</h5>
+                                            <p>Resolución N°177/03</p>
+                                        </div>
+                                        <div class="card-link media">
+                                            <a href="#">Iniciar Trámite</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('bundles/js/tramites.js')}}"></script>
+{% endblock %}

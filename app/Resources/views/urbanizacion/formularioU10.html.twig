@@ -1,0 +1,65 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 9. DESCRIPCIÓN DEL PROYECTO <span class="text-success" data-toggle="tooltip" title="En la descripción deberá especificar: cantidad de manzanas, cantidad de lotes destinados a vivienda, cantidad y superficie destinados a vivienda, cantidad de lotes de uso privado, y otros datos sobre espacios verdes, retardador fluvial, equipamiento comunitario.">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU10" action="{{ path('tramiteU11') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="razonSocial"> DESCRIPCIÓN DEL PROYECTO <span class="text-danger">(*)</span></p>
+            </div>
+        </div>
+        {% if Loteo is defined  and Loteo != null %}
+            <textarea class="form-control" name="Loteo[descripcion]" required>{{Loteo.descripcionProyecto}}</textarea>
+        {% else %}
+            <textarea class="form-control" name="Loteo[descripcion]" required></textarea>
+        {% endif %}
+        
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="input-group mb-3">
+                <p for="razonSocial"> DESARROLLO EN ETAPAS <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Cuando el emprendimiento no se desarrolla en etapas, las factibilidades de los servicios deberán ser para la totalidad de la urbanización.">(?)</span></p>
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="radio" name="Urbanizacion[check]" value="Si" {% if Urbanizacion is defined and Urbanizacion != null and Urbanizacion.desarrolloEtapa != null %}checked{% endif %} onclick="showInput()">SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" id="" name="Urbanizacion[check]" value="No" onclick="hideInput()" required>NO
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% if Urbanizacion is defined and Urbanizacion != null and Urbanizacion.desarrolloEtapa != null %}
+    <div class="row" id="divEtapas">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="razonSocial"> EXPLICACIÓN DEL DESARROLLO EN ETAPAS <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Deberá explicar: N° de lotes, superficies de los mismos, ubicación, obras de infraestructura, plano 1° etapa.">(?)</span></p>
+            </div>
+        </div>
+        <textarea class="form-control" name="Urbanizacion[etapa]" id ='explicacionEtapas'>{{Urbanizacion.desarrolloEtapa}}</textarea>
+    </div>
+    {% else %}
+    <div class="row" id="divEtapas" style="display:none;">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="razonSocial"> EXPLICACIÓN DEL DESARROLLO EN ETAPAS <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Deberá explicar: N° de lotes, superficies de los mismos, ubicación, obras de infraestructura, plano 1° etapa.">(?)</span></p>
+            </div>
+        </div>
+        <textarea class="form-control" name="Urbanizacion[etapa]" id ='explicacionEtapas'></textarea>
+    </div>
+    {% endif %}
+    <br>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script src="{{asset('bundles/js/formularioUrbanizacion/formularioU10.js')}}"></script>   
+{% endblock %}

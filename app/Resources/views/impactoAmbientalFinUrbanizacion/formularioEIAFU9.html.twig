@@ -1,0 +1,39 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 9. PRESENTACIÓN DEL PROYECTO DE PLANO DE MENSURA <span class="text-danger">(*)</span><span class="text-success">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU9') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <h6>9.-Con las condiciones para su registración definitiva en el SCIT en cumplimiento de la Resolución
+        027/14 del SCIT.
+        En caso de ser barrios cerrados, el plano de mensura deberá contener las características de conjunto
+        inmobiliario según el código Civil y Comercial.
+    </h6>
+    {% set i = 1 %}
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" accept=".pdf"/> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'9.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div> 
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/archivoIndividual.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,346 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}6. USO DE RECURSOS NATURALES Y ENERGÍA{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio7') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">AGUA DE RED PUBLICA</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Agua[tipo][publica]" data-tipo="publica" required {% if AguaPublica is defined and AguaPublica|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Agua[tipo][publica]" data-tipo="publica" required {% if AguaPublica is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="aguapublica"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Prestador de Servicios</th>
+                                <th colspan="3">Consumo (Volumne / tiempo)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasaguapublica">
+                            {% if AguaPublica is defined and AguaPublica|length >0 %}
+                                {% for publica in AguaPublica %}
+                                    <tr>
+                                        <td><input type="text" name="AguaPublica[nombre][]" value="{{publica.nombre}}"/></td>
+                                        <td><input type="text" name="AguaPublica[consumo][]" value="{{publica.cantidad}}"/></td>
+                                        <td>
+                                            <select name="AguaPublica[unidad][]">
+                                                <option {{ publica.unidad == 'litro' ? 'selected' }}>litros</option>
+                                                <option {{ publica.unidad == 'm3' ? 'selected' }}>m3</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="AguaPublica[tiempo][]">
+                                                <option {{ publica.tiempo == 'minuto' ? 'selected' }}>minuto</option>
+                                                <option {{ publica.tiempo == 'hora' ? 'selected' }}>hora</option>
+                                                <option {{ publica.tiempo == 'dia' ? 'selected' }}>dia</option>
+                                                <option {{ publica.tiempo == 'mes' ? 'selected' }}>mes</option>
+                                            </select>
+                                        <a onClick="eliminarFila(this,{{publica.id}},'Agua')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>        
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaAgua('aguapublica')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">CAPTACIÓN DE AGUA SUBTERRÁNEA</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Agua[tipo][subterranea]" data-tipo="subterranea" required {% if AguaSubterranea is defined and AguaSubterranea|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Agua[tipo][subterranea]" data-tipo="subterranea" required {% if AguaSubterranea is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="aguasubterranea"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nro Perforación</th>
+                                <th>Descripccion del Uso / Ubicación en el plano</th>
+                                <th colspan="3">Consumo (Volumne / tiempo)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasaguasubterranea">
+                            {% if AguaSubterranea is defined and AguaSubterranea|length >0 %}
+                                {% for subterranea in AguaSubterranea %}
+                                    <tr>
+                                        <td><input type="number" name="AguaSubterranea[nroPerforacion][]" step="1" min="1" value="{{subterranea.nroPerforacion}}"/></td>
+                                        <td><input type="text" name="AguaSubterranea[ubicacion][]" value="{{subterranea.ubicacionPlano}}"/></td>
+                                        <td><input type="text" name="AguaSubterranea[consumo][]" value="{{subterranea.cantidad}}"/></td>
+                                        <td>
+                                            <select name="AguaSubterranea[unidad][]">
+                                                <option {{ subterranea.unidad == 'litro' ? 'selected' }}>litros</option>
+                                                <option {{ subterranea.unidad == 'm3' ? 'selected' }}>m3</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="AguaSubterranea[tiempo][]">
+                                                <option {{ subterranea.tiempo == 'minuto' ? 'selected' }}>minuto</option>
+                                                <option {{ subterranea.tiempo == 'hora' ? 'selected' }}>hora</option>
+                                                <option {{ subterranea.tiempo == 'dia' ? 'selected' }}>dia</option>
+                                                <option {{ subterranea.tiempo == 'mes' ? 'selected' }}>mes</option>
+                                            </select>
+                                        <a onClick="eliminarFila(this,{{subterranea.id}},'Agua')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>        
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaAgua('aguasubterranea')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">ENERGÍA ELÉCTRICA DE RED PUBLICA</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Electrica[tipo][publica]" data-tipo="electricapublica" required {% if EnergiaPropia is defined and EnergiaPropia|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Electrica[tipo][publica]" data-tipo="electricapublica" required {% if EnergiaPropia is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="energiaelectricapublica"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Prestador de Servicios</th>
+                                <th>Consumo mensual (kw)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filaselectricapublica">
+                            {% if EnergiaAdquirida is defined and EnergiaAdquirida|length >0 %}
+                                {% for adquirida in EnergiaAdquirida %}
+                                    <tr>
+                                        <td><input type="text" name="EnergiaAdquirida[nombre][]" value="{{adquirida.nombre}}"/></td>
+                                        <td><input type="text" name="EnergiaAdquirida[consumo][]" value="{{adquirida.cantidad}}"/>
+                                        <a onClick="eliminarFila(this,{{subterranea.id}},'ElectricaAdquirida')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>        
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaElectrica('electricapublica')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">ENERGÍA ELÉCTRICA DE GENERACIÓN PROPIA</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Electrica[tipo][propia]" data-tipo="electricapropia" required {% if EnergiaPropia is defined and EnergiaPropia|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Electrica[tipo][propia]" data-tipo="electricapropia" required {% if EnergiaPropia is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="energiaelectricapropia"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Metodo</th>
+                                <th>Consumo mensual (kw)</th>
+                                <th>Tipo de Combustible o efluente</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filaselectricapropia">
+                            {% if EnergiaPropia is defined and EnergiaPropia|length >0 %}
+                                {% for propia in EnergiaPropia %}
+                                    <tr>
+                                        <td><input type="text" name="EnergiaPropia[metodo]" value="{{propia.metodo}}"/></td>
+                                        <td><input type="text" name="EnergiaPropia[consumo]" value="{{propia.consumo}}"/></td>                                
+                                        <td><input type="text" name="EnergiaPropia[fuente]" value="{{propia.fuente}}"/></td>                                
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td><input type="text" name="EnergiaPropia[metodo]" /></td>
+                                <td><input type="text" name="EnergiaPropia[consumo]" /></td>                                
+                                <td><input type="text" name="EnergiaPropia[fuente]" /></td>                                
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>              
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">OTROS RECURSOS</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Electrica[tipo][otro]" data-tipo="electricaotro" required {% if OtroRecurso is defined and OtroRecurso|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Electrica[tipo][otro]" data-tipo="electricaotro" required {% if OtroRecurso is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div id="energiaelectricaotro"  style="display :none">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Recurso</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filaselectricaotro">
+                            {% if OtroRecurso is defined and OtroRecurso|length >0 %}
+                                {% for otro in OtroRecurso %}
+                                    <tr>
+                                        <td><textarea name="OtroRecurso[tipo][]" cols="120" rows="3">{{otro.tipo}}</textarea></td>
+                                        <a onClick="eliminarFila(this,{{otro.id}},'OtroRecurso')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>   
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaElectrica('electricaotro')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendio5') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('formularioExpendio5',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script src="{{asset('bundles/js/expendioCombustible/formulario6.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-check').click(function(){
+                var tipo = $(this).data('tipo');
+                $('#agua'+tipo).toggle();
+            })
+            $('.ck-check').click(function(){
+                var tipo = $(this).data('tipo');
+                $('#energia'+tipo).toggle();
+            })
+
+            {% if AguaPublica is defined and AguaPublica|length >0 %} $('#aguapublica').toggle(); {% endif %}
+            {% if AguaSubterranea is defined and AguaSubterranea|length >0 %} $('#aguasubterranea').toggle(); {% endif %}
+            {% if EnergiaPropia is defined and EnergiaPropia|length >0 %} $('#energiaelectricapublica').toggle(); {% endif %}
+            {% if EnergiaAdquirida is defined and EnergiaAdquirida|length >0 %} $('#energiaelectricapropia').toggle(); {% endif %}
+            {% if OtroRecurso is defined and OtroRecurso|length >0 %} $('#energiaelectricaotro').toggle(); {% endif %}
+        })
+    </script>
+{% endblock %}

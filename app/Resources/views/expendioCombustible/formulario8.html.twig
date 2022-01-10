@@ -1,0 +1,1255 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}8. PLAN DE GESTIÓN AMBIENTAL{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio9') }}" method="post" enctype="multipart/form-data">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" id="tramitesId" value="{{idTramite}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="font-weight-bold">PREVENCIÓN DE IMPACTOS AMBIENTALES Atención: Se generarán automáticamente las tablas en cada ítem, de acuerdo a los impactos identificados en el punto 7 del formulario.
+                    </label>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">PREVENCIÓN DE IMPACTOS SOBRE EL SUELO IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoSuelo is defined and ImpactoSuelo != null %}
+            <div class="row">
+                <div class="col-md-12 center">
+                    <table class='table'>
+                        <thead>
+                            <tr>
+                                <th>Prevención</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasImpactoSuelo">
+                            {% if ImpactoSueloDAtos != null and ImpactoSueloDAtos[0].prevencion != null %}
+                                {% for suelo in ImpactoSueloDAtos %}
+                                    <tr>
+                                        <td><textarea name="ImpactoSuelo[]" cols="120" rows='1' required>{{suelo.prevencion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'ImpactoSuelo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="ImpactoSuelo[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'ImpactoSuelo',{{suelo.id}},'Impacto')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('ImpactoSuelo')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>            
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">PREVENCIÓN DE IMPACTOS SOBRE EL AGUA SUBTERRÁNEA IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoAguaSubterranea is defined and ImpactoAguaSubterranea != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Prevención</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasImpactoAguaSubterranea">
+                            {% if ImpactoAguaSubterraneaDAtos != null and ImpactoAguaSubterraneaDAtos[0].prevencion != null %}
+                                {% for agua in ImpactoAguaSubterraneaDAtos %}
+                                    <tr>
+                                        <td><textarea name="ImpactoAguaSubterranea[]" cols="120" rows='1' required>{{agua.prevencion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'ImpactoAguaSubterranea',{{agua.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="ImpactoAguaSubterranea[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'ImpactoAguaSubterranea')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaAgua('ImpactoAguaSubterranea')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">PREVENCIÓN DE IMPACTOS SOBRE EL AIRE IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoAire is defined and ImpactoAire != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Prevención</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasImpactoAire">
+                            {% if ImpactoAireDAtos != null and ImpactoAireDAtos[0].prevencion != null %}
+                                {% for aire in ImpactoAireDAtos %}
+                                    <tr>
+                                        <td><textarea name="ImpactoAire[]" cols="120" rows='1' required>{{aire.prevencion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'ImpactoAire',{{aire.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="ImpactoAire[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'ImpactoAire')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('ImpactoAire')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">PREVENCIÓN DE IMPACTOS SOBRE EL AGUA SUPERFICIAL O CUERPO RECEPTOR IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoCuerpoReceptor is defined and ImpactoCuerpoReceptor != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Prevención</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasImpactoCuerpoReceptor">
+                            {% if ImpactoCuerpoReceptorDAtos != null and ImpactoCuerpoReceptorDAtos[0].prevencion != null %}
+                                {% for cuerporeceptor in ImpactoCuerpoReceptorDAtos %}
+                                    <tr>
+                                        <td><textarea name="ImpactoCuerpoReceptor[]" cols="120" rows='1' required>{{cuerporeceptor.prevencion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'ImpactoCuerpoReceptor',{{cuerporeceptor.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="ImpactoCuerpoReceptor[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'ImpactoCuerpoReceptor')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('ImpactoCuerpoReceptor')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">PREVENCIÓN DE OTROS IMPACTOS IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoOtro is defined and ImpactoOtro != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Prevención</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasImpactoOtro">
+                            {% if ImpactoOtroDAtos != null and ImpactoOtroDAtos[0].prevencion != null %}
+                                {% for otros in ImpactoOtroDAtos %}
+                                    <tr>
+                                        <td><textarea name="ImpactoOtro[]" cols="120" rows='1' required>{{otros.prevencion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'ImpactoOtro',{{otros.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="ImpactoOtro[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'ImpactoOtro')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('ImpactoOtro')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="font-weight-bold">MITIGACIÓN DE IMPACTOS AMBIENTALES Atención: Se generarán automáticamente las tablas en cada ítem, de acuerdo a los impactos identificados en el punto 7 del formulario.
+                    </label>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">MITIGACIÓN DE IMPACTOS SOBRE EL SUELO IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoSuelo is defined and ImpactoSuelo != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mitigacion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasMitigacionSuelo">
+                            {% if ImpactoSueloDAtos != null and ImpactoSueloDAtos[0].prevencion != null %}
+                                {% for suelo in ImpactoSueloDAtos %}
+                                    <tr>
+                                        <td><textarea name="MitigacionSuelo[]" cols="120" rows='1' required>{{suelo.medidaMitigacion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'MitigacionSuelo',{{suelo.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="MitigacionSuelo[]" cols="120" rows='1' required></textarea></td>
+                                        <td><a onClick="eliminarFila(this,'MitigacionSuelo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('MitigacionSuelo')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">MITIGACIÓN DE IMPACTOS SOBRE EL AGUA SUBTERRÁNEA IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoAguaSubterranea is defined and ImpactoAguaSubterranea != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>                                
+                                <th>Mitigacion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasMitigacionAgua">
+                            {% if ImpactoAguaSubterraneaDAtos != null and ImpactoAguaSubterraneaDAtos[0].prevencion != null %}
+                                {% for agua in ImpactoAguaSubterraneaDAtos %}
+                                    <tr>
+                                        <td><textarea name="MitigacionAgua[]" cols="120" rows='1' required>{{agua.medidaMitigacion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'MitigacionAgua',{{agua.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="MitigacionAgua[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'MitigacionAgua')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('MitigacionAgua')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">MITIGACIÓN DE IMPACTOS SOBRE EL AIRE IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoAire is defined and ImpactoAire != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                
+                                <th>Mitigacion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasMitigacionAire">
+                            {% if ImpactoAireDAtos != null and ImpactoAireDAtos[0].prevencion != null %}
+                                {% for aire in ImpactoAireDAtos %}
+                                    <tr>
+                                        <td><textarea name="MitigacionAire[]" cols="120" rows='1' required>{{aire.medidaMitigacion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'MitigacionAire',{{aire.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="MitigacionAire[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'MitigacionAire')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('MitigacionAire')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">MITIGACIÓN DE IMPACTOS SOBRE EL AGUA SUPERFICIAL O CUERPO RECEPTOR IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoCuerpoReceptor is defined and ImpactoCuerpoReceptor != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                
+                                <th>Mitigacion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasMitigacionCuerpoReceptor">
+                            {% if ImpactoCuerpoReceptorDAtos != null and ImpactoCuerpoReceptorDAtos[0].prevencion != null %}
+                                {% for cuerporeceptor in ImpactoCuerpoReceptorDAtos %}
+                                    <tr>
+                                        <td><textarea name="MitigacionCuerpoReceptor[]" cols="120" rows='1' required>{{cuerporeceptor.medidaMitigacion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'MitigacionCuerpoReceptor',{{cuerporeceptor.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="MitigacionCuerpoReceptor[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'MitigacionCuerpoReceptor')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('MitigacionCuerpoReceptor')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">MITIGACIÓN DE OTROS IMPACTOS IDENTIFICADOS EN EL ÍTEM.
+                    </label>
+                </div>
+            </div>
+            {% if ImpactoOtro is defined and ImpactoOtro != null %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                
+                                <th>Mitigacion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasMitigacionOtro">
+                            {% if ImpactoOtroDAtos != null and ImpactoOtroDAtos[0].prevencion != null %}
+                                {% for otros in ImpactoOtroDAtos %}
+                                    <tr>
+                                        <td><textarea name="MitigacionOtro[]" cols="120" rows='1' required>{{otros.medidaMitigacion}}</textarea></td>
+                                        <td><a onClick="eliminarFila(this,'MitigacionOtro',{{otros.id}},'Impacto)" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td><textarea name="MitigacionOtro[]" cols="120" rows='1' required></textarea></td>
+                                    <td><a onClick="eliminarFila(this,'MitigacionOtro')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFila('MitigacionOtro')" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="font-weight-bold">GESTIÓN DE RESIDUOS.
+                    </label>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">RESIDUOS SÓLIDOS URBANOS.
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tipo <span class="text-success" title="Indicar RSU o Asimilable, especificando el tipo de residuo">(?)</span></th>
+                                <th>Cantidad (kg/mes)</th>
+                                <th>Empresa de Transporte</th>
+                                <th>Destino Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select name="ResiduosSolidos[tipo]">
+                                        {{dump(ResiduoSolido.tipo)}}
+                                        {% for tipoResiduo in TiposResiduos %}
+                                            <option value='{{tipoResiduo.id}}' {% if ResiduoSolido is defined and ResiduoSolido.tipo == tipoResiduo.id %} selected {% endif %}>{{tipoResiduo.tipo}}</option>                                            
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td><input type="number" name="ResiduosSolidos[cantidad]" step="1" min="0" {% if ResiduoSolido is defined %} value="{{ResiduoSolido.volumen}}" {% endif %}></td>
+                                <td><input type="text" name="ResiduosSolidos[empresa]" {% if ResiduoSolido is defined and TratamientoPlantaExpendioResiduoSolido is defined and TratamientoPlantaExpendioResiduoSolido != null  %} value="{{TratamientoPlantaExpendioResiduoSolido.empresaTransportadora}}" {% endif %}></td>
+                                <td><textarea name="ResiduosSolidos[destino]" cols="30" rows="10">{% if ResiduoSolido is defined and TratamientoPlantaExpendioResiduoSolido is defined and TratamientoPlantaExpendioResiduoSolido != null  %} {{TratamientoPlantaExpendioResiduoSolido.disposicionFinal}} {% endif %}</textarea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <p for="descripccion">RESIDUOS PELIGROSOS (Decreto 1844/02)<span class="text-success" title="Indicar si se generan este tipo de residuos en el establecimineto. Agregar una fila por cada residuo">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Residuos[Peligrosos][check]" data-tipo="residuospeligroso" required {% if Peligroso is defined and Peligroso|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Residuos[Peligrosos][check]" data-tipo="residuospeligroso" required {% if Peligroso is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="residuospeligroso" style="display:none">             
+                <p for="calle">Número de Generador otorgado por el Ministerio de Medio Ambiente para la confección del manifiesto electrónico. <span class="text-success" title="En caso de contar con numero de Generador de est tipo de residuo, tipear el mismo">(?)</span></p>   
+                <div class="input-group mb-12">
+                    <span class="input-group-text">G-</span>
+                    <input type="number" class="form-control" id="calle" name="Residuos[Peligrosos][nrogenerador]" max="9999" min="1000" step="1" {% if TratamientoPlantaExpendioPeligroso is defined %} value="{{ TratamientoPlantaExpendioPeligroso[0].numeroRegistro }}" {% endif %}/>
+                </div>
+                <div>
+                    <div class="row">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Tipo (anexo I-decreto 1844/02)</span></th>
+                                    <th>Destino Final - operador - almacenador transitorio</th>
+                                    <th>Cantidad / Unidad de tiempo</th>
+                                    <th>Empresa de Transporte</th>
+                                </tr>
+                            </thead>
+                            <tbody id="filasresiduosPeligrosos">
+                                {% if Peligroso is defined and Peligroso != null and TratamientoPlantaExpendioPeligroso is defined %}
+                                    {% for respel in Peligroso %}
+                                        <tr>
+                                            <td>
+                                                <select name="Residuos[Peligrosos][tipo][]" class="custom-select" id="tiposPeligrosos">
+                                                {% for peligroso in TipoResiduosPeligroso %}
+                                                    <option value="{{peligroso.id}}" {% if TratamientoPlantaExpendioPeligroso[loop.index -1 ] is defined and TratamientoPlantaExpendioPeligroso[loop.index -1 ].residuo == respel.id and respel.tipo == peligroso.id %} selected {% endif %}>{{peligroso.clase}} {{peligroso.descripcion}}</option>
+                                                {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="Residuos[Peligrosos][destino][]" value="{{ TratamientoPlantaExpendioPeligroso[loop.index - 1].disposicionFinal }}"></td>
+                                            <td><input type="text" name="Residuos[Peligrosos][volumen][]" value="{{ respel.volumen }}"></td>
+                                            <td><input type="text" name="Residuos[Peligrosos][empresa][]" value="{{ TratamientoPlantaExpendioPeligroso[loop.index - 1].empresaTransportadora }}"></td>
+                                            <td><a onClick="eliminarFila(this,{{respel.id}},'Residuo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td>
+                                            <select name="Residuos[Peligrosos][tipo][]" class="custom-select" id="tiposPeligrosos">
+                                            {% for peligroso in TipoResiduosPeligroso %}
+                                                <option value="{{peligroso.id}}" >{{peligroso.clase}} {{peligroso.descripcion}}</option>
+                                            {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="Residuos[Peligrosos][destino][]" ></td>
+                                        <td><input type="text" name="Residuos[Peligrosos][volumen][]" ></td>
+                                        <td><input type="text" name="Residuos[Peligrosos][empresa][]" ></td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a onClick="agregarFilaResiduosPeligroso()" class="btn btn-secondary text-light">Agregar Fila</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">RESIDUOS NO PELIGROSOS DE ACTIVIDADES DE SERVICIOS (Decreto nº 2151/14)<span class="text-success" title="Indicar si se generan este tipo de residuos en el establecimineto. Agregar una fila por cada residuo">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Residuos[NoPeligrosos][check]" data-tipo="residuosnopeligrosos" required class="ck-check" {% if Peligroso is defined and Peligroso|length >0 %} checked {% endif %} value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Residuos[NoPeligrosos][check]" data-tipo="residuosnopeligrosos" required {% if Peligroso is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <br/>
+            <div id="residuosnopeligrosos" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Tipo (anexo I-Decreto Nº 2151/14)</span></th>
+                                <th>Destino Final - tratador - almacenador transitorio</th>
+                                <th>Cantidad / Unidad de tiempo</th>
+                                <th>Empresa de Transporte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasresiduosNoPeligrosos">
+                            {% if NoPeligroso is defined and NoPeligroso != null and TratamientoPlantaExpendioNoPeligroso is defined %}
+                                {% for norespel in NoPeligroso %}
+                                    <tr>
+                                        <td>
+                                            <select name="Residuos[NoPeligrosos][tipo][]" class="custom-select" id="tiposNoPeligrosos">
+                                            {% for nopeligroso in TipoResiduosNoPeligroso %}
+                                                <option value="{{nopeligroso.id}}" {% if TratamientoPlantaExpendioNoPeligroso[loop.index -1 ] is defined and TratamientoPlantaExpendioNoPeligroso[loop.index -1 ].residuo == norespel.id and norespel.tipo == nopeligroso.id %} selected {% endif %}>{{nopeligroso.clase ~ nopeligroso.descripcion}}</option>
+                                            {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="Residuos[NoPeligrosos][destino][]" value="{{ TratamientoPlantaExpendioNoPeligroso[loop.index - 1].disposicionFinal }}"></td>
+                                        <td><input type="text" name="Residuos[NoPeligrosos][volumen][]" value="{{ norespel.volumen }}"></td>
+                                        <td><input type="text" name="Residuos[NoPeligrosos][empresa][]" value="{{ TratamientoPlantaExpendioNoPeligroso[loop.index - 1].empresaTransportadora }}"></td>
+                                        <td><a onClick="eliminarFila(this,{{norespel.id}},'Residuo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                        <td>
+                                            <select name="Residuos[NoPeligrosos][tipo][]" class="custom-select" id="tiposNoPeligrosos">
+                                            {% for nopeligroso in TipoResiduosNoPeligroso %}
+                                                <option value="{{nopeligroso.id}}" >{{nopeligroso.clase ~ nopeligroso.descripcion}}</option>
+                                            {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="Residuos[NoPeligrosos][destino][]" ></td>
+                                        <td><input type="text" name="Residuos[NoPeligrosos][volumen][]" ></td>
+                                        <td><input type="text" name="Residuos[NoPeligrosos][empresa][]" ></td>
+                                    </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaResiduosNoPeligroso()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text-default">GESTIÓN DE LÍQUIDOS RESIDUALES
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">LÍQUIDOS DE ORIGEN SANITARIO PROVENIENTES DEL DESAGOTE DE POZOS ABSORBENTES POR CAMIONES ATMOSFÉRICOS<span class="text-success" title="Especificar los datos correspondientes al desagote de pozos si se utiliza este servicio en la EESS">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Liquidos[Desagote][check]" data-tipo="liquidosDesagote" required {% if LiquidosDesagote is defined and LiquidosDesagote|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Liquidos[Desagote][check]" data-tipo="liquidosDesagote" required {% if LiquidosDesagote is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <br/>
+            <div id="liquidosDesagote" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Número de servicios mensuales</span></th>
+                                <th>Empresa</th>
+                                <th>Destino Final</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasLiquidisDesagote">
+                            {% if LiquidosDesagote is defined and LiquidosDesagote != null %}
+                                {% for liquidos in LiquidosDesagote %}
+                                    <tr>
+                                        <td><input type="text" name="Liquidos[Desagote][numero][]" value="{{liquidos.volumen}}"></td>
+                                        <td><input type="text" name="Liquidos[Desagote][empresa][]" value="{{TratamientoPlantaExpendioLiquidosDesagote[loop.index - 1].empresaTransportadora}}"></td>
+                                        <td><input type="text" name="Liquidos[Desagote][destino][]" value="{{TratamientoPlantaExpendioLiquidosDesagote[loop.index - 1].disposicionFinal}}"></td>
+                                        <td><a onClick="eliminarFila(this,{{liquidos.id}},'Residuo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}    
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaLiquidosDesagote()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">LÍQUIDOS DE ORIGEN SANITARIO VOLCADOS A LA RED CLOACAL<span class="text-success" title="Especificar los datos correspondientes a la red de cloacas si se utiliza este servicio en la EESS">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Liquidos[RedCloacal][check]" data-tipo="liquidosRedCloacal" required {% if TratamientoPlantaExpendioLiquidosRedCloacal is defined and TratamientoPlantaExpendioLiquidosRedCloacal|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Liquidos[RedCloacal][check]" data-tipo="liquidosRedCloacal" required {% if TratamientoPlantaExpendioLiquidosRedCloacal is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <br/>
+            <div id="liquidosRedCloacal" style="display:none">
+                <div class="row">                
+                    <div class="col-md-5">
+                        <div class="form-row">                    
+                            <p for="calle">NOMBRE DEL PRESTADOR</p>
+                            <input type="text" class="form-control" id="prestador" name="Liquidos[RedCloacal][empresa]" {% if TratamientoPlantaExpendioLiquidosRedCloacal is defined and TratamientoPlantaExpendioLiquidosRedCloacal != null %} value="{{TratamientoPlantaExpendioLiquidosRedCloacal.empresaTransportadora}}" {% endif %}>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="form-row">                    
+                            <p for="calle">NOMBRE DE ARCHIVO CORRESPONDIENTE A CONTRATO DE VINCULACIÓN ESTABLECIMIENTO / PRESTADOR</p>
+                            <input class="p-top" name="Liquidos[RedCloacal][contrato]" type="file" accept=".pdf" />
+                            {% if ImagenesLiquidosRedCloacal is defined and ImagenesLiquidosRedCloacal != null %}<spam class='text-success'>{{ImagenesLiquidosRedCloacal}}</spam>{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>                        
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">OTROS LÍQUIDOS RESIDUALES</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="LiquidosResiduales[Otros][check]" data-tipo="liquidosResiduales" required {% if LiquidosResiduales is defined and LiquidosResiduales|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="LiquidosResiduales[Otros][check]" data-tipo="liquidosResiduales" required {% if LiquidosResiduales is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <br/>            
+            <div id="liquidosResiduales" style="display:none">
+                <div id="filasLiquidosResiduales">
+                    {% if LiquidosResiduales is defined and LiquidosResiduales|length >0 %}
+                        {% for liquidos in LiquidosResiduales%}
+                        <div class="row">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                    </tr>                        
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:20%">PROCESO QUE LO GENERA</td>
+                                        <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="LiquidosResiduales[procesoGenerado][]">{{liquidos.procesoGenerador}}</textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">COMPONENTE/S RELEVANTE/S</td>
+                                        <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="LiquidosResiduales[componenteRelevante][]">{{liquidos.componenteRelevante}}</textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">CAUDAL</td>
+                                        <td style="width:80%">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Valor</label>
+                                                        <input class="form-control" type="text" class="form-control" name="LiquidosResiduales[cantidad][]" value="{{liquidos.volumen}}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Volumen</label>
+                                                        <select class="form-control" name="LiquidosResiduales[volumen][]">
+                                                            <option {% if liquidos.unidad == 'm3' %} selected {% endif %}>m3</option>
+                                                            <option {% if liquidos.unidad == 'lt' %} selected {% endif %}>lt</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Unidad de Tiempo</label>
+                                                        <select class="form-control" name="LiquidosResiduales[periodoTiempo][]">
+                                                            <option {% if liquidos.periodoTiempo == 'semanal' %} selected {% endif %}>semanal</option>
+                                                            <option {% if liquidos.periodoTiempo == 'mensual' %} selected {% endif %}>mensual</option>
+                                                            <option {% if liquidos.periodoTiempo == 'diario' %} selected {% endif %}>diario</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">Tratamiento (Seleccione al menos una opción)</td>
+                                        <td style="width:80%">
+                                            <div class="form-row">
+                                                <div class="input-group-text">
+                                                    <input type="radio" aria-label="Checkbox for following text input" value="Decantacion" name="LiquidosResiduales[gestion][]" {% if liquidos.gestion == 'Decantacion' %} checked {% endif %}> Decantación
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" aria-label="Checkbox for following text input" value="Tratamiento biológico" name="LiquidosResiduales[gestion][]" {% if liquidos.gestion == 'Tratamiento biológico' %} checked {% endif %}> Tratamiento biológico
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" aria-label="Checkbox for following text input" value="Neutralización" name="LiquidosResiduales[gestion][]" {% if liquidos.gestion == 'Neutralización' %} checked {% endif %}> Neutralización
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" aria-label="Checkbox for following text input" value="Oxidación" name="LiquidosResiduales[gestion][]" {% if liquidos.gestion == 'Oxidación' %} checked {% endif %}> Oxidación
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio"  aria-label="Checkbox for following text input" value="Reducción" name="LiquidosResiduales[gestion][]" {% if liquidos.gestion == 'Reducción' %} checked {% endif %}> Reducción
+                                                </div>
+                                                <div class="input-group-text">
+                                                    {% set tipos = ['Decantación','Tratamiento biológico','Neutralización','Oxidación','Reducción'] %}
+                                                    <input type="text" name="LiquidosResiduales[gestion][]" placeholder="Otro" {% if liquidos.gestion not in tipos %} checked {% endif %}>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">DESTINO</td>
+                                        <td style="width:80%">
+                                            <select name="LiquidosResiduales[destino][]" class="selectDestinoLiquidosResiduales" data-otro=''>
+                                                <option value="Colectora cloacal" {% if liquidos.receptor == 'Colectora cloacal' %} selected {% endif %}>Colectora cloacal</option>
+                                                <option value="Conducto pluvial abierto" {% if liquidos.receptor == 'Conducto pluvial abierto' %} selected {% endif %}>Conducto pluvial abierto</option>
+                                                <option value="Conducto pluvial cerrado" {% if liquidos.receptor == 'Conducto pluvial cerrado' %} selected {% endif %}>Conducto pluvial cerrado</option>
+                                                <option value="Cuenca elemental cerrada" {% if liquidos.receptor == 'Cuenca elemental cerrada' %} selected {% endif %}>Cuenca elemental cerrada</option>
+                                                <option value="Curso de agua superficial" {% if liquidos.receptor == 'Curso de agua superficial' %} selected {% endif %}>Curso de agua superficial</option>
+                                                <option value="Cursos de agua no permanente"{% if liquidos.receptor == 'Cursos de agua no permanente' %} selected {% endif %}>Cursos de agua no permanente</option>
+                                                <option value="Pozos o campos de drenaje"{% if liquidos.receptor == 'Pozos o campos de drenaje' %} selected {% endif %}>Pozos o campos de drenaje</option>
+                                            </select>
+                                        </td>
+                                    </tr>                                    
+                                    <tr><td><a onClick="eliminarTabla(this,{{liquidos.id}},'Efluente')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>                                
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaLiquidosResiduales()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>            
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="font-weight-bold">EMISIONES
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">EMISIONES GASEOSAS</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Emision[Gaseosa][check]" data-tipo="emisiongaseosa" class="ck-check" {% if EmisionGaseosa is defined and EmisionGaseosa|length >0 %} checked {% endif %} value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Emision[Gaseosa][check]" data-tipo="emisiongaseosa" {% if EmisionGaseosa is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <br/>
+            <div id="emisiongaseosa" style="display:none">        
+                {% if EmisionGaseosa is defined and EmisionGaseosa|length >0 %}
+                    {% for emigas in EmisionGaseosa %}
+                        <div class="row">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                    </tr>                        
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:20%">Operación que lo genera</td>
+                                        <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Emision[Gaseosa][procesoGenerado][]">{{emigas.procesoGenerador}}</textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">Componentes relevantes</td>
+                                        <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Emision[Gaseosa][componenteRelevante][]">{{emigas.componenteRelevante}}</textarea></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td style="width:20%">Tratamiento (Seleccione al menos una opción)</td>
+                                        <td style="width:80%">
+                                            
+                                            <div class="form-row">
+                                                <div class="input-group-text">
+                                                    <input type="radio"  aria-label="Checkbox for following text input" value="Adsorcion" name="Emision[Gaseosa][gestion][]" {% if emigas.gestion == 'Adsorcion'%} checked {% endif %}> Adsorción
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio"  aria-label="Checkbox for following text input" value="Filtro" name="Emision[Gaseosa][gestion][]" {% if emigas.gestion == 'Filtro'%} checked {% endif %}> Filtro (carbón activado)
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" aria-label="Checkbox for following text input" value="Scrubber" name="Emision[Gaseosa][gestion][]" {% if emigas.gestion == 'Scrubber'%} checked {% endif %}> Scrubber
+                                                </div>
+                                                <div class="input-group-text">
+                                                {% set tipos = ['Adsorción','Filtro','Scrubber'] %}
+                                                <input type="text" name="Emision[Gaseosa][gestion][]" placeholder="Otro" {% if emigas.gestion not in tipos %} checked {% endif %}>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">DESTINO</td>
+                                        <td style="width:80%">
+                                            <select name="Emision[Gaseosa][destino][]" class="selectDestinoEmision" data-otro='`+e+`'>
+                                                <option value="Colectora cloacal">Colectora cloacal</option>
+                                                <option value="Conducto pluvial abierto" {% if emigas.receptor == 'Conducto pluvial abierto'%} selected {% endif %}>Conducto pluvial abierto</option>
+                                                <option value="Conducto pluvial cerrado" {% if emigas.receptor == 'Conducto pluvial cerrado'%} selected {% endif %}>Conducto pluvial cerrado</option>
+                                                <option value="Cuenca elemental cerrada" {% if emigas.receptor == 'uenca elemental cerrada'%} selected {% endif %}>Cuenca elemental cerrada</option>
+                                                <option value="Curso de agua superficial" {% if emigas.receptor == 'Curso de agua superficial'%} selected {% endif %}>Curso de agua superficial</option>
+                                                <option value="Cursos de agua no permanente" {% if emigas.receptor == 'Cursos de agua no permanente'%} selected {% endif %}>Cursos de agua no permanente</option>
+                                                <option value="Pozos o campos de drenaje" {% if emigas.receptor == 'Pozos o campos de drenaje'%} selected {% endif %}>Pozos o campos de drenaje</option>
+                                            </select>
+                                        </td>
+                                    </tr>                
+                                    <tr><td><a onClick="eliminarTabla(this,{{emigas.id}},'Efluente')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}        
+                {% endif %}        
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaEmisionGaseosa()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">RUIDO</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Ruido[check]" data-tipo="ruido" required {% if Ruido is defined and Ruido|length >0 %} checked {% endif %} class="ck-check" value='1'> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="Ruido[check]" data-tipo="ruido" required {% if Ruido is not defined %} checked {% endif %} class="ck-check" value=0> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <br/>
+            <div id="ruido" style="display:none">
+                <div class="row">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Operación que lo genera</th>
+                                <th>Tratamiento</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filasotro">
+                            {% if Ruido is defined and Ruido|length >0 %}
+                                {% for ruido in Ruido %}
+                                    <tr>
+                                        <td><input type="text" name="Ruido[operacion][]" value="{{ruido.procesoGenerador}}"></td>
+                                        <td><input type="text" name="Ruido[tratamiento][]" value="{{ruido.tratamiento}}"></td>
+                                        <td><input type="text" name="Ruido[observacion][]" value="{{ruido.gestion}}"></td>
+                                        <td><a onClick="eliminarFila(this,{{ruido.id}},'Efluente')" class="btn text-danger"><i class="far fa-trash-alt"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a onClick="agregarFilaRuido()" class="btn btn-secondary text-light">Agregar Fila</a>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <label for="descripccion" class="font-weight-bold span-1">PLAN DE MONITOREO (Indicar el plan de monitoreo para el seguimiento de los impactos potenciales identificados en el punto 7). Especificar: frecuencia, georreferenciación de puntos de muestreo. ATENCIÓN: inicialmente los campos estarán deshabilitados. Se habilitarán automáticamente, cuando se seleccione la opción "SÍ" en el impacto relacionado en el punto 7</label>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p for="descripccion">ANÁLISIS DE CALIDAD DE SUELO</p>
+                            <textarea class="form-control" id="descripccion" name="CalidadSuelo" required placeholder="ANÁLISIS DE CALIDAD DE SUELO">{% if ImpactoSueloDAtos != null and ImpactoSueloDAtos[0].prevencion != null %} {{ImpactoSueloDAtos[0].frecuencia}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>                
+            </div>            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p for="descripccion">ANÁLISIS DE AGUA SUBTERRÁNEA</p>
+                            <textarea class="form-control" id="descripccion" name="CalidadAguaSubterranea" required placeholder="ANÁLISIS DE AGUA SUBTERRÁNEA">{% if ImpactoAguaSubterraneaDAtos != null and ImpactoAguaSubterraneaDAtos[0].prevencion != null %} {{ImpactoAguaSubterraneaDAtos[0].frecuencia}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>                
+            </div>            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p for="descripccion">ANÁLISIS DE CALIDAD DE AIRE</p>
+                            <textarea class="form-control" id="descripccion" name="CalidadAire" required >{% if ImpactoAireDAtos != null and ImpactoAireDAtos[0].prevencion != null %} {{ImpactoAireDAtos[0].frecuencia}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>                
+            </div>            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p for="descripccion">ANÁLISIS DE AGUA SUPERFICIAL O CUERPO RECEPTOR</p>
+                            <textarea class="form-control" id="descripccion" name="CalidadCuerpoReceptor" required >{% if ImpactoCuerpoReceptorDAtos != null and ImpactoCuerpoReceptorDAtos[0].prevencion != null %} {{ImpactoCuerpoReceptorDAtos[0].frecuencia}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>                
+            </div>            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p for="descripccion">ANÁLISIS DE OTROS IMPACTOS IDENTIFICADOS</p>
+                            <textarea class="form-control" id="descripccion" name="CalidadOtros" required >{% if ImpactoOtroDAtos != null and ImpactoOtroDAtos[0].prevencion != null %} {{ImpactoOtroDAtos[0].frecuencia}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>                
+            </div>       
+            <br/>     
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="font-weight-bold">RIESGO.
+                    </label>
+                </div>
+            </div>
+            <br/>           
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th colspan="6">Tipo de Riesgos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ACTIVIDADES / PROCESOS DEL ESTABLECIMIENTO</td>
+                                <td>Acústicos</td>
+                                <td>Aparatos a presión</td>
+                                <td>Sustancias Químicas</td>
+                                <td>Explosión</td>
+                                <td>Incendio</td>
+                                <td>Otro</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Expendio de combustibles líquidos<span class="text-success" title="En referencia al item 3. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[liquidi][]" value="acustico" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.acustico == 1 %} checked {% endif %} ></td>
+                                <td><input type="checkbox" name="Riesgo[liquidi][]" value="presion" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidi][]" value="sustancia" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidi][]" value="explosion" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidi][]" value="incendio" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoliquido" class="ck-otro" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.otro == 1 %} checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[liquidi][]" id="otroriesgoliquido" {% if RiesgoPresuntoLiquidos is defined and RiesgoPresuntoLiquidos.observaciones == 1 and RiesgoPresuntoLiquidos.observaciones != null and RiesgoPresuntoLiquidos.otro == 1 %} value="{{RiesgoPresuntoLiquidos.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Expendio de GNC<span class="text-success" title="En referencia al item 3. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[gnc][]" value="acustico" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[gnc][]" value="presion" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[gnc][]" value="sustancia" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[gnc][]" value="explosion" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[gnc][]" value="incendio" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgognc" class="ck-otro" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.otro == 1 %} checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[gnc][]" id="otroriesgognc" {% if RiesgoPresuntoGnc is defined and RiesgoPresuntoGnc.observaciones != null and RiesgoPresuntoGnc.otro == 1 %} value="{{RiesgoPresuntoGnc.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Expendio de otras sustancias<span class="text-success" title="En referencia al item 4. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[sustancia][]" value="acustico" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[sustancia][]" value="presion" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[sustancia][]" value="sustancia" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[sustancia][]" value="explosion" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[sustancia][]" value="incendio" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgosustancia" class="ck-otro" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.otro == 1 %} checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[sustancia][]" id="otroriesgosustancia" {% if RiesgoPresuntoSustancia is defined and RiesgoPresuntoSustancia.observaciones != null and RiesgoPresuntoSustancia.otro == 1 %} value="{{RiesgoPresuntoSustancia.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Servicios secundarios que brinda<span class="text-success" title="En referencia al item 4. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[servsec][]" value="acustico" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[servsec][]" value="presion" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[servsec][]" value="sustancia" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[servsec][]" value="explosion" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[servsec][]" value="incendio" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoservsec" class="ck-otro" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.otro == 1 %} checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[servsec][]" id="otroriesgoservsec" {% if RiesgoPresuntoServec is defined and RiesgoPresuntoServec.observaciones != null and RiesgoPresuntoServec.otro == 1 %} value="{{RiesgoPresuntoServec.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Almacenamiento de sustancias líquidas<span class="text-success" title="En referencia al item 5. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[liquidas][]" value="acustico" {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidas][]" value="presion"  {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidas][]" value="sustancia"  {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidas][]" value="explosion"  {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[liquidas][]" value="incendio"  {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoliquida" class="ck-otro" {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.otro == 1 %} checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[liquidas][]" id="otroriesgoliquida" {% if RiesgoPresuntoLiquidas is defined and RiesgoPresuntoLiquidas.observaciones != null and RiesgoPresuntoLiquidas.otro == 1 %} value="{{RiesgoPresuntoLiquidas.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Almacenamiento de GNC<span class="text-success" title="En referencia al item 5. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[almgnc][]" value="acustico" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almgnc][]" value="presion" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almgnc][]" value="sustancia" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almgnc][]" value="explosion" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almgnc][]" value="incendio" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoalmgnc" class="ck-otro" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.otro == 1 %}checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[almgnc][]" id="otroriesgoalmgnc" {% if RiesgoPresuntoAlmGnc is defined and RiesgoPresuntoAlmGnc.observaciones != null and RiesgoPresuntoAlmGnc.otro == 1 %} value="{{RiesgoPresuntoAlmGnc.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Almacenamiento de otras sustancias<span class="text-success" title="En referencia al item 5. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[almsustancia][]" value="acustico" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almsustancia][]" value="presion" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almsustancia][]" value="sustancia" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almsustancia][]" value="explosion" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[almsustancia][]" value="incendio" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoalmsustancia" class="ck-otro" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.otro == 1 %}checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[almsustancia][]" id="otroriesgoalmsustancia" {% if RiesgoPresuntoAlmSustancia is defined and RiesgoPresuntoAlmSustancia.observaciones != null and RiesgoPresuntoAlmSustancia.otro == 1 %} value="{{RiesgoPresuntoAlmSustancia.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Consumo de Recursos: AGUA<span class="text-success" title="En referencia al item 6. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[agua][]" value="acustico" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[agua][]" value="presion" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[agua][]" value="sustancia" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[agua][]" value="explosion" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[agua][]" value="incendio" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoagua" class="ck-otro" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.otro == 1 %}checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[agua][]" id="otroriesgoagua" {% if RiesgoPresuntoAgua is defined and RiesgoPresuntoAgua.observaciones != null and RiesgoPresuntoAlmSustancia.otro == 1 %} value="{{RiesgoPresuntoAgua.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Consumo de Recursos: ENERGÍA ELÉCTRICA<span class="text-success" title="En referencia al item 6. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[electricidad][]" value="acustico" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[electricidad][]" value="presion" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[electricidad][]" value="sustancia" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[electricidad][]" value="explosion" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[electricidad][]" value="incendio" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgoelectricidad" class="ck-otro" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.otro == 1 %}checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[electricidad][]" id="otroriesgoelectricidad" {% if RiesgoPresuntoElectricidad is defined and RiesgoPresuntoElectricidad.observaciones != null and RiesgoPresuntoElectricidad.otro == 1 %} value="{{RiesgoPresuntoElectricidad.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                            <tr>
+                                <td>Consumo de Otros Recursos<span class="text-success" title="En referencia al item 6. La fila sera editable solo si selecciono la opción Si en docho item">(?)</span></td>
+                                <td><input type="checkbox" name="Riesgo[recursos][]" value="acustico" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.acustico == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[recursos][]" value="presion" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.presion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[recursos][]" value="sustancia" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.sustanciaQuimica == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[recursos][]" value="explosion" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.explosion == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" name="Riesgo[recursos][]" value="incendio" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.incendio == 1 %} checked {% endif %}></td>
+                                <td><input type="checkbox" data-otro="riesgorecursos" class="ck-otro" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.otro == 1 %}checked {% endif %}></td>
+                                <td><input type="text" name="Riesgo[recursos][]" id="otroriesgorecursos" {% if RiesgoPresuntoRecursos is defined and RiesgoPresuntoRecursos.observaciones != null and RiesgoPresuntoRecursos.otro == 1 %} value="{{RiesgoPresuntoRecursos.observaciones}}" {% else %} style="display:none;" {% endif %}></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>                
+            </div>            
+        </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendio7') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('formularioExpendio4',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script src="{{asset('bundles/js/expendioCombustible/formulario8.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-otro').click(function(){
+                var otro = $(this).data('otro');
+                $('#otro'+otro).toggle();
+            });
+            $('.ck-check').click(function(){
+                var tipo = $(this).data('tipo');
+                $('#'+tipo).toggle();
+            });
+            $('.selectDestino').on('change',function(){
+                var otro = $(this).data('otro');
+                if($(this).val()=='otro'){
+                    $('#liquidosResidualesDestino_'+otro).show();
+                }else{
+                    $('#liquidosResidualesDestino_'+otro).hide();
+                }
+            });
+            $('.selectDestinoEmision').on('change',function(){
+                var otro = $(this).data('otro');
+                if($(this).val()=='otro'){
+                    $('#liquidosResidualesDestino_'+otro).show();
+                }else{
+                    $('#liquidosResidualesDestino_'+otro).hide();
+                }
+            });
+        })
+        {% if ImpactoSuelo is defined and ImpactoSuelo != null and ImpactoSueloDAtos == null %} agregarFila('ImpactoSuelo'); agregarFila('MitigacionSuelo'); {% endif %}
+        {% if ImpactoAire is defined and ImpactoAire != null and ImpactoAireDAtos == null %} agregarFila('ImpactoAire'); agregarFila('MitigacionAire'); {% endif %}
+        {% if ImpactoAguaSubterranea is defined and ImpactoAguaSubterranea != null and ImpactoAguaSubterraneaDAtos == null %} agregarFila('ImpactoAguaSubterranea'); agregarFila('MitigacionAgua');{% endif %}
+        {% if ImpactoCuerpoReceptor is defined and ImpactoCuerpoReceptor != null and ImpactoCuerpoReceptorDAtos == null %} agregarFila('ImpactoCuerpoReceptor'); agregarFila('MitigacionCuerpoReceptor');{% endif %}
+        {% if ImpactoOtro is defined and ImpactoOtro != null and ImpactoOtroDAtos == null %} agregarFila('ImpactoOtro'); agregarFila('MitigacionOtro');{% endif %}
+        {% if Peligroso is defined and Peligroso|length >0 %} $("#residuospeligroso").show(); {% endif %}
+        {% if NoPeligroso is defined and NoPeligroso|length >0 %} $("#residuosnopeligrosos").show(); {% endif %}
+        {% if LiquidosDesagote is defined and LiquidosDesagote|length >0 %} $("#liquidosDesagote").show(); {% endif %}
+        {% if LiquidosRedCloacal is defined and LiquidosRedCloacal|length >0 %} $("#liquidosRedCloacal").show(); {% endif %}
+        {% if LiquidosResiduales is defined and LiquidosResiduales|length >0 %} $("#liquidosResiduales").show(); {% endif %}
+        {% if EmisionGaseosa is defined and EmisionGaseosa|length >0 %} $("#emisiongaseosa").show(); {% endif %}
+        {% if Ruido is defined and Ruido|length >0 %} $("#ruido").show(); {% endif %}
+    </script>
+{% endblock %}

@@ -1,0 +1,279 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 6. IDENTIFICACIÓN DE IMPACTOS - RIESGOS AMBIENTALES <span class="text-danger">(*)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU6') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <h6>A.- Del medio circundante a la urbanización.</h6>
+
+    <div class="tabla-pers">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null  and AreaMedioUrbanizacion.actividadIndustrial == 1 %} checked {% endif %} id="" name="A[]" value="Externalidades de actividades industriales" > 
+                <label>Externalidades de actividades industriales.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.actividadServicio == 1 %} checked {% endif %} id="" name="A[]" value="Externalidades de actividades de servicios" > 
+                <label>Externalidades de actividades de servicios.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.actividadAgropecuaria == 1 %} checked {% endif %} id="" name="A[]" value="Externalidades de actividades agropecuarias" > 
+                <label>Externalidades de actividades agropecuarias.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.plantaTratamiento == 1 %} checked {% endif %} id="" name="A[]" value="Cercanias a plantas de tratamiento de efluentes" > 
+                <label>Cercanias a plantas de tratamiento de efluentes.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" id="" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.actividadPecuaria == 1 %} checked {% endif %} name="A[]" value="Actividades pecuarias" > 
+                <label>Actividades pecuarias.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" id="" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.criaGanado == 1 %} checked {% endif %} name="A[]" value="Cría de ganado (bovino,porcino)" > 
+                <label>Cría de ganado (bovino,porcino).</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.aveCorral == 1 %} checked {% endif %} id="" name="A[]" value="Aves de corral" > 
+                <label>Aves de corral.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.proximidadRuta == 1 %} checked {% endif %} id="" name="A[]" value="Externalidades por la proximidad de rutas" > 
+                <label>Externalidades por la proximidad de rutas.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.transportePublico == 1 %} checked {% endif %} id="" name="A[]" value="Oferta de transporte público" > 
+                <label>Oferta de transporte público.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.ferrocarriles == 1 %} checked {% endif %} id="" name="A[]" value="Ferrocarriles" > 
+                <label>Ferrocarriles.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.aeropuerto == 1 %} checked {% endif %} id="" name="A[]" value="Aeropuertos" > 
+                <label>Aeropuertos.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.actividadAgricola == 1 %} checked {% endif %} id="" name="A[]" value="Actividades agrícolas" > 
+                <label>Actividades agrícolas.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.vertederosRsu == 1 %} checked {% endif %} id="" name="A[]" value="Vertederos de RSU" > 
+                <label>Vertederos de RSU.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and  AreaMedioUrbanizacion.generacionResiduo == 1 %} checked {% endif %} id="" name="A[]" value="Generación de residuos" > 
+                <label>Generación de residuos.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaMedioUrbanizacion != null and AreaMedioUrbanizacion.otros != null %} checked {% endif %} id="aCheckOtros" onClick="cambiarOtros('aCheckOtros','aInputOtros')" name="A[]" value="Otros" > 
+                <label>Otros.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input readonly type="text" class="form-control" id="aInputOtros" name="A[otros]" value="{% if AreaMedioUrbanizacion != null and AreaMedioUrbanizacion.otros != null %}{{AreaMedioUrbanizacion.otros}}{% endif %}" > 
+            </div>
+        </div> 
+    </div> 
+    <br/>
+
+    <h6>B.- De la urbanización al medio circundante.</h6>
+    <div class="tabla-pers">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaUrbanizacionMedio != null and  AreaUrbanizacionMedio.ofertaNuevaVivienda == 1 %} checked {% endif %} id="" name="B[]" value="Ofertas de nuevas viviendas" > 
+                <label>Ofertas de nuevas viviendas.</label>☺
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaUrbanizacionMedio != null and AreaUrbanizacionMedio.aspectoSocioEconomico == 1 %} checked {% endif %} id="" name="B[]" value="Aspectos socioeconómicos" > 
+                <label>Aspectos socioeconómicos.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" id="" name="B[]" value="Accesibilidad vial al ingreso/egreso a la urbanización" > 
+                <label>Accesibilidad vial al ingreso/egreso a la urbanización.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaUrbanizacionMedio != null and AreaUrbanizacionMedio.incrementoTraficoVehicular == 1 %} checked {% endif %} id="" name="B[]" value="Incremento en el tráfico vehicular" > 
+                <label>Incremento en el tráfico vehicular.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaUrbanizacionMedio != null and AreaUrbanizacionMedio.afectacionMedioFisico == 1 %} checked {% endif %} id="" name="B[]" value="Afectación a los medios físicos(agua, suelo y aire)" > 
+                <label>Afectación a los medios físicos(agua, suelo y aire).</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" id="" name="B[]" value="Uso de recursos naturales" > 
+                <label>Uso de recursos naturales.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaUrbanizacionMedio != null and AreaUrbanizacionMedio.usoAguasSubterranea == 1 %} checked {% endif %} id="" name="B[]" value="Uso de aguas subterráneas" > 
+                <label>Uso de aguas subterráneas.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" id="" name="B[]" value="Destino de efluentes cloacales" > 
+                <label>Destino de efluentes cloacales.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaUrbanizacionMedio != null and AreaUrbanizacionMedio.otros != null %} checked {% endif %} id="bCheckOtros" onClick="cambiarOtros('bCheckOtros','bInputOtros')" name="B[]" value="Otros" > 
+                <label>Otros.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input readonly type="text" class="form-control" id="bInputOtros" name="B[otros]" value="{% if AreaUrbanizacionMedio != null and AreaUrbanizacionMedio.otros != null %}{{AreaUrbanizacionMedio.otros}}{% endif %}" > 
+            </div>
+        </div> 
+    </div>
+    <br/>
+
+    <h6>C.- Afectación a áreas naturales protegidas.</h6>
+    <div class="tabla-pers">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaNaturalProtegida != null and AreaNaturalProtegida.ribera == 1 %} checked {% endif %} id="" name="C[]" value="Riberas" > 
+                <label>Riberas.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaNaturalProtegida != null and AreaNaturalProtegida.crestaBarranca == 1 %} checked {% endif %} id="" name="C[]" value="Crestas de barrancas" > 
+                <label>Crestas de barrancas.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AreaNaturalProtegida != null and AreaNaturalProtegida.otros != null %} checked {% endif %} id="cCheckOtros" onClick="cambiarOtros('cCheckOtros','cInputOtros')" name="C[]" value="Otros" > 
+                <label>Otros.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input readonly type="text" class="form-control" id="cInputOtros" name="C[otros]" value="{% if AreaNaturalProtegida != null and AreaNaturalProtegida.otros != null %}{{AreaNaturalProtegida.otros}}{% endif %}" > 
+            </div>
+        </div> 
+    </div> 
+    <br/>
+
+    <h6>D.- Afectación a los:</h6>
+    <div class="tabla-pers">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AfectacionA != null and AfectacionA.aspectoBiotico == 1 %} checked {% endif %} id="" name="D[]" value="Aspectos bióticos" > 
+                <label>Aspectos bióticos.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AfectacionA != null and AfectacionA.coberturaVegetal == 1 %} checked {% endif %} id="" name="D[]" value="Cobertura vegetal" > 
+                <label>Cobertura vegetal.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AfectacionA != null and AfectacionA.fauna == 1 %} checked {% endif %} id="" name="D[]" value="Fauna" > 
+                <label>Fauna.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if AfectacionA != null and AfectacionA.otros != null %} checked {% endif %} id="dCheckOtros" onClick="cambiarOtros('dCheckOtros','dInputOtros')" name="D[]" value="Otros" > 
+                <label>Otros.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input readonly type="text" class="form-control" id="dInputOtros" name="D[otros]" value="{% if AfectacionA != null and AfectacionA.otros != null %}{{AfectacionA.otros}}{% endif %}" > 
+            </div>
+        </div> 
+    </div> 
+    <br/>
+
+    <h6>E.- Servidumbres de paso de:</h6>
+    <div class="tabla-pers">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if ServidumbreAmbiental != null and ServidumbreAmbiental.electroducto == 1 %} checked {% endif %}  id="" name="E[]" value="Electroductos" > 
+                <label>Electroductos.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if ServidumbreAmbiental != null and ServidumbreAmbiental.gas == 1 %} checked {% endif %}  id="" name="E[]" value="Gas" > 
+                <label>Gas.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if ServidumbreAmbiental != null and ServidumbreAmbiental.hidrica == 1 %} checked {% endif %} id="" name="E[]" value="Hídricas" > 
+                <label>Hídricas.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" {% if ServidumbreAmbiental != null and ServidumbreAmbiental.otros != null %} checked {% endif %} id="eCheckOtros" onClick="cambiarOtros('eCheckOtros','eInputOtros')" name="E[]" value="Otros" > 
+                <label>Otros.</label>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <input readonly type="text" class="form-control" id="eInputOtros" name="E[otros]" value="{% if ServidumbreAmbiental != null and ServidumbreAmbiental.otros != null %}{{ServidumbreAmbiental.otros}}{% endif %}" > 
+            </div>
+        </div> 
+    </div> 
+    <br/>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbientalFinUrbanizacion/EIAFU6.js')}}"></script>
+{% endblock %}

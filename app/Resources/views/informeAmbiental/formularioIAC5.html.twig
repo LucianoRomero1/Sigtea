@@ -1,0 +1,410 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 5. USO DE RECURSOS NATURALES {% endblock %}
+
+{% block contenctForms %}
+    <div class="card-body">
+        <form id="formularioIAC5" action="{{ path('tramiteIAC6') }}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">5.1 AGUA <span class="text-success" data-toggle="tooltip" title="Para Procesos, refrigeración, limpieza, etc">(?)</span></h6>
+                <h6 class="titulos">5.1.1 CAPTACIÓN DE AGUA SUBTERRÁNEA <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Tipear sobre la celda la información requerida. Idem ptos. 5.1.2 y 5.1.3 Marcar la ubicación de las perforaciones en el plano generial de la planta, aduntado en el punto 1.3">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="AguasSubterraneas[check]" id="aguaSubterranea_si" value="Si" {% if AguasSubterraneas != null %}checked{% endif %}>
+                    <label class="form-check-label" for="aguaSubterranea_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="AguasSubterraneas[check]" id="aguaSubterranea_no" value="No" {% if AguasSubterraneas == null %}checked{% endif %}>
+                    <label class="form-check-label" for="aguaSubterranea_no">No</label>
+                </div>
+            </div>
+            <div class="row" id="divAguaSubterranea" {% if AguasSubterraneas != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_aguaSubterranea" >
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nro. de Perforación</th>
+                            <th scope="col">Descripción del Uso / Ubicación en plano/croquis general del punto 1.3</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Unidad</th>
+                            <th scope="col">Tiempo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agua in AguasSubterraneas %}
+                                <tr>
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td><input type="number" class="form-control" name="AguasSubterraneas[nroPerforacion][]"  value="{{agua.nroPerforacion}}" ></td>
+                                    <td><input type="text" class="form-control" name="AguasSubterraneas[ubicacion][]"  value="{{agua.ubicacionPlano}}" ></td>
+                                    <td><input type="text" class="form-control" name="AguasSubterraneas[cantidad][]"  value="{{agua.cantidad}}" ></td>
+                                    <td>
+                                        <select class="form-control" name="AguasSubterraneas[unidad][]" >                               
+                                            <option {% if agua.unidad == "Litros" %}selected{% endif %} value="Litros">Litros</option>
+                                            <option {% if agua.unidad == "m3" %}selected{% endif %} value="m3">m3</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" name="AguasSubterraneas[tiempo][]" >                               
+                                            <option {% if agua.tiempo == "Minuto" %}selected{% endif %} value="Minuto">Minuto</option>
+                                            <option {% if agua.tiempo == "Hora" %}selected{% endif %} value="Hora">Hora</option>
+                                            <option {% if agua.tiempo == "Dia" %}selected{% endif %} value="Dia">Dia</option>
+                                            <option {% if agua.tiempo == "Mes" %}selected{% endif %} value="Mes">Mes</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onClick="eliminarFilaBd(this, 'tabla_aguaSubterranea',{{agua.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th> 
+                                <td><input type="number" class="form-control" name="AguasSubterraneas[nroPerforacion][]"  ></td>
+                                <td><input type="text" class="form-control" name="AguasSubterraneas[ubicacion][]"  ></td>
+                                <td><input type="text" class="form-control" name="AguasSubterraneas[cantidad][]"  ></td>
+                                <td>
+                                    <select class="form-control" name="AguasSubterraneas[unidad][]" >   
+                                        <option  value="">Seleccione una opción</option>                            
+                                        <option  value="Litros">Litros</option>
+                                        <option  value="m3">m3</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="AguasSubterraneas[tiempo][]" > 
+                                        <option  value="">Seleccione una opción</option>                               
+                                        <option  value="Minuto">Minuto</option>
+                                        <option  value="Hora">Hora</option>
+                                        <option  value="Dia">Dia</option>
+                                        <option  value="Mes">Mes</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_aguaSubterranea')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %} 
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_aguaSubterranea')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">5.1.2 CAPTACIÓN DE AGUA SUPERFICIAL <span class="text-danger">(*)</span></p>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="AguasSuperficiales[check]" id="aguaSuperficial_si" value="Si" {% if AguasSuperficiales != null %}checked{% endif %}>
+                    <label class="form-check-label" for="aguaSuperficial_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="AguasSuperficiales[check]" id="aguaSuperficial_no" value="No" {% if AguasSuperficiales == null %}checked{% endif %}>
+                    <label class="form-check-label" for="aguaSuperficial_no">No</label>
+                </div>
+            </div>
+            <div class="" id="divAguaSuperficial" {% if AguasSuperficiales != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_aguaSuperficial">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre del Arroyo, Río, etc.</th>
+                            <th scope="col">Descripción plano/croquis general del punto 1.3</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Unidad</th>
+                            <th scope="col">Tiempo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agua in AguasSuperficiales %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="AguasSuperficiales[nombre][]"  value="{{agua.nombre}}" ></td>
+                                <td><input type="text" class="form-control" name="AguasSuperficiales[ubicacion][]"  value="{{agua.ubicacionPlano}}" ></td>
+                                <td><input type="text" class="form-control" name="AguasSuperficiales[cantidad][]"  value="{{agua.cantidad}}" ></td>
+                                <td>
+                                    <select class="form-control" name="AguasSuperficiales[unidad][]" >                               
+                                        <option {% if agua.unidad == "Litros" %}selected{% endif %} value="Litros">Litros</option>
+                                        <option {% if agua.unidad == "m3" %}selected{% endif %} value="m3">m3</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="AguasSuperficiales[tiempo][]" >                               
+                                        <option {% if agua.tiempo == "Minuto" %}selected{% endif %} value="Minuto">Minuto</option>
+                                        <option {% if agua.tiempo == "Hora" %}selected{% endif %} value="Hora">Hora</option>
+                                        <option {% if agua.tiempo == "Dia" %}selected{% endif %} value="Dia">Dia</option>
+                                        <option {% if agua.tiempo == "Mes" %}selected{% endif %} value="Mes">Mes</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tabla_aguaSuperficial', {{agua.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th> 
+                                <td><input type="text" class="form-control" name="AguasSuperficiales[nombre][]"  ></td>
+                                <td><input type="text" class="form-control" name="AguasSuperficiales[ubicacion][]"  ></td>
+                                <td><input type="text" class="form-control" name="AguasSuperficiales[cantidad][]"  ></td>
+                                <td>
+                                    <select class="form-control" name="AguasSuperficiales[unidad][]" >   
+                                        <option  value="">Seleccione una opción</option>                            
+                                        <option  value="Litros">Litros</option>
+                                        <option  value="m3">m3</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="AguasSuperficiales[tiempo][]" > 
+                                        <option  value="">Seleccione una opción</option>                               
+                                        <option  value="Minuto">Minuto</option>
+                                        <option  value="Hora">Hora</option>
+                                        <option  value="Dia">Dia</option>
+                                        <option  value="Mes">Mes</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_aguaSuperficial')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_aguaSuperficial')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">5.1.3 CAPTACIÓN DE AGUA DE RED PÚBLICA <span class="text-danger">(*)</span></h6>
+                 <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="AguasPublicas[check]" id="aguaRedPublica_si" value="Si" {% if AguasPublicas != null %}checked{% endif %}>
+                    <label class="form-check-label" for="aguaRedPublica_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="AguasPublicas[check]" id="aguaRedPublica_no" value="No" {% if AguasPublicas == null %}checked{% endif %}>
+                    <label class="form-check-label" for="aguaRedPublica_no">No</label>
+                </div>
+            </div>
+            <div class="row" id="divAguaRedPublica" {% if AguasPublicas != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tabla_redPublica">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre del Prestador de Servicios</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Unidad</th>
+                            <th scope="col">Tiempo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agua in AguasPublicas %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="AguasPublicas[nombre][]"  value="{{agua.nombre}}" ></td>
+                                <td><input type="text" class="form-control" name="AguasPublicas[cantidad][]"  value="{{agua.cantidad}}" ></td>
+                                <td>
+                                    <select class="form-control" name="AguasPublicas[unidad][]" >                               
+                                        <option {% if agua.unidad == "Litros" %}selected{% endif %} value="Litros">Litros</option>
+                                        <option {% if agua.unidad == "m3" %}selected{% endif %} value="m3">m3</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="AguasPublicas[tiempo][]" >                               
+                                        <option {% if agua.tiempo == "Minuto" %}selected{% endif %} value="Minuto">Minuto</option>
+                                        <option {% if agua.tiempo == "Hora" %}selected{% endif %} value="Hora">Hora</option>
+                                        <option {% if agua.tiempo == "Dia" %}selected{% endif %} value="Dia">Dia</option>
+                                        <option {% if agua.tiempo == "Mes" %}selected{% endif %} value="Mes">Mes</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tabla_redPublica', {{agua.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr> 
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th> 
+                                <td><input type="text" class="form-control" name="AguasPublicas[nombre][]"  ></td>
+                                <td><input type="text" class="form-control" name="AguasPublicas[cantidad][]"  ></td>
+                                <td>
+                                    <select class="form-control" name="AguasPublicas[unidad][]"  >   
+                                        <option  value="">Seleccione una opción</option>                            
+                                        <option  value="Litros">Litros</option>
+                                        <option  value="m3">m3</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="AguasPublicas[tiempo][]" > 
+                                        <option  value="">Seleccione una opción</option>                               
+                                        <option  value="Minuto">Minuto</option>
+                                        <option  value="Hora">Hora</option>
+                                        <option  value="Dia">Dia</option>
+                                        <option  value="Mes">Mes</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_redPublica')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tabla_redPublica')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 inputs">
+                <h6 class="titulos">5.2 SUELO (ARCILLA, ARENA,etc.) COMO MATERIA PRIMA <span class="text-danger">(*)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Suelos[check]" id="materiaPrima_si" value="Si" {% if Suelos != null %}checked{% endif %}>
+                    <label class="form-check-label" for="materiaPrima_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Suelos[check]" id="materiaPrima_no" value="No" {% if Suelos == null %}checked{% endif %}>
+                    <label class="form-check-label" for="materiaPrima_no">No</label>
+                </div>
+            </div>
+            <div id="divSuelo" {% if Suelos != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <div class="col-md-14 inputs">
+                    <div class="form-group">
+                        <h6 class="titulos">5.2.1 DESCRIPCIÓN DE USO <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Describir la utilización de estos componentes en los procesos u operaciones que desarrolla la empresa. Por ejemplo, en la fabricación de cerámica, vidrio, etc. Límite 3000 caracteres.">(?)</span></h6>
+                        <textarea class="form-control" name="Suelos[descripcionUso]">{% if Suelos != null %}{{Suelos[0].descripcionUso}}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-5 inputs">
+                    <h6 class="titulos">5.2.2 EXTRACCIÓN <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Tipear sobre las celdas: sitio de extracción, coordenadas geodésicas, cantidad utilizada indicando las unidades de masa, volumen sobre unidad de tiempo, autorización del Ministerio de la Producción">(?)</span></p>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Suelos[checkDos]" id="extraccion_si" value="Si" {% if Suelos != null and Suelos[0].sitioExtraccion != null %}checked{% endif %}>
+                        <label class="form-check-label" for="extraccion_si">Si</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Suelos[checkDos]" id="extraccion_no" value="No" {% if Suelos != null and Suelos[0].sitioExtraccion == null or Suelos == null %}checked{% endif %}>
+                        <label class="form-check-label" for="extraccion_no">No</label>
+                    </div>
+                </div>
+                <div id="divExtracion" {% if Suelos != null and Suelos[0].sitioExtraccion != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                    <table class="table" id="tabla_extraccion" >
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Sitio de extracción</th>
+                                <th scope="col">Latitud</th>
+                                <th scope="col">Longitud</th>
+                                <th scope="col">Cantidad/(u. de tiempo)</th>
+                                <th scope="col">Autorización Ministerio Producción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for suelo in Suelos %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="Suelos[sitioExtraccion][]"  value="{{suelo.sitioExtraccion}}" ></td>
+                                <td><input type="text" class="form-control" name="Suelos[latitud][]"  value="{{suelo.latitud}}" ></td>
+                                <td><input type="text" class="form-control" name="Suelos[longitud][]"  value="{{suelo.longitud}}" ></td>
+                                <td><input type="number" step="0.01" class="form-control" name="Suelos[cantidadTiempo][]"  value="{{suelo.cantidadTiempo}}" ></td>
+                                <td>
+                                    <select class="form-control" name="Suelos[autorizacionMinisterio][]" >                               
+                                        <option {% if suelo.autorizacionMinisterio == 1 %}selected{% endif %} value="1">Autoriza</option>
+                                        <option {% if suelo.autorizacionMinisterio == 0 %}selected{% endif %} value="0">No Autoriza</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tabla_extraccion', {{suelo.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                               <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="Suelos[sitioExtraccion][]" ></td>
+                                <td><input type="text" class="form-control" name="Suelos[latitud][]" ></td>
+                                <td><input type="text" class="form-control" name="Suelos[longitud][]" ></td>
+                                <td><input type="number" step="0.01" class="form-control" name="Suelos[cantidadTiempo][]" ></td>
+                                <td>
+                                    <select class="form-control" name="Suelos[autorizacionMinisterio][]" >        
+                                        <option value="">Seleccione una opción</option>                       
+                                        <option value="1">Autoriza</option>
+                                        <option value="0">No Autoriza</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_extraccion')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button onClick="agregarFila('tabla_extraccion')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="divOrigen" {% if Suelos != null and Suelos[0].sitioExtraccion == null or Suelos == null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                    <div class="col-md-14">
+                        <div class="form-group">
+                            <label class="labels">ORIGEN Y GESTION <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Especificar la procedencia de estos componentes, su logística, gestión y almacenamiento previo a su utilización como materia prima. Límite 500 caracteres.">(?)</span></label>
+                            <textarea class="form-control" name="Suelos[origenGestion]">{% if Suelos != null and Suelos[0].origenGestion != null %}{{Suelos[0].origenGestion}}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h6 class="titulos">5.3 USO DE OTROS RECURSOS NATURALES</h6>
+             <div class="row">
+                <table class="table" id="tabla_otroRecurso">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Recurso <span class="text-success" data-toggle="tooltip" title="Elementos forestales, animales, minerales, u otros no incluidos previamente. Límite 50 caracteres">(?)</span></th>
+                            <th scope="col">Extracción/Captación <span class="text-success" data-toggle="tooltip" title="Cantidad de sitios de extracción, identificación de los mismos, dimensionamiento y ubicación. Límite 50 caracteres">(?)</span></th>
+                            <th scope="col">Tareas / Procesos/ Etapas en los que se utiliza <span class="text-success" data-toggle="tooltip" title="Indicar todas las tareas o procesos en los que se utiliza ese recurso, utilizando la misma nomenclatura que en los puntos 3.1, 3.2, 3.3 y 3.4. Límite 875 caracteres">(?)</span></th>
+                            <th scope="col">Cantidad/Unidad de tiempo <span class="text-success" data-toggle="tooltip" title="Deberán indicarse la cantidad correspondiente a cada tarea o proceso de la fila anterior y sumar el total. Límite 875 caracteres">(?)</span></th>
+                            <th scope="col">Anexar Autorizaciones e imágenes del sitio de extracción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for otro in OtroRecurso %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="OtroRecurso[tipo][]" value="{{otro.tipo}}"/></td>
+                                <td><input type="text" class="form-control" name="OtroRecurso[extraccion][]" value="{{otro.extraccionCaptacion}}"/></td>
+                                <td><input type="text" class="form-control" name="OtroRecurso[etapa][]" value="{{otro.etapaProceso}}"/></td>
+                                <td><input type="text" class="form-control" name="OtroRecurso[cantidad][]" value="{{otro.cantidadTiempo}}"/></td>
+                                <td><input type="file" accept=".pdf" name="OtroRecurso[archivos][]"/><span class='text-success'>{{ImagenesOtroRecurso.archivos[loop.index - 1]}}</span></td> 
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tabla_otroRecurso', {{otro.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="OtroRecurso[tipo][]" required/></td>
+                                <td><input type="text" class="form-control" name="OtroRecurso[extraccion][]" required/></td>
+                                <td><input type="text" class="form-control" name="OtroRecurso[etapa][]" required/></td>
+                                <td><input type="text" class="form-control" name="OtroRecurso[cantidad][]" required/></td>
+                                <td><input type="file" accept=".pdf" name="OtroRecurso[archivos][]" required/></td> 
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tabla_otroRecurso')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button onClick="agregarFila('tabla_otroRecurso')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                </div>
+            </div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/informeAmbiental/formularioIAC5.js')}}"></script>
+{% endblock %}

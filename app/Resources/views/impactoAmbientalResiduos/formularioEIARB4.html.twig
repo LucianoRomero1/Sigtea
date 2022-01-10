@@ -1,0 +1,409 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO B - 4. FLUJO DE MATERIALES {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB4') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+
+    <div class="tabla-pers">
+        <h6>
+            MATERIAS PRIMAS (Sustancias que se incorporan al producto terminado) 
+            <span data-toggle="tooltip" data-placement="right" 
+                title="(?) Se listarán todas las materias primas que forman parte del producto final (excluyendo el agua)"
+                class="text-success pad-span">(?)</span>
+        </h6>
+        <table id="tablaMateriasPrimas" class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">MATERIAS PRIMAS</th>
+                    <th scope="col">ESTADO FÍSICO DE AGREGACIÓN</th>
+                    <th scope="col">PRODUCCIÓN ANUAL</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">ALMACENAMIENTO</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for materiaPrima in MateriasPrimas %}
+                <tr>
+                    <th>{{loop.index}}<input value="{{loop.index}}" type="hidden" name="MateriaPrima[numero][]"></th>
+                    <td><input value="{{materiaPrima.nombre}}" class="form-control" type="text" name="MateriaPrima[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="MateriaPrima[estado][]">
+                            <option value="Gaseoso" {% if materiaPrima.estadoFisico == "Gaseoso" %} selected {% endif %}>Gaseoso</option>
+                            <option value="Líquido" {% if materiaPrima.estadoFisico == "Líquido" %} selected {% endif %}>Líquido</option>
+                            <option value="Semisólido" {% if materiaPrima.estadoFisico == "Semisólido" %} selected {% endif %}>Semisólido</option>
+                            <option value="Sólido" {% if materiaPrima.estadoFisico == "Sólido" %} selected {% endif %}>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" value="{{materiaPrima.produccion}}" type="text" name="MateriaPrima[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="MateriaPrima[unidad][]">
+                            <option value="kg" {% if materiaPrima.unidad == "kg" %} selected {% endif %}>kg</option>
+                            <option value="lt" {% if materiaPrima.unidad == "lt" %} selected {% endif %}>lt</option>
+                            <option value="m3" {% if materiaPrima.unidad == "m3" %} selected {% endif %}>m3</option>
+                            <option value="tn" {% if materiaPrima.unidad == "tn" %} selected {% endif %}>tn</option>
+                            <option value="unidades" {% if materiaPrima.unidad == "unidades" %} selected {% endif %}>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" value="{{materiaPrima.almacenamiento}}" type="text" name="MateriaPrima[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaMateriasPrimas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>           
+            {% else %}
+                <tr>
+                    <th>1<input value="1" type="hidden" name="MateriaPrima[numero][]"></th>
+                    <td><input class="form-control" type="text" name="MateriaPrima[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="MateriaPrima[estado][]">
+                            <option value="Gaseoso">Gaseoso</option>
+                            <option value="Líquido">Líquido</option>
+                            <option value="Semisólido">Semisólido</option>
+                            <option value="Sólido">Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" name="MateriaPrima[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="MateriaPrima[unidad][]">
+                            <option value="kg">kg</option>
+                            <option value="lt">lt</option>
+                            <option value="m3">m3</option>
+                            <option value="tn">tn</option>
+                            <option value="unidades">unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" name="MateriaPrima[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaMateriasPrimas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>       
+            {% endfor %}      
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaMateriasPrimas')" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+    </div>
+    
+    </br>
+    <div class="tabla-pers">
+        <h6>
+            INSUMOS (Sustancias que no se incorporan al producto terminado) 
+            <span data-toggle="tooltip" data-placement="right" 
+                title="(?) Se listarán todas aquellas sustancias que no forman parte del producto final, excluyendo el agua, fluidos
+                    y las sustancias auxiliares."
+                class="text-success pad-span">(?)</span>
+        </h6>
+        <table class="table table-sm" id="tablaInsumos">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">INSUMO</th>
+                    <th scope="col">ESTADO FÍSICO DE AGREGACIÓN</th>
+                    <th scope="col">PRODUCCIÓN ANUAL</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">ALMACENAMIENTO</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for insumo in Insumos %}
+
+                <tr>
+                    <th>{{loop.index}}<input value="{{loop.index}}" type="hidden" name="Insumo[numero][]"></th>
+                    <td><input value="{{insumo.nombre}}" class="form-control" type="text" name="Insumo[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="Insumo[estado][]">
+                            <option value="Gaseoso" {% if insumo.estadoFisico == "Gaseoso" %} selected {% endif %}>Gaseoso</option>
+                            <option value="Líquido" {% if insumo.estadoFisico == "Líquido" %} selected {% endif %}>Líquido</option>
+                            <option value="Semisólido" {% if insumo.estadoFisico == "Semisólido" %} selected {% endif %}>Semisólido</option>
+                            <option value="Sólido2" {% if insumo.estadoFisico == "Sólido" %} selected {% endif %}>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" value="{{insumo.produccion}}" type="text" name="Insumo[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="Insumo[unidad][]">
+                            <option value="kg" {% if insumo.unidad == "kg" %} selected {% endif %}>kg</option>
+                            <option value="lt" {% if insumo.unidad == "lt" %} selected {% endif %}>lt</option>
+                            <option value="m3" {% if insumo.unidad == "m3" %} selected {% endif %}>m3</option>
+                            <option value="tn" {% if insumo.unidad == "tn" %} selected {% endif %}>tn</option>
+                            <option value="unidades" {% if insumo.unidad == "unidades" %} selected {% endif %}>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" value="{{insumo.almacenamiento}}" type="text" name="Insumo[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaMateriasPrimas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>    
+
+            {% else %}
+
+                <tr>
+                    <th>1<input value="1" type="hidden" name="Insumo[numero][]"></th>
+                    <td><input class="form-control" type="text" name="Insumo[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="Insumo[estado][]">
+                            <option value="Gaseoso">Gaseoso</option>
+                            <option value="Líquido">Líquido</option>
+                            <option value="Semisólido">Semisólido</option>
+                            <option value="Sólido">Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" name="Insumo[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="Insumo[unidad][]">
+                            <option value="kg">kg</option>
+                            <option value="lt">lt</option>
+                            <option value="m3">m3</option>
+                            <option value="tn">tn</option>
+                            <option value="unidades">unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" name="Insumo[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaInsumos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaInsumos')" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="tabla-pers">
+        <table id="tablaSustanciasAuxiliares" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">SUSTANCIAS AUXILIARES Y FLUIDOS</th>
+                    <th scope="col">ESTADO FÍSICO DE AGREGACIÓN</th>
+                    <th scope="col">CONSUMO ANUAL</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">
+                        ALMACENAMIENTO 
+                        <span data-toggle="tooltip" data-placement="right" 
+                        title="(?) Indicar la forma de almacenamiento / tipo de contenedor y su capacidad."
+                        class="text-success pad-span">(?)</span>
+                    </th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for sustanciaAuxiliar in SustanciasAuxiliares %}                            
+                <tr>
+                    <td><input class="form-control" type="text" value="{{sustanciaAuxiliar.nombre}}" name="SustanciaAuxiliar[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="SustanciaAuxiliar[estado][]">
+                            <option value="Gaseoso" {% if sustanciaAuxiliar.estadoFisico == "Gaseoso" %} selected {% endif %}>Gaseoso</option>
+                            <option value="Líquido" {% if sustanciaAuxiliar.estadoFisico == "Líquido" %} selected {% endif %}>Líquido</option>
+                            <option value="Semisólido" {% if sustanciaAuxiliar.estadoFisico == "Semisólido" %} selected {% endif %}>Semisólido</option>
+                            <option value="Sólido" {% if sustanciaAuxiliar.estadoFisico == "Sólido" %} selected {% endif %}>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" value="{{sustanciaAuxiliar.produccion}}" name="SustanciaAuxiliar[produccion][]" required></td>
+                    <td name="SustanciaAuxiliar[unidad][]">
+                        <select class="form-control">
+                            <option value="kg" {% if sustanciaAuxiliar.unidad == "kg" %} selected {% endif %}>kg</option>
+                            <option value="lt" {% if sustanciaAuxiliar.unidad == "lt" %} selected {% endif %}>lt</option>
+                            <option value="m3" {% if sustanciaAuxiliar.unidad == "m3" %} selected {% endif %}>m3</option>
+                            <option value="tn" {% if sustanciaAuxiliar.unidad == "tn" %} selected {% endif %}>tn</option>
+                            <option value="unidades" {% if sustanciaAuxiliar.unidad == "unidades" %} selected {% endif %}>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" value="{{sustanciaAuxiliar.almacenamiento}}" class="form-control" name="SustanciaAuxiliar[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaSustanciasAuxiliares')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td><input class="form-control" type="text" name="SustanciaAuxiliar[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="SustanciaAuxiliar[estado][]">
+                            <option value="Gaseoso">Gaseoso</option>
+                            <option value="Líquido">Líquido</option>
+                            <option value="Semisólido">Semisólido</option>
+                            <option value="Sólido">Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" name="SustanciaAuxiliar[produccion][]" required></td>
+                    <td name="SustanciaAuxiliar[unidad][]">
+                        <select class="form-control">
+                            <option value="kg">kg</option>
+                            <option value="lt">lt</option>
+                            <option value="m3">m3</option>
+                            <option value="tn">tn</option>
+                            <option value="unidades">unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="SustanciaAuxiliar[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this,'tablaSustanciasAuxiliares')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaSustanciasAuxiliares')" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="tabla-pers">
+        <h6>
+            AGUA
+        </h6>
+        <table id="tablaAguas" class="table">
+            <thead>
+                <tr>
+                    <th>Nombre del Prestador de Servicios</th>
+                    <th colspan="3">Consumo (Volumen / tiempo)</th>
+                    <th colspan="3"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for publica in AguasPublicas %}
+                <tr>
+                    <td><input type="text" class="form-control" name="AguaPublica[nombre][]" value="{{publica.nombre}}"/></td>
+                    <td><input type="text" class="form-control" name="AguaPublica[consumo][]" value="{{publica.cantidad}}"/></td>
+                    <td>
+                        <select class="form-control" name="AguaPublica[unidad][]">
+                            <option value="litro" {{ publica.unidad == 'litro' ? 'selected' }}>litros</option>
+                            <option value="m3" {{ publica.unidad == 'm3' ? 'selected' }}>m3</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" name="AguaPublica[tiempo][]">
+                            <option value="minuto" {{ publica.tiempo == 'minuto' ? 'selected' }}>minuto</option>
+                            <option value="hora" {{ publica.tiempo == 'hora' ? 'selected' }}>hora</option>
+                            <option value="dia" {{ publica.tiempo == 'dia' ? 'selected' }}>dia</option>
+                            <option value="mes" {{ publica.tiempo == 'mes' ? 'selected' }}>mes</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this,'tablaAguas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td><input type="text" class="form-control" name="AguaPublica[nombre][]" /></td>
+                    <td><input type="text" class="form-control" name="AguaPublica[consumo][]" /></td>
+                    <td>
+                        <select class="form-control" name="AguaPublica[unidad][]">
+                            <option value="litro">litros</option>
+                            <option value="m3">m3</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" name="AguaPublica[tiempo][]">
+                            <option value="minuto">minuto</option>
+                            <option value="hora">hora</option>
+                            <option value="dia">dia</option>
+                            <option value="mes">mes</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this,'tablaAguas')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaAguas')" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="tabla-pers">
+    
+        <h6>Tanques o cisternas subterráneos</h6>
+        <table id="tablaTanques" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">CAPACIDAD TOTAL</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for tanque in Tanques %}
+            <tr>
+                <td>
+                    <input type="text" name="Cisterna[cantidad][]" class="form-control" value="{{ tanque.cantidad }}">
+                </td>
+                <td>
+                    <input type="text" name="Cisterna[capacidad][]" class="form-control" value="{{ tanque.capacidadTotal }}">
+                </td>
+                <td>
+                    <select name="Cisterna[unidad][]" class="form-control">
+                        <option value="litro" {{ tanque.unidad == "litro" ? 'selected' }}>lt</option>
+                        <option value="m3" {{ tanque.unidad == "m3" ? 'selected' }}>m3</option>
+                    </select>
+                </td>
+                <td>
+                    <a onClick="eliminarFila(this,'tablaTanques')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% else %}
+                <td>
+                    <input type="text" name="Cisterna[cantidad][]" class="form-control">
+                </td>
+                <td>
+                    <input type="text" name="Cisterna[capacidad][]" class="form-control">
+                </td>
+                <td>
+                    <select name="Cisterna[unidad][]" class="form-control">
+                        <option value="litro">lt</option>
+                        <option value="m3">m3</option>
+                    </select>
+                </td>
+                <td>
+                    <a onClick="eliminarFila(this,'tablaTanques')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaTanques')" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

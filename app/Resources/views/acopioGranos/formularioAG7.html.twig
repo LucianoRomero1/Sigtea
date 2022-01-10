@@ -1,0 +1,677 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 7. ETAPAS DEL PROCESO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG7" action="{{ path('tramiteAG8') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-12">
+            <b for=""> ETAPA A </b>
+        </div>
+    </div>
+    <br>
+    {% if ProcesoGrano is defined %}
+    <div class="row">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">PASO</th>
+                    <th scope="col">OPERATORIA</th>
+                    <th scope="col">OBSERVACIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for proceso in ProcesoGrano %} 
+                {% if proceso.etapa == 'Etapa A'%}
+                    {% if proceso.paso == 1 %}
+                    <tr>
+                        <td>INGRESO GRANOS<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Ingreso" ></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+
+                                <option {% if proceso.operatoria == "Camion" %}selected{% endif %} value="Camion">Camion</option>
+                                <option {% if proceso.operatoria == "Vagon" %}selected{% endif %} value="Vagon">Vagon</option>
+                                <option {% if proceso.operatoria == "Buques" %}selected{% endif %} value="Buques">Buques</option>
+                                <option {% if proceso.operatoria == "Barcaza" %}selected{% endif %} value="Barcaza">Barcaza</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                    </tr> 
+                    {% elseif proceso.paso == 2 %}
+                    <tr>
+                        <td>DESCARGA<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Descarga"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                                <option {% if proceso.operatoria == "Hidraulica" %}selected{% endif %} value="Hidraulica">Hidraulica</option>
+                                <option {% if proceso.operatoria == "Rejilla" %}selected{% endif %} value="Rejilla">Rejilla</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                    </tr>  
+                    {% elseif proceso.paso == 3 %}
+                    <tr>
+                        <td>CERRAMIENTO<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Cerramiento"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                                <option {% if proceso.operatoria == "Total" %}selected{% endif %} value="Total">Total</option>
+                                <option {% if proceso.operatoria == "Parcial" %}selected{% endif %} value="Parcial">Parcial</option>
+                                <option {% if proceso.operatoria == "Aire libre" %}selected{% endif %} value="Aire libre">Aire libre</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                    </tr> 
+                    {% elseif proceso.paso == 4 %}
+                    <tr>
+                        <td>SISTEMAS DE RETENCIÓN<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Sistemas"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                                <option {% if proceso.operatoria == "Ciclon" %}selected{% endif %} value="Ciclon">Ciclon</option>
+                                <option {% if proceso.operatoria == "Filtro manga" %}selected{% endif %} value="Filtro manga">Filtro manga</option>
+                                <option {% if proceso.operatoria == "Cortinas plasticas" %}selected{% endif %} value="Cortinas plasticas">Cortinas plasticas</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        </div> 
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA B </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center" >
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proceso in ProcesoGrano %} 
+                        {% if proceso.etapa == 'Etapa B'%}
+                        <tr>
+                            <td>LIMPIEZA<input type="hidden" class="form-control" name="ProcesoGrano[etapaB][paso][]"  value="Limpieza" required></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaB][operatoria][]" id="" required>
+                                    <option {% if proceso.operatoria == "Aire" %}selected{% endif %} value="Aire">Aire</option>
+                                    <option  {% if proceso.operatoria == "Gravedad" %}selected{% endif %} value="Gravedad">Gravedad</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaB][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>    
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA C </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center" >
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for proceso in ProcesoGrano %} 
+                    {% if proceso.etapa == 'Etapa C'%}
+                        {% if proceso.paso == 1 %}
+                        <tr>
+                            <td>SECADORA<input type="hidden" class="form-control" name="ProcesoGrano[etapaC][paso][]"  value="Secadora" ></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaC][operatoria][]" id="" required>
+                                    <option {% if proceso.operatoria == "Mezclado" %}selected{% endif %} value="Mezclado">Mezclado</option>
+                                    <option {% if proceso.operatoria == "Artificial" %}selected{% endif %} value="Artificial">Artificial</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaC][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr> 
+                        {% elseif proceso.paso == 2 %}   
+                        <tr>
+                            <td>COMBUSTIBLE<input type="hidden" class="form-control" name="ProcesoGrano[etapaC][paso][]"  value="Combustible"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaC][operatoria][]" id="" required>
+                                    <option {% if proceso.operatoria == "Gas natural" %}selected{% endif %} value="Gas natural">Gas natural</option>
+                                    <option {% if proceso.operatoria == "Gasoil" %}selected{% endif %} value="Gasoil">Gasoil</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaC][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>
+                        {% elseif proceso.paso == 3 %}      
+                        <tr>
+                            <td>RETENCIÓN PARTÍCULAS<input type="hidden" class="form-control" name="ProcesoGrano[etapaC][paso][]"  value="Retencion"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaC][operatoria][]" id="" required>
+                                    <option {% if proceso.operatoria == "Filtros" %}selected{% endif %} value="Filtros">Filtros</option>
+                                    <option {% if proceso.operatoria == "Ciclones" %}selected{% endif %} value="Ciclones">Ciclones</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaC][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>    
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA D </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center" >
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for proceso in ProcesoGrano %} 
+                    {% if proceso.etapa == 'Etapa D'%}
+                        {% if proceso.paso == 1 %}
+                        <tr>
+                            <td>NORIAS<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="Norias"></td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][operatoria][]"  value="{{proceso.operatoria}}" required></td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr> 
+                        {% elseif proceso.paso == 2 %}     
+                        <tr>
+                            <td>NORIA POZO<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="NoriaPozo"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaD][operatoria][]" id="" required>
+                                    <option {% if proceso.operatoria == "Ciclon" %}selected{% endif %} value="Ciclon">Ciclon</option>
+                                    <option {% if proceso.operatoria == "Otros" %}selected{% endif %} value="Otros">Otros</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>  
+                        {% elseif proceso.paso == 3 %}    
+                        <tr>
+                            <td>NORIA CABEZAL<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="NoriaCabezal"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaD][operatoria][]" id="" required>                                    
+                                    <option {% if proceso.operatoria == "Ciclon" %}selected{% endif %} value="Ciclon">Ciclon</option>
+                                    <option {% if proceso.operatoria == "Otros" %}selected{% endif %} value="Otros">Otros</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="{{proceso.observacion}}"  required></td>
+                        </tr>  
+                        {% elseif proceso.paso == 4 %}   
+                        <tr>
+                            <td>DISTRIBUCIÓN<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="Distribucion"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaD][operatoria][]" id="" required>                                  
+                                    <option {% if proceso.operatoria == "Cinta" %}selected{% endif %} value="Cinta">Cinta</option>
+                                    <option {% if proceso.operatoria == "Tornillo sin fin" %}selected{% endif %} value="Tornillo sin fin">Tornillo sin fin</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>  
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA E </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                {% for proceso in ProcesoGrano %} 
+                    {% if proceso.etapa == 'Etapa E'%}
+                        {% if proceso.paso == 1 %}
+                        <tr>
+                            <td>SALIDA GRANOS<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="SalidaGranos" ></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>                               
+                                    <option {% if proceso.operatoria == "Camion" %}selected{% endif %} value="Camion">Camion</option>
+                                    <option {% if proceso.operatoria == "Vagon" %}selected{% endif %} value="Vagon">Vagon</option>
+                                    <option {% if proceso.operatoria == "Buques" %}selected{% endif %} value="Buques">Buques</option>
+                                    <option {% if proceso.operatoria == "Barcaza" %}selected{% endif %} value="Barcaza">Barcaza</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>
+                        {% elseif proceso.paso == 2 %}   
+                        <tr>
+                            <td>CERRAMIENTO<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="Cerramiento"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>                                 
+                                    <option {% if proceso.operatoria == "Total" %}selected{% endif %} value="Total">Total</option>
+                                    <option {% if proceso.operatoria == "Parcial" %}selected{% endif %} value="Parcial">Parcial</option>
+                                    <option {% if proceso.operatoria == "Aire libre" %}selected{% endif %} value="Aire libre">Aire libre</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>   
+                        {% elseif proceso.paso == 3 %}    
+                        <tr>
+                            <td>CAPTACIÓN<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="Captacion"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>                                
+                                    <option {% if proceso.operatoria == "Ciclon" %}selected{% endif %} value="Ciclon">Ciclon</option>
+                                    <option {% if proceso.operatoria == "Filtro manga" %}selected{% endif %} value="Filtro manga">Filtro manga</option>
+                                    <option {% if proceso.operatoria == "Cortinas plasticas" %}selected{% endif %} value="Cortinas plasticas">Cortinas plasticas</option>
+                                    <option {% if proceso.operatoria == "Manga retractil" %}selected{% endif %} value="Manga retractil">Manga retractil</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>  
+                        {% elseif proceso.paso == 4 %}     
+                        <tr>
+                            <td>PLAYA MANIOBRAS<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="Playa"></td>
+                            <td>
+                                <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>
+                                    <option {% if proceso.operatoria == "Superficie" %}selected{% endif %}value="Superficie">Superficie</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="{{proceso.observacion}}" required></td>
+                        </tr>   
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="row">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">PASO</th>
+                    <th scope="col">OPERATORIA</th>
+                    <th scope="col">OBSERVACIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>INGRESO GRANOS<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Ingreso" ></td>
+                    <td>
+                        <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Camion">Camion</option>
+                            <option value="Vagon">Vagon</option>
+                            <option value="Buques">Buques</option>
+                            <option value="Barcaza">Barcaza</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="" required></td>
+                </tr> 
+                <tr>
+                    <td>DESCARGA<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Descarga"></td>
+                    <td>
+                        <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Hidraulica">Hidraulica</option>
+                            <option value="Rejilla">Rejilla</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="" required></td>
+                </tr>  
+                <tr>
+                    <td>CERRAMIENTO<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Cerramiento"></td>
+                    <td>
+                        <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Total">Total</option>
+                            <option value="Parcial">Parcial</option>
+                            <option value="Aire libre">Aire libre</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="" required></td>
+                </tr> 
+                <tr>
+                    <td>SISTEMAS DE RETENCIÓN<input type="hidden" class="form-control" name="ProcesoGrano[etapaA][paso][]"  value="Sistemas"></td>
+                    <td>
+                        <select class="form-control" name="ProcesoGrano[etapaA][operatoria][]" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Ciclon">Ciclon</option>
+                            <option value="Filtro manga">Filtro manga</option>
+                            <option value="Cortinas plasticas">Cortinas plasticas</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="ProcesoGrano[etapaA][observaciones][]"  value="" required></td>
+                </tr>
+            </tbody>
+        </table>
+        </div> 
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA B </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center" >
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LIMPIEZA<input type="hidden" class="form-control" name="ProcesoGrano[etapaB][paso][]"  value="Limpieza" required></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaB][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Aire">Aire</option>
+                                <option value="Gravedad">Gravedad</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaB][observaciones][]"  value="" required></td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA C </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center" >
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SECADORA<input type="hidden" class="form-control" name="ProcesoGrano[etapaC][paso][]"  value="Secadora" ></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaC][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Mezclado">Mezclado</option>
+                                <option value="Artificial">Artificial</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaC][observaciones][]"  value="" required></td>
+                    </tr>    
+                    <tr>
+                        <td>COMBUSTIBLE<input type="hidden" class="form-control" name="ProcesoGrano[etapaC][paso][]"  value="Combustible"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaC][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Gas">Gas</option>
+                                <option value="Gasoil">Gasoil</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaC][observaciones][]"  value="" required></td>
+                    </tr>    
+                    <tr>
+                        <td>RETENCIÓN PARTÍCULAS<input type="hidden" class="form-control" name="ProcesoGrano[etapaC][paso][]"  value="Retencion"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaC][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Filtros">Filtros</option>
+                                <option value="Ciclones">Ciclones</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaC][observaciones][]"  value="" required></td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA D </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center" >
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NORIAS<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="Norias"></td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][operatoria][]"  value="" required></td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="" required></td>
+                    </tr>    
+                    <tr>
+                        <td>NORIA POZO<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="NoriaPozo"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaD][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Ciclon">Ciclon</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="" required></td>
+                    </tr>    
+                    <tr>
+                        <td>NORIA CABEZAL<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="NoriaCabezal"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaD][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Ciclon">Ciclon</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value=""  required></td>
+                    </tr>   
+                    <tr>
+                        <td>DISTRIBUCIÓN<input type="hidden" class="form-control" name="ProcesoGrano[etapaD][paso][]"  value="Distribucion"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaD][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Cinta">Cinta</option>
+                                <option value="Tornillo sin fin">Tornillo sin fin</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaD][observaciones][]"  value="" required></td>
+                    </tr>  
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b for=""> ETAPA E </b>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">PASO</th>
+                        <th scope="col">OPERATORIA</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SALIDA GRANOS<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="SalidaGranos" ></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Camion">Camion</option>
+                                <option value="Vagon">Vagon</option>
+                                <option value="Buques">Buques</option>
+                                <option value="Barcaza">Barcaza</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="" required></td>
+                    </tr>
+                    <tr>
+                        <td>CERRAMIENTO<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="Cerramiento"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Total">Total</option>
+                                <option value="Parcial">Parcial</option>
+                                <option value="Aire libre">Aire libre</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="" required></td>
+                    </tr>    
+                    <tr>
+                        <td>CAPTACIÓN<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="Captacion"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Ciclon">Ciclon</option>
+                                <option value="Filtro manga">Filtro manga</option>
+                                <option value="Cortinas plasticas">Cortinas plasticas</option>
+                                <option value="Manga retractil">Manga retractil</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="" required></td>
+                    </tr>    
+                    <tr>
+                        <td>PLAYA MANIOBRAS<input type="hidden" class="form-control" name="ProcesoGrano[etapaE][paso][]"  value="Playa"></td>
+                        <td>
+                            <select class="form-control" name="ProcesoGrano[etapaE][operatoria][]" id="" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="Superficie">Superficie</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control" name="ProcesoGrano[etapaE][observaciones][]"  value="" required></td>
+                    </tr>   
+                </tbody>
+        </table>
+    </div>
+    {% endif %}
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <b for=""> PRODUCTOS UTILIZADOS EN SERVICIOS AUXILIARES </b>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <table class="table text-center" id="tablaServicios">
+            <thead>
+                <tr>
+                    <th scope="col">DESCRIPCIÓN</th>
+                    <th scope="col">CANTIDAD MEDIA</th>
+                    <th scope="col">UNIDAD</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if ServicioAuxiliar is defined %}     
+                {% for servicio in ServicioAuxiliar %}
+                <tr>
+                    <td><input type="text" class="form-control" name="ServicioAuxiliar[descripcion][]"  value="{{servicio.descripcion}}" required></td>
+                    <td><input type="number" class="form-control" name="ServicioAuxiliar[cantidad][]"  value="{{servicio.cantidad}}" required></td>
+                    <td><input type="text" class="form-control" name="ServicioAuxiliar[unidad][]"  value="{{servicio.unidad}}" required></td>
+                    <td>
+                        <select class="form-control" name="TipoAplicacionServicio[nombre][]" required>
+                            {% for tipo in TipoAplicacion %}
+                                {% if servicio.tipoAplicacionAuxiliar.id == tipo.id %}
+                                    <option value="{{ tipo.id }}" selected>{{ tipo.nombre }}</option>
+                                {% else %}
+                                    <option value="{{ tipo.id }}" >{{ tipo.nombre }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="ServicioAuxiliar[responsable][]"  value="{{servicio.responsable}}" required>
+                        <a onClick="eliminarFila(this, 'tablaServicios')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr> 
+                {% endfor %} 
+            {% else %}
+                <tr>
+                    <td><input type="text" class="form-control" name="ServicioAuxiliar[descripcion][]"  value="" required></td>
+                    <td><input type="number" class="form-control" name="ServicioAuxiliar[cantidad][]"  value="" required></td>
+                    <td><input type="text" class="form-control" name="ServicioAuxiliar[unidad][]"  value="" required></td>
+                    <td>
+                        <select class="form-control" name="TipoAplicacionServicio[nombre][]" required>
+                            {% for tipo in TipoAplicacion %}
+                                <option value="{{ tipo.id }}" >{{ tipo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="media">
+                        <input type="text" class="form-control" name="ServicioAuxiliar[responsable][]"  value="" required>
+                        <a onClick="eliminarFila(this, 'tablaServicios')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr> 
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaServicios')" class="btn btn-secondary text-light">Agregar Servicio</a>
+        </div>
+    </div>
+    <br>    
+    {% set i = 1 %}
+    <b>CROQUIS DE UBICACIÓN DE LAS INSTALACIONES</b>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'7.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

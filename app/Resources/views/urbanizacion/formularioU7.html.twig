@@ -1,0 +1,41 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 7. CONSULTOR, EXPERTO o PERITO DEL REGISTRO OFICIAL DE CONSULTORES, EXPERTOS Y PERITOS <span class="text-success" data-toggle="tooltip" title="Incluir los datos correspondientes al representante legal de la empresa">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU7" action="{{ path('tramiteU8') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+    <div class="row">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">NOMBRE Y APELLIDO</th>
+                    <th scope="col">PROFESIÓN</th>
+                    <th scope="col">N° DE REGISTRO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control" list="browsers" value="NuevaPersona" />
+                        <datalist  id="browsers">
+                            {% for i in 0..10 %}
+                               <option value="Nombre Apellido">
+                            {% endfor %}
+                        </datalist>
+                    </td>
+                    <td><input class ='form-control' type="text" name=""  value="" ></td>
+                    <td><input class ='form-control' type="number" name="" value="" ></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>  
+    <br>   
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/formularioAmbiental/formularioU7.js')}}"></script>
+{% endblock %}

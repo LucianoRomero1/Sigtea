@@ -1,0 +1,83 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 8. RUIDOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG8" action="{{ path('tramiteAG9') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <table class="table text-center"  id="tablaRuido">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">NOMBRE</th>
+                    <th scope="col">HORARIO</th>
+                    <th scope="col">CARACTERISTICA RUIDO</th>
+                    <th scope="col">TIPO RUIDO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if Ruido is defined %} 
+                    {% for ruido in Ruido %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="Ruido[nombre][]" required value="{{ruido.nombre}}"></td>
+                            <td><input type="text" class="form-control" name="Ruido[horario][]" required value="{{ruido.horario}}"></td>
+                            <td>
+                                <select class="form-control" name="TipoRuido[nombre][]" required>
+                                    {% for tipo in TipoRuido %}
+                                        {% if ruido.tipoRuido.id == tipo.id %}
+                                            <option value="{{ tipo.id }}" selected>{{ tipo.nombre }}</option>
+                                        {% else %}
+                                            <option value="{{ tipo.id }}" >{{ tipo.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="media">
+                                <select class="form-control" name="Ruido[caracteristica][]" required>
+                                    <option {% if ruido.caracteristica == 1 %}selected{% endif %} value="1">CONTÍNUO</option>
+                                    <option {% if ruido.caracteristica == 2 %}selected{% endif %} value="2">FRECUENTE</option>
+                                    <option {% if ruido.caracteristica == 3 %}selected{% endif %} value="3">POCO FRECUENTE</option>
+                                </select>
+                                <a onClick="eliminarFila(this, 'tablaRuido')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>  
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td><input type="text" class="form-control" name="Ruido[nombre][]" required value=""></td>
+                        <td><input type="text" class="form-control" name="Ruido[horario][]" required value=""></td>
+                        <td>
+                            <select class="form-control" name="TipoRuido[nombre][]" required>
+                                {% for tipo in TipoRuido %}
+                                    <option value="{{ tipo.id }}" >{{ tipo.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="media">
+                            <select class="form-control" name="Ruido[caracteristica][]" required>
+                                <option value="1">CONTÍNUO</option>
+                                <option value="2">FRECUENTE</option>
+                                <option value="3">POCO FRECUENTE</option>
+                            </select>
+                            <a onClick="eliminarFila(this, 'tablaRuido')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>  
+                {% endif %} 
+            </tbody>
+        </table>
+        <br>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaRuido')" class="btn btn-secondary text-light">Agregar Ruido</a>
+            </div>
+        </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

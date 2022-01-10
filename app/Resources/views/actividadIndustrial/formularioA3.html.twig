@@ -1,0 +1,142 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO A</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">3. DOMICILIO CONSTITUIDO </div>
+    <div class="card-body">
+        <form action="{{ path('tramiteA3') }}" method="post">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-row">                    
+                    <p for="calle">CALLE </p>
+                    <input type="text" class="form-control" id="calle" name="Domicilio[calle]" required value="{% if Domicilio is defined %} {{ Domicilio.calle }} {% endif %}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-row">                    
+                    <p for="nro">N° </p>
+                    <input type="text" class="form-control" id="nro" name="Domicilio[numero]" required value="{% if Domicilio is defined %} {{ Domicilio.numero }} {% endif %}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-row">                    
+                    <p for="piso">PISO</p>
+                    <input type="text" class="form-control" id="piso" name="Domicilio[piso]" required value="{% if Domicilio is defined %} {{ Domicilio.piso }} {% endif %}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-row">                    
+                    <p for="dpto">DPTO</p>
+                    <input type="text" class="form-control" id="dpto" name="Domicilio[depto]" required value="{% if Domicilio is defined %} {{ Domicilio.depto }} {% endif %}">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-row">
+                    <p for="provincia">PROVINCIA </p>
+                    <select for="provincia" class="form-control" id="provincia" name="Domicilio[provincia]" required onChange="parent.provincia('provincia','departamento')">
+                        <option value="">SELECCIONA UNA PROVINCIA</option>
+                        {% for provincia in provincias %}
+                            {% if Domicilio is defined and Domicilio.provincia.id == provincia.id %}
+                                <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                            {% else %}
+                                <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-row">                    
+                    <p for="departamento">DEPARTAMENTO <span class="text-danger">(*)</span></p>
+                    <select class="form-control" id="departamento" name="Domicilio[departamento]" required onChange="parent.localidad('departamento','localidad')">
+                        <option value="">SELECCIONA UN DEPARTAMENTO</option>                        
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-row">                    
+                    <p for="localidad">LOCALIDAD</p>
+                    <select class="form-control" id="localidad" name="Domicilio[localidad]" required onChange="parent.departamento('localidad','codigoPostal')">
+                        <option value="">SELECCIONA UNA LOCALIDAD</option>
+                    </select>
+                </div>
+            </div>            
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-row">
+                    <p for="cp">CP </p>
+                    <input type="text" class="form-control" id="codigoPostal" name="Domicilio[cp]" readonly>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-row">
+                    <p for="telefono">TELEFONO/ FAX </p>
+                    <input type="text" class="form-control" id="telefono" name="Domicilio[telefono]" required value="{% if Domicilio is defined %} {{ Domicilio.telefono }} {% endif %}">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-row">
+                    <p for="mail">EMAIL </p>
+                    <input type="email" class="form-control" id="mail" name="Domicilio[email]" required value="{% if Domicilio is defined %} {{ Domicilio.email }} {% endif %}">
+                </div>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('/tramiteA1') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteA1',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteA4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{asset('bundles/js/domicilio.js')}}"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    {% if (Domicilio is defined) %}
+        $( document ).ready(function() {
+            $("#provincia").trigger("change");
+            setTimeout(function(){
+                $("#departamento").val({{ Domicilio.departamento.id }});
+                $("#departamento").trigger("change");
+            }, 7000);
+            setTimeout(function(){
+                $("#localidad").val({{ Domicilio.localidad.id }});
+                $("#localidad").trigger("change");
+            }, 16000);
+        });        
+    {% endif %}
+    </script>
+{% endblock %}

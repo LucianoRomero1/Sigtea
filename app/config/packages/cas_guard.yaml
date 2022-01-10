@@ -1,0 +1,8 @@
+cas_guard:
+    hostname: dsso.santafe.gob.ar
+    url: /service-auth # opcional
+    port: 443 # opcional
+    logout_redirect: home  # opcional
+    login_failure: failure # opcional - Debe definirse en el área pública
+    debug: true # opcional - Se recomienda false en producción
+    version: "3.0" # opcional

@@ -1,0 +1,18 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class = "container-fluid login-div">
+    <div class="login-div-purple">
+        Restablecer contraseña
+    </div>
+    <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+        <div>
+            <label for="username">{{ 'resetting.request.username'|trans }}</label>
+            <input type="text" class="form-control" id="username" name="username" required="required" />
+        </div>
+        <br>
+        <div class="text-right">
+            <input class="btn" type="submit" value="{{ 'resetting.request.submit'|trans }}" />
+        </div>
+        <br>
+    </form>
+</div>

@@ -1,0 +1,52 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+    <div class="m-top">
+
+        <div class="input-group rounded">
+            <input type="text" class="form-control" id="buscarTramite" placeholder="Buscar..." aria-label="Search" aria-describedby="search-addon" />
+
+            <span class="input-group-text border-0" id="search-addon">
+                <i class="fas fa-search"></i>
+            </span>
+
+        </div>
+        
+        <div class="m-top">
+            <h6>MIS TRÁMITES</h6>
+        </div>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Tramite</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tramite in tramites %}
+                    {% if tramite.empresa != null %}
+                        <tr>
+                            <td>{{tramite.empresa.persona.razonSocial}}</td>
+                            <td>{{tramite.nombre}}</td>
+                            <td>{{tramite.estado.descripcion}}</td>
+                            <td>                                                
+                                {% if tramite.estado.id <= 3 and tramite.estado.id != 2 %}
+                                    <a href="{{ path(urlList[tramite.id],{'idTramite': tramite.id ?? 0} ) }}"><i class="fas fa-edit" title="Editar"></i></a> 
+                                    <buttom onclick="parent.cambioEstado({{tramite.id}},2)" title="Enviar"><i class="fas fa-check text-success"></i></buttom>
+                                {% endif %}                        
+                                <buttom onclick="parent.mensajes({{tramite.id}})" title="Mensajes"><i class="fas fa-list text-primary"></i></buttom>
+                                <buttom class="mensaje" data-idtramite={{tramite.id}} title="Nuevo Mensaje"><i class="far fa-envelope text-primary"></i></buttom>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+	<script src="{{asset('bundles/js/tramites.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO B - 2. PRODUCTOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB2') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="tabla-pers">
+        <h6>
+            PRODUCTOS
+            <span data-toggle="tooltip" data-placement="right" 
+                title="(?) Listar los productos de valor en el mercado" class="text-success pad-span">(?)</span>
+        </h6>
+        <table id="tablaProductos" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">PRODUCTO</th>
+                    <th scope="col">ESTADO FÍSICO DE AGREGACIÓN</th>
+                    <th scope="col">PRODUCCIÓN ANUAL</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">ALMACENAMIENTO</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for producto in Productos %}
+                <tr>
+                    <th>{{loop.index}}<input type="hidden" name="Producto[numero][]" value="{{loop.index}}"></th>
+                    <td><input class="form-control" type="text" name="Producto[nombre][]" required value="{{producto.nombre}}"></td>
+                    <td>
+                        <select class="form-control" name="Producto[estado][]">
+                            <option {% if producto.estadoFisico == 'Gaseoso'%} selected {% endif %}>Gaseoso</option>
+                            <option {% if producto.estadoFisico == 'Líquido'%} selected {% endif %}>Líquido</option>
+                            <option {% if producto.estadoFisico == 'Semisólido'%} selected {% endif %}>Semisólido</option>
+                            <option {% if producto.estadoFisico == 'Sólido'%} selected {% endif %}>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="Producto[produccion][]" required value="{{producto.produccion}}"></td>
+                    <td>
+                        <select class="form-control" name="Producto[unidad][]">
+                            <option {% if producto.unidad == 'kg'%} selected {% endif %}>kg</option>
+                            <option {% if producto.unidad == 'lt'%} selected {% endif %}>lt</option>
+                            <option {% if producto.unidad == 'm3'%} selected {% endif %}>m3</option>
+                            <option {% if producto.unidad == 'tn'%} selected {% endif %}>tn</option>
+                            <option {% if producto.unidad == 'unidades'%} selected {% endif %}>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Producto[almacenamiento][]" required value="{{producto.almacenamiento}}">
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaProductos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th>1<input value="1" type="hidden" name="Producto[numero][]"></th>
+                    <td><input class="form-control" type="text" name="Producto[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="Producto[estado][]">
+                            <option>Gaseoso</option>
+                            <option>Líquido</option>
+                            <option>Semisólido</option>
+                            <option>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" name="Producto[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="Producto[unidad][]">
+                            <option>kg</option>
+                            <option>lt</option>
+                            <option>m3</option>
+                            <option>tn</option>
+                            <option>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" name="Producto[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaProductos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr> 
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaProductos')" class="btn btn-primary text-light">Agregar Fila</a>
+                {# <span data-toggle="tooltip" data-placement="right" 
+                    title="(?) Clasifique cada uno de los productos agregados en la tabla anterior. Bien de consumo: producto destinado
+                        al consumo directo. Ej: alimentos, muebles, calzado, etc. Bien de Capital: producto utilizado junto a otros
+                        factores de producción para producir a su vez otros bienes y servicios. Ej: equipos, herramientas, maquinaria, etc.
+                        Producto industrial: producto destinado a la elaboración de otros productos. Ej: materia prima, componentes, etc."
+                    class="text-success pad-span">(?)</span> #}
+            </div>
+        </div>
+    </div>
+    </br>
+    <div class="tabla-pers">
+        <h6>
+            SUBPRODUCTOS
+            <span data-toggle="tooltip" data-placement="right" 
+                title="(?) Listar los subproductos de valor en el mercado" class="text-success pad-span">(?)</span>
+        </h6>
+        <table id="tablaSubproductos" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">SUBPRODUCTO</th>
+                    <th scope="col">ESTADO FÍSICO DE AGREGACIÓN</th>
+                    <th scope="col">PRODUCCIÓN ANUAL</th>
+                    <th scope="col">UNIDAD</th>
+                    <th scope="col">ALMACENAMIENTO</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for subproducto in SubProductos %}
+                <tr>
+                    <th>{{loop.index}}<input value="{{loop.index}}" type="hidden" name="SubProducto[numero][]"></th>
+                    <td><input type="text" class="form-control" value="{{subproducto.nombre}}" name="SubProducto[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="SubProducto[estado][]">
+                            <option {% if subproducto.estadoFisico == 'Gaseoso' %} selected {% endif %}>Gaseoso</option>
+                            <option {% if subproducto.estadoFisico == 'Líquido' %} selected {% endif %}>Líquido</option>
+                            <option {% if subproducto.estadoFisico == 'Semisólido' %} selected {% endif %}>Semisólido</option>
+                            <option {% if subproducto.estadoFisico == 'Sólido' %} selected {% endif %}>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" value="{{subproducto.produccion}}" name="SubProducto[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="SubProducto[unidad][]">
+                            <option {% if subproducto.unidad == 'kg' %} selected {% endif %}>kg</option>
+                            <option {% if subproducto.unidad == 'lt' %} selected {% endif %}>lt</option>
+                            <option {% if subproducto.unidad == 'tn' %} selected {% endif %}>tn</option>
+                            <option {% if subproducto.unidad == 'unidades' %} selected {% endif %}>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" value="{{subproducto.almacenamiento}}" type="text" name="SubProducto[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaSubproductos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th>1<input value="1" type="hidden" name="SubProducto[numero][]"></th>
+                    <td><input type="text" class="form-control" name="SubProducto[nombre][]" required></td>
+                    <td>
+                        <select class="form-control" name="SubProducto[estado][]">
+                            <option>Gaseoso</option>
+                            <option>Líquido</option>
+                            <option>Semisólido</option>
+                            <option>Sólido</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="SubProducto[produccion][]" required></td>
+                    <td>
+                        <select class="form-control" name="SubProducto[unidad][]">
+                            <option>kg</option>
+                            <option>lt</option>
+                            <option>tn</option>
+                            <option>unidades</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" name="SubProducto[almacenamiento][]" required>
+                    </td>
+                    <td>
+                        <a onClick="eliminarFila(this, 'tablaSubproductos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a onClick="agregarFila('tablaSubproductos')" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+    </div>
+    
+    </br>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

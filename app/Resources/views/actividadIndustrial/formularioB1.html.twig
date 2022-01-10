@@ -1,0 +1,227 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO B</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">1. DATOS PARA LA CATEGORIZACIÓN AMBIENTAL DE ACTIVIDADES</div>
+    <div class="card-body">
+        <form action="{{ path('tramiteB1') }}" method="post">
+
+        {# {% if idtramite is defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <input type="hidden" name="idPlanta" value="{{idPlanta}}">
+        {# {% endif %} #}
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <p for="planta">Planta <span class="text-danger">(*)</span><span data-toggle="tooltip" data-placement="right" 
+                        title="(?) Escribir el nombre con que se identifica la planta en cuestión (sí es una sola identificarla como 'única')"
+                        class="text-success pad-span">(?)</span></p>
+                    <input type="text" required class="form-control" id="planta" name="Planta[nombre]" value="{% if Planta is defined %} {{ Planta.nombre }} {% endif %}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            <label>FECHA DE INICIO DE ACTIVIDADES EN EL SITIO: <span class="text-danger">(*)</span><span data-toggle="tooltip" data-placement="right" 
+                        title="(?) En caso de empresas que aún no han sido reemplazadas, indicar una fecha de inicio estimativa"
+                        class="text-success pad-span">(?)</span></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <p for="inicioActividades">¿La empresa ya inició actividades a categorizar en el sitio? <span class="text-danger">(*)</span></p>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="verFecha()" value="SI" name="Planta[InicioFecha]" {% if Planta is defined  and Planta.fechaInicioActividades != null %} checked {% endif %}> SI
+                        </div>
+                    </div>                    
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" onClick="verFecha()" value="NO"  name="Planta[InicioFecha]" {% if Planta is defined  and Planta.fechaInicioActividades == null %} checked {% endif %}> NO
+                        </div>
+                    </div>                    
+                    <input type="date" class="form-control" id="inicioActividades" name="Planta[inicioActividades]" value="{% if Planta is defined  and Planta.fechaInicioActividades != null %}{{ Planta.fechaInicioActividades|date("Y-m-d") }}{% endif %}">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <p for="otrasFueraProvincia">¿Posee otras plantas ubicadas fuera de la provincia? <span class="text-danger">(*)</span></p>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" onClick="mostrarTabla()" value="SI" name="Planta[otrasFueraProvincia]" required {% if Planta is defined and Planta.fueraProvincia == 1 %} checked {% endif %}> SI
+                        </div>
+                    </div>                    
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" onClick="desactivarTabla()" value="NO" name="Planta[otrasFueraProvincia]" required {% if Planta is defined  and Planta.fueraProvincia == 0 %} checked {% endif %}> NO
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <table id="tabla" class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">DOMICILIO</th>
+                        <th scope="col">PROVINCIA</th>
+                        <th scope="col">DEPARTAMENTO</th>
+                        <th scope="col">LOCALIDAD</th>
+                        <th scope="col">CODIGO POSTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="filas">
+                {% set i = 0 %}
+                {% if (Domicilios is defined and Planta.fueraProvincia == 1) %}
+                    {% for domicilio in Domicilios %}
+                        <tr id="tr">
+                            <td>
+                                <input type="text" class="form-control" name="Domicilio[calle][]" value="{{domicilio.calle ~ domicilio.numero ~ domicilio.piso ~ domicilio.depto}}">
+                            </td>
+                            <td>
+                                <div id="provincias">
+                                    <select for="provincia" class="form-control" id="provincia_{{i}}" name="Domicilio[provincia][]" onChange="parent.provincia('provincia_{{i}}','departamento_{{i}}')">
+                                        <option value="">SELECCIONE UNA PROVINCIA</option>
+                                        {% for provincia in provincias %}
+                                            {% if domicilio.provincia.id == provincia.id %}
+                                                <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                                            {% else %}
+                                                <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-control" id="departamento_{{i}}" name="Domicilio[departamento][]" onChange="parent.localidad('departamento_{{i}}','localidad_{{i}}')">
+                                    <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="localidad_{{i}}" name="Domicilio[localidad][]" onChange="parent.departamento('localidad_{{i}}','codigoPostal_{{i}}')">
+                                    <option value="">SELECCIONE UNA LOCALIDAD</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="codigoPostal_{{i}}" name="Domicilio[cp][]" readonly>
+                                <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr> 
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                {% else %} 
+                    <tr id="tr">
+                        <td>
+                            <input type="text" class="form-control" name="Domicilio[calle][]">
+                        </td>
+                        <td>
+                            <div id="provincias">
+                                <select for="provincia" class="form-control" id="provincia_{{i}}" name="Domicilio[provincia][]" onChange="parent.provincia('provincia_{{i}}','departamento_{{i}}')">
+                                    <option value="">SELECCIONE UNA PROVINCIA</option>
+                                    {% for provincia in provincias %}
+                                            <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <select class="form-control" id="departamento_{{i}}" name="Domicilio[departamento][]" onChange="parent.localidad('departamento_{{i}}','localidad_{{i}}')">
+                                <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="localidad_{{i}}" name="Domicilio[localidad][]" onChange="parent.departamento('localidad_{{i}}','codigoPostal_{{i}}')">
+                                <option value="">SELECCIONE UNA LOCALIDAD</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="codigoPostal_{{i}}" name="Domicilio[cp][]" readonly>
+                            <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr> 
+                    {% set i = i + 1 %}
+                {% endif %}                
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a id="buttonDatos" onClick="agregarFila()" class="btn btn-light">Agregar Fila</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('tramiteA8') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />                    
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteA8',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteB2',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/formularioB1.js')}}"></script>
+    <script src="{{asset('bundles/js/domicilio.js')}}"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>    
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    {% if (Domicilios is defined and Planta.fueraProvincia == 1) %}        
+        $( document ).ready(function() {
+            parent.mostrarTabla();
+            $("#tr").show();
+            var provinciaData = [];
+            var departamentoData = [];
+            var localidadData = [];
+            {% for domicilio in Domicilios %}
+                provinciaData.push({{domicilio.provincia.id}});
+                departamentoData.push({{domicilio.departamento.id}});
+                localidadData.push({{domicilio.localidad.id}});
+            {% endfor %}
+            for(var index = 0; index<provinciaData.length;index ++){      
+                $("#provincia_"+index).val(provinciaData[index]);
+                $("#provincia_"+index).trigger("change");
+            }
+            setTimeout(function(){
+                for(var index = 0; index<departamentoData.length;index ++){      
+                    $("#departamento_"+index).val(departamentoData[index]);
+                    $("#departamento_"+index).trigger("change");
+                }
+            }, 7000);
+            setTimeout(function(){
+                for(var index = 0; index<localidadData.length;index ++){      
+                    $("#localidad_"+index).val(localidadData[index]);
+                    $("#localidad_"+index).trigger("change");
+                }
+            }, 16000);
+        });
+    {% endif %}
+    {% if Planta is defined  and Planta.fueraProvincia == 0 %} desactivarTabla(); {% endif %}
+    </script>
+{% endblock %}

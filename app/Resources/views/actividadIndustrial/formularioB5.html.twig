@@ -1,0 +1,805 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO B</h4></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">5. EMISIONES, EFLUENTES Y RESIDUOS </div>
+    <div class="card-body">
+        <form action="{{ path('tramiteB5') }}" method="post">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <input type="hidden" name="idPlanta" value="{{idPlanta}}">
+        {# {% endif %} #}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>EMISIONES GASEOSAS 
+                    <span data-toggle="tooltip" data-placement="right" 
+                        title="Emisión: Identificar la emisión gaseosa. Proceso que la genera: Mencionar el proceso u operación
+                         que la produce. Tratamiento: Indicar el tratamiento de esa emisión. Por ej: Ninguno, Ciclón, Filtro Manga,
+                          Precipitador Electrostático, Lavador de gases (Scrubber), Proceso de Adsorción, Proceso de Combustión,
+                           Otros (Especificar), Ej: Gases de combustión, Material Particulado, VOC's, Ruido, etc."
+                        class="text-success pad-span">(?)</span>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>
+                        ¿Posee emisiones de componentes naturales del aire incluido vapor de agua o productos de combustión de gas
+                        natural? 
+                        <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" value="SI" {% if EmisionGaseosa|length > 0 %} checked {% endif %} onClick="activarTabla('EmisionGaseosa')" name="EmisionGaseosa[poseeComponenetesNaturales]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" value="NO" onClick="desactivarTabla('EmisionGaseosa')" name="EmisionGaseosa[poseeComponenetesNaturales]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tablaEmisionGaseosa" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">EMISIÓN</th>
+                            <th scope="col">PROCESO QUE LO GENERA</th>
+                            <th scope="col">TRATAMIENTO</th>
+                        </tr>                        
+                    </thead>
+                    <tbody id="filasEmisionGaseosa">
+                        {% if EmisionGaseosa|length > 0%}
+                            {% for emisionGaseosa in EmisionGaseosa %}
+                                <tr>
+                                    <td><input type="text" value="{{emisionGaseosa.emision}}" class="form-control" name="EmisionGaseosa[emision][]"><input type="hidden" name="EmisionGaseosa[tipo][]" value="gas_natural"\></td>
+                                    <td><input type="text" value="{{emisionGaseosa.procesoGenerador}}" class="form-control" name="EmisionGaseosa[proceso][]"></td>
+                                    <td>
+                                        <input type="text" value="{{emisionGaseosa.tratamiento}}" class="form-control" name="EmisionGaseosa[tratamiento][]">
+                                        <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a id="buttonEmisionGaseosa" onClick="agregarFilaEmisionGaseosa()" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Posee emisiones de gases de combustión de combustibles líquidos? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" value="SI" {% if EmisionGaseosaCombustion is defined %} checked {% endif %} onClick="activarTabla('EmisionGaseosaCombustion')" name="EmisionGaseosaCombustion[poseeCombustibles]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" value="NO" onClick="desactivarTabla('EmisionGaseosaCombustion')" name="EmisionGaseosaCombustion[poseeCombustibles]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tablaEmisionGaseosaCombustion" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">EMISIÓN</th>
+                            <th scope="col">PROCESO QUE LO GENERA</th>
+                            <th scope="col">TRATAMIENTO</th>
+                        </tr>                        
+                    </thead>
+                    <tbody id="filasEmisionGaseosaCombustion">
+                        {% if EmisionGaseosaCombustion is defined%}
+                            {% for emisionGaseosaCombustion in EmisionGaseosaCombustion %}
+                                <tr>
+                                    <td><input type="text"  value="{{emisionGaseosaCombustion.emision}}"  class="form-control" name="EmisionGaseosaCombustion[emision][]"><input type="hidden" name="EmisionGaseosaCombustion[tipo]" value="combustible"\></td>
+                                    <td><input type="text"  value="{{emisionGaseosaCombustion.procesoGenerador}}" class="form-control" name="EmisionGaseosaCombustion[proceso][]"></td>
+                                    <td>
+                                        <input type="text"  value="{{emisionGaseosaCombustion.tratamiento}}" class="form-control" name="EmisionGaseosaCombustion[tratamiento][]">
+                                        <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                    </td>
+                                </tr> 
+                            {% endfor %}
+                        {% endif %}                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a id="buttonEmisionGaseosaCombustion" onClick="agregarFilaEmisionGaseosaCombustion()" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Posee emisiones de gases no contemplados en las preguntas anteriores? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" value="SI"  {% if EmisionGaseosaGases is defined %} checked {% endif %} onClick="activarTabla('EmisionGaseosaGases')" name="EmisionGaseosaGases[poseeNoContemplados]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" value="NO" onClick="desactivarTabla('EmisionGaseosaGases')" name="EmisionGaseosaGases[poseeNoContemplados]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tablaEmisionGaseosaGases" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">PROCESO QUE LO GENERA</th>
+                            <th scope="col">COMPONENTES RELEVANTES</th>
+                            <th scope="col">TRATAMIENTO</th>
+                        </tr>                        
+                    </thead>
+                    <tbody id="filasEmisionGaseosaGases">
+                        {% if EmisionGaseosaGases is defined%}
+                            {% for emisionGaseosaGases in EmisionGaseosaGases %}
+                                <tr>
+                                    <td><input type="text" value="{{emisionGaseosaGases.procesoGenerador}}" class="form-control" name="EmisionGaseosaGases[proceso][]"><input type="hidden" name="EmisionGaseosaGases[tipo]" value="no_contemplados"\></td>
+                                    <td><input type="text" value="{{emisionGaseosaGases.componenteRelevante}}" class="form-control" name="EmisionGaseosaGases[componentes][]"></td>
+                                    <td>
+                                        <input type="text" value="{{emisionGaseosaGases.tratamiento}}" class="form-control" name="EmisionGaseosaGases[tratamiento][]">
+                                        <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                                    </td>
+                                </tr> 
+                            {% endfor %}
+                        {% endif %}    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a id="buttonEmisionGaseosaGases" onClick="agregarFilaEmisionGaseosaGases()" class="btn btn-primary text-light">Agregar Fila</a>
+            </div>
+        </div>
+        </br>
+        {# EFLUENTES #}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>
+                    EFLUENTES Y/O RESIDUOS LÍQUIDOS 
+                    <span data-toggle="tooltip" data-placement="right" 
+                        title="(?) Efluente: Identificar el efluente líquido y el proceso en operación que lo produce.
+                        Gestión: Indicar el tratamiento de esos líquidos (Neutralización, Decantación, Tratamiento Biológico,
+                         Oxidación, Ninguno, Otros). Cuerpo Receptor: destino de los mismos (Sistema cloacal, Zanja a cielo
+                          abierto, Ríos, Arroyos(especificar), Otros)."
+                        class="text-success pad-span">(?)</span>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿En el establecimiento se generan efluentes o residuos líquidos? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" onClick="mostrarDiv()" {% if Efluentes is defined %} checked {% endif %} value="SI" name="Efluentes[poseeEfluentes]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" onClick="ocultarDiv()" value="NO" name="Efluentes[poseeEfluentes]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        </br>
+        {# OCULTAMIENTO #}
+        <div style="display: none;" id="residuosLiquidos">
+            <div style="border-left: 2px solid #0275d8" class="pad">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <label>¿El efluente es únicamente agua a temperatura ambiente? <span class="text-danger">(*)</span></label>
+                            <div class="input-group-text">
+                                <input type="radio" name="Efluentes[temperaturaAmbiente]" value="SI" required> SI
+                            </div>
+                            <div class="input-group-text">
+                                <input type="radio" id="efluenteTemperaturaAmbiente" name="Efluentes[temperaturaAmbiente]" value="NO" required> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <label>¿Los efluentes están constituidos esencialmente por agua de lavado o de procesos que no contengan residuos peligrosos ni que pudieran dar origen a residuos peligrosos por su tratamiento? <span class="text-danger">(*)</span></label>                    
+                            <div class="input-group-text">
+                                <input type="radio" value="SI" {% if Efluentes is defined %} checked {% endif %}  onClick="agregarEfluente()" name="Efluentes[noResiduosPeligrosos]" required> SI
+                            </div>
+                            <div class="input-group-text">
+                                <input type="radio" id="efluenteNoResiduosPeligrosos" value="NO" onClick="limpiarDivCompleto('efluentes')" name="Efluentes[noResiduosPeligrosos]" required> NO
+                            </div>
+                            <p>(Ver Decreto Nº 1844/02 para conocer la definición de residuo peligroso. Específicamente Capítulo I - Artículo 1 - Inciso k. Link para acceder al Decreto <a href="https://www.santafe.gob.ar/index.php/content/view/full/10817/" target="_blank">aquí</a>)</p>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div id="efluentes">
+                    {% set i = 1 %}
+                    {% if Efluentes is defined %}
+                    
+                    {% for efluente in Efluentes %}
+                        <div id="efluente{{i}}" class="row">
+                            <div class="col-md-12">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col"></th>
+                                        </tr>                        
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:20%">PROCESO QUE LO GENERA</td>
+                                            <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Efluentes[procesoGenerado][]">{{efluente.procesoGenerador}}</textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%">COMPONENTE/S RELEVANTE/S</td>
+                                            <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Efluentes[componenteRelevante][]">{{efluente.componenteRelevante}}</textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%">CANTIDAD</td>
+                                            <td style="width:80%">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label>Valor</label>
+                                                            <input class="form-control" value="{{efluente.volumen}}" type="text" class="form-control" name="Efluentes[cantidad][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label>Volumen</label>
+                                                            <select class="form-control" name="Efluentes[volumen][]">
+                                                                <option {% if efluente.unidad == "m3"%} selected {% endif %}>m3</option>
+                                                                <option {% if efluente.unidad == "lt"%} selected {% endif %}>lt</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label>Unidad de Tiempo</label>
+                                                            <select class="form-control" name="Efluentes[periodoTiempo][]">
+                                                                <option {% if efluente.periodoTiempo == "semanal"%} selected {% endif %}>semanal</option>
+                                                                <option {% if efluente.periodoTiempo == "mensual"%} selected {% endif %}>mensual</option>
+                                                                <option {% if efluente.periodoTiempo == "diario"%} selected {% endif %}>diario</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%">GESTIÓN (Seleccione al menos una opción)</td>
+                                            <td style="width:80%">
+                                                
+                                                <div class="form-row">
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if efluente.gestion == "Decantación" %} checked {% endif %} aria-label="Checkbox for following text input" value="Decantación" name="Efluentes[gestion][{{i - 1 }}][]"> Decantación
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if efluente.gestion == "Tratamiento biológico" %} checked {% endif %} aria-label="Checkbox for following text input" value="Tratamiento biológico" name="Efluentes[gestion][{{i - 1 }}][]"> Tratamiento biológico
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if efluente.gestion == "Neutralización" %} checked {% endif %} aria-label="Checkbox for following text input" value="Neutralización" name="Efluentes[gestion][{{i - 1 }}][]"> Neutralización
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if efluente.gestion == "Oxidación" %} checked {% endif %} aria-label="Checkbox for following text input" value="Oxidación" name="Efluentes[gestion][{{i - 1 }}][]"> Oxidación
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if efluente.gestion == "Ninguno"%} checked {% endif %} aria-label="Checkbox for following text input" value="Ninguno" name="Efluentes[gestion][{{i - 1 }}][]"> Ninguno
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if efluente.gestion == "Otro"%} checked {% endif %} aria-label="Checkbox for following text input" value="Otro" name="Efluentes[gestion][{{i - 1 }}][]"> Otro
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <tr>
+                                            <td style="width:20%">CUERPO RECEPTOR</td>
+                                            <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Efluentes[receptor][]">{{efluente.receptor}}</textarea></td>
+                                        </tr>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center">
+                                <a onClick="eliminarDiv('efluente{{i}}')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <input type="button" onClick="agregarEfluente({{i}})" id="buttonefluentes" {% if Efluentes is not defined %} disabled {% endif %}  class="btn btn-primary text-light" value="Agregar efluente"/>
+                    </div>
+                </div>
+                </br>
+                        
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <label>¿Los líquidos contienen residuos peligros o pueden generar residuos peligrosos? <span class="text-danger">(*)</span></label>
+                            <div class="input-group-text">
+                                <input type="radio" {% if Residuos is defined %} checked {% endif %} value="SI" onClick="agregarLiquido()" name="Residuo[posee]" required> SI
+                            </div>
+                            <div class="input-group-text">
+                                <input type="radio" id="residuoPosee" value="NO" onclick="limpiarDivCompleto('liquidos')" name="Residuo[posee]" required> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="liquidos">
+                    {% set i = 1 %}
+                    {% if Residuos is defined %}
+                    {% for residuo in Residuos %}
+                    <div id="liquido{{i}}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col"></th>
+                                        </tr>                        
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:20%">PROCESO QUE LO GENERA</td>
+                                            <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Residuo[proceso][]">{{residuo.procesoGenerador}}</textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%">COMPONENTE/S RELEVANTE/S</td>
+                                            <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Residuo[componente][]">{{residuo.componenteRelevante}}</textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%">CANTIDAD</td>
+                                            <td style="width:80%">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label>Valor</label>
+                                                            <input type="text" value="{{residuo.volumen}}" class="form-control" name="Residuo[cantidad][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label>Volumen</label>
+                                                            <select class="form-control" name="Residuo[volumen][]">
+                                                                <option {% if residuo.unidad == "m3" %} selected {% endif %}>m3</option>
+                                                                <option {% if residuo.unidad == "lt" %} selected {% endif %}>lt</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label>Unidad de Tiempo</label>
+                                                            <select class="form-control" name="Residuo[periodoTiempo][]">
+                                                                <option {% if residuo.periodoTiempo == "semanal" %} selected {% endif %}>semanal</option>
+                                                                <option {% if residuo.periodoTiempo == "mensual" %} selected {% endif %}>mensual</option>
+                                                                <option {% if residuo.periodoTiempo == "diario" %} selected {% endif %}>diario</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%">GESTIÓN (Seleccione al menos una opción)</td>
+                                            <td style="width:80%">
+                                                <div class="form-row">
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if residuo.gestion == "Decantación" %} checked {% endif %} aria-label="Checkbox for following text input" value="Decantación" name="Residuo[gestion][{{i - 1}}][]"> Decantación
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio"  {% if residuo.gestion == "Tratamiento biológico" %} checked {% endif %} aria-label="Checkbox for following text input" value="Tratamiento biológico"  name="Residuo[gestion][{{i - 1 }}][]"> Tratamiento biológico
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if residuo.gestion == "Neutralización" %} checked {% endif %} aria-label="Checkbox for following text input" value="Neutralización" name="Residuo[gestion][{{i - 1 }}][]"> Neutralización
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if residuo.gestion == "Oxidación" %} checked {% endif %} aria-label="Checkbox for following text input" value="Oxidación" name="Residuo[gestion][{{i - 1 }}][]"> Oxidación
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if residuo.gestion == "Ninguno" %} checked {% endif %} aria-label="Checkbox for following text input" value="Ninguno" name="Residuo[gestion][{{i - 1 }}][]"> Ninguno
+                                                    </div>
+                                                    <div class="input-group-text">
+                                                        <input type="radio" {% if residuo.gestion == "Otro" %} checked {% endif %} aria-label="Checkbox for following text input" value="Otro" name="Residuo[gestion][{{i - 1 }}][]"> Otro
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <tr>
+                                            
+                                            <td style="width:20%">CUERPO RECEPTOR</td>
+                                            <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="Residuo[receptor][]">{#{{ residuo.receptor }}#}</textarea></td>
+                                        </tr>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a onClick="eliminarDiv('liquido{{i}}')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                        </div>
+                    </div>
+                    {% set i = i + 1 %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <input id="buttonliquidos" type="button" {% if Residuos is not defined %} disabled {% endif %} onClick="agregarLiquido({{i}})" class="btn btn-primary text-light" value="Agregar liquido"/>
+                    </div>
+                </div>
+                </br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <label>¿Los efluentes líquidos requieren más de un tratamiento para poder ser vertidos? <span class="text-danger">(*)</span></label>
+                            <div class="input-group-text">
+                                <input  {% if EfluentesLiquidos is defined %} checked {% endif %}   onClick="agregarEfluenteVertido()"  type="radio" value="SI" name="EfluentesLiquidos[vertidos]" required> SI
+                            </div>
+                            <div class="input-group-text">
+                                <input id="efluenteVertidos" onClick="limpiarDivCompleto('efluentesVertidos')" type="radio" value="NO" name="EfluentesLiquidos[vertidos]" required> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                        
+                <div id="efluentesVertidos">
+                
+                {% set i = 1 %}
+                {% if EfluentesLiquidos|length != 0 %}
+                {% for efluenteLiquido in EfluentesLiquidos %}
+                <div id="efluenteVertido{{i}}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                    </tr>                        
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:20%">PROCESO QUE LO GENERA</td>
+                                        <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="EfluentesLiquidos[proceso][]">{{efluenteLiquido.procesoGenerador}}</textarea><input type="hidden" name="Efluentes[tipo]" value="liquidos"\> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">COMPONENTE/S RELEVANTE/S</td>
+                                        <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="EfluentesLiquidos[componente][]">{{efluenteLiquido.componenteRelevante}}</textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">CANTIDAD</td>
+                                        <td style="width:80%">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Valor</label>
+                                                        <input type="text" value="{{efluenteLiquido.volumen}}" class="form-control" name="EfluentesLiquidos[cantidad][]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Volumen</label>
+                                                        <select class="form-control" name="EfluentesLiquidos[volumen][]">
+                                                            <option {% if efluenteLiquido.unidad == "m3" %} selected {% endif %}>m3</option>
+                                                            <option {% if efluenteLiquido.unidad == "lt" %} selected {% endif %}>lt</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Unidad de Tiempo</label>
+                                                        <select class="form-control" name="EfluentesLiquidos[periodoTiempo][]">
+                                                            <option {% if efluenteLiquido.periodoTiempo == "semanal" %} selected {% endif %} >semanal</option>
+                                                            <option {% if efluenteLiquido.periodoTiempo == "mensual" %} selected {% endif %} >mensual</option>
+                                                            <option {% if efluenteLiquido.periodoTiempo == "diario" %} selected {% endif %} >diario</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%">GESTIÓN (Seleccione al menos una opción)</td>
+                                        <td style="width:80%">
+                                            <div class="form-row">
+                                                <div class="input-group-text">
+                                                    <input type="radio" {% if efluenteLiquido.gestion == "Decantación" %} checked {% endif %} aria-label="Checkbox for following text input" value="Decantación" name="EfluentesLiquidos[gestion][{{i - 1}}][]"> Decantación
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio"  {% if efluenteLiquido.gestion == "Tratamiento biológico" %} checked {% endif %} aria-label="Checkbox for following text input" value="Tratamiento biológico"  name="EfluentesLiquidos[gestion][{{i - 1}}][]"> Tratamiento biológico
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" {% if efluenteLiquido.gestion == "Neutralización" %} checked {% endif %} aria-label="Checkbox for following text input" value="Neutralización" name="EfluentesLiquidos[gestion][{{i - 1}}][]"> Neutralización
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" {% if efluenteLiquido.gestion == "Oxidación" %} checked {% endif %} aria-label="Checkbox for following text input" value="Oxidación" name="EfluentesLiquidos[gestion][{{i - 1}}][]"> Oxidación
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" {% if efluenteLiquido.gestion == "Ninguno" %} checked {% endif %} aria-label="Checkbox for following text input" value="Ninguno" name="EfluentesLiquidos[gestion][{{i - 1}}][]"> Ninguno
+                                                </div>
+                                                <div class="input-group-text">
+                                                    <input type="radio" {% if efluenteLiquido.gestion == "Otro" %} checked {% endif %} aria-label="Checkbox for following text input" value="Otro" name="EfluentesLiquidos[gestion][{{i - 1}}][]"> Otro
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <tr>
+                                        <td style="width:20%">CUERPO RECEPTOR</td>
+                                        <td style="width:80%"><textarea rows="3" name="EfluentesLiquidos[receptor][]" cols="100">{{efluenteLiquido.receptor}}</textarea></td>
+                                    </tr>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a onClick="eliminarDiv('efluenteVertido{{i}}')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </div>
+                    
+                </div>
+                {% set i = i + 1 %}
+                {% endfor %}
+                {% endif %}
+                </div>
+                
+                
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <input type="button" value="Agregar efluente" id="buttonefluentesVertidos" onClick="agregarEfluenteVertido({{i}})" class="btn btn-primary text-light"></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>RESIDUOS SÓLIDOS Y/O SEMISÓLIDOS 
+                    <span data-toggle="tooltip" data-placement="right" 
+                        title="Residuo: Identificar el residuo y el proceso en operación que lo produce. Gestión: Indicar el 
+                        manejo de los residuos, especificando tratamiento (en planta o a través de terceros) y/o dispoción final."
+                        class="text-success pad-span">(?)</span>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Se generan en el establecimiento residuos sólidos y semisólidos asimilables a domiciliarios? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" value="SI" name="ResiduosSolidos[posee]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" value="NO" name="ResiduosSolidos[posee]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿En los procesos industriales, actividades auxiliares, de servicio, tratamiento de efluentes u otras, se generan residuos sólidos o semisólidos no peligrosos? <span class="text-danger">(*)</span> <a href="https://www.santafe.gob.ar/index.php/web/content/view/full/185309" target="_blank">Decreto 2151/14</a></label>
+                    <div class="input-group-text">
+                        <input type="radio" value="SI" {% if ResiduosSolidos|length >0 %} checked {% endif %} onClick="agregarResiduoNoPeligroso()" name="ResiduosSolidos[nopeligrosos]" required> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" value="NO" onClick="eliminarResiduosNoPeligrosos()" name="ResiduosSolidos[nopeligrosos]" required> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        </br>
+        <div id="residuosNoPeligrosos">
+            {% set i = 1 %}
+            {% if ResiduosSolidos|length > 0 %}
+            {% for residuoSolido in ResiduosSolidos %}
+            <div id="residuoNoPeligroso{{i}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>                        
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width:20%">RESIDUO</td>
+                                    <td style="width:80%"><textarea rows="3" value="" cols="100" class="form-control" name="ResiduosSolidos[pendiente][]"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:20%">CANTIDAD</td>
+                                    <td style="width:80%">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Valor</label>
+                                                    <input type="text" class="form-control" value="{{residuoSolido.volumen}}" name="ResiduosSolidos[cantidad][]">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Unidad</label>
+                                                    <input type="text" class="form-control" value="{{residuoSolido.unidad}}" name="ResiduosSolidos[unidad][]">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Período</label>
+                                                    <input type="text" class="form-control" value="{{residuoSolido.periodoTiempo}}" name="ResiduosSolidos[periodoTiempo][]">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:20%">PROCESO QUE LO GENERA</td>
+                                    <td style="width:80%"><textarea class="form-control" rows="3" cols="100" name="ResiduosSolidos[proceso][]">{{residuoSolido.procesoGenerador}}</textarea></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:20%">GESTIÓN</td>
+                                    <td style="width:80%"><textarea rows="3" class="form-control" cols="100" name="ResiduosSolidos[gestion][]">{{residuoSolido.gestion}}</textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a onClick="eliminarDiv('residuoNoPeligroso{{i}}')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                </div>
+                
+            </div>
+            {% set i = i + 1 %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <input type="button" value="Agregar residuo" id="buttonResiduoNoPeligroso" {% if ResiduosSolidos|length == 0 %} disabled {% endif %} onClick="agregarResiduoNoPeligroso()" class="btn btn-primary text-light"></input>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existen residuos sólidos o semisólidos peligrosos, o podrían éstos contener o generar residuos peligrosos? <span class="text-danger">(*)</span> <a href="https://www.santafe.gov.ar/index.php/web/content/view/full/9575" target="_blank">Decreto 1844/02</a></label>
+                    <div class="input-group-text">
+                        <input type="radio" value="SI"  {% if ResiduosPeligrosos|length >0 %} checked {% endif %} onClick="agregarResiduoPeligroso()" name="ResiduosPeligrosos[posee]"> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input type="radio" value="NO" onClick="eliminarResiduosPeligrosos()" name="ResiduosPeligrosos[posee]"> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        </br>
+        
+        <div id="residuosPeligrosos">
+        {% set i = 1 %}
+        {% if ResiduosPeligrosos|length > 0 %}
+        {% for residuoPeligroso in ResiduosPeligrosos %}
+        <div id="residuoPeligroso{{i}}">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>                        
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:20%">RESIDUO</td>
+                                <td style="width:80%"><textarea rows="3" cols="100" class="form-control" name="ResiduosPeligrosos[pendiente][]"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%">CANTIDAD</td>
+                                <td style="width:80%">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Valor</label>
+                                                <input type="text" class="form-control" value="{{residuoPeligroso.volumen}}" name="ResiduosPeligrosos[cantidad][]">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Unidad</label>
+                                                <input type="text" class="form-control" value="{{residuoPeligroso.unidad}}" name="ResiduosPeligrosos[unidad][]">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Período</label>
+                                                <input type="text" class="form-control" value="{{residuoPeligroso.periodoTiempo}}" name="ResiduosPeligrosos[periodoTiempo][]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%">PROCESO QUE LO GENERA</td>
+                                <td style="width:80%"><textarea rows="3" cols="100" class="form-control" name="ResiduosPeligrosos[proceso][]">{{residuoPeligroso.procesoGenerador}}</textarea></td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%">GESTIÓN</td>
+                                <td style="width:80%"><textarea rows="3" cols="100" class="form-control" name="ResiduosPeligrosos[gestion][]">{{residuoPeligroso.gestion}}</textarea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center">
+                <a onClick="eliminarDiv('residuoPeligroso{{i}}')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+            </div>
+            
+        </div>
+        {% set i = i + 1 %}
+        {% endfor %}
+        {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <input type="button" value="Agregar residuo" id="buttonResiduoPeligroso"  {% if ResiduosPeligrosos|length == 0 %} disabled {% endif %} onClick="agregarResiduoPeligroso()" class="btn btn-primary text-light"></input>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('tramiteB3') }} data-idtramite="{{idTramite}}" data-idplanta="{{idPlanta}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteB3',{'idTramite': idTramite ?? 0},{'rol':'admin'},{'diPlanta': idPlanta ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteB6',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/formularioB5.js')}}"></script>
+    <script src="{{asset('bundles/js/formularioB5-residuo.js')}}"></script>
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    </script>
+{% endblock %}

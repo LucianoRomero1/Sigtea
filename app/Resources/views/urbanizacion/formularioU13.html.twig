@@ -1,0 +1,538 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 12. INDICE DE ARCHIVOS A PRESENTAR EN VENTANILLA JUNTO CON ESTE FORMULARIO <br>(Se presenta en papel y digital) <span class="text-success" data-toggle="tooltip" title="Se debe tildar y luego ingresar el nombre correspondiente del archivo.">(?)</span> {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU13" action="{{path('tramiteU14')}}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    {% set i = 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="1"> 
+                    <label class="ml-2" for=""> 12.1 - Nota dirigida al ministro <span class="text-danger">(*)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage1 is defined and Storage1 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="2"> 
+                    <label class="ml-2" for=""> 12.2 - Fotocopia de los Documentos de Identidad correspondiente a las personas físicas detalladas en 4,5 y 6 <span class="text-danger">(*)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage2 is defined and Storage2 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value=""  data-number="3"> 
+                    <label class="ml-2" for=""> 12.3 - Constancia de N° de C.U.I.T <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Se debe presentar la constancia de inscripción de AFIP.">(?)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage3 is defined and Storage3 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="4"> 
+                    <label class="ml-2" for=""> 12.4 - Conformidad de uso de suelo otorgada a través del área con competencia para tal fin (Mencionar instrumento legal que lo avale). <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Conformidad de Uso de Suelo, otorgado por autoridad local a través del área con competencia para tal fin (Mencionar instrumento legal que dé la competencia para otorgarlo). El que deberá precisar la ubicación y el objeto de la materia de Ordenamiento Territorial que aplique al proyecto, con la cartografía correspondiente indicando la superficie total urbana y suburbana del distrito. Para aquellas comunas o municipios que no dispongan de planes estructurales de desarrollo urbano (Planes Reguladores) o Planes de Ordenamiento Territorial registrados en la Secretaría de Regiones y Comunas, deberán seguir los lineamientos básicos establecidos por el Decreto N° 7317/67 y sus normas complementarias o la información que como Anexo VI forma parte de la presente resolución.">(?)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage4 is defined and Storage4 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="5"> 
+                    <label class="ml-2" for=""> 12.5 - Documentación que acredite la titularidad del inmueble. <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="En caso de que no sea el propietario del inmueble se deberá presentar la documentación de vinculación entre ambos. En caso de ser un fideicomiso deberá presentar su correspondiente acta de constitución.">(?)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage5 is defined and Storage5 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="6" > 
+                    <label class="ml-2" for=""> 12.6 - Ordenanzas de uso del suelo. <span class="text-danger">(*)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage6 is defined and Storage6 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage6.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check" name="" value="" data-number="7"> 
+                    <label class="ml-2" for=""> 12.7 - Resolución de registro de Plan de Ordenamiento Territorial (POT) en la Secretaría de Municipios y comunas. </label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage7 is defined and Storage7 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage7.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="8"> 
+                    <label class="ml-2" for=""> 12.8 - Anteproyecto del Plano de Mensura. <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Debe ser visado por la autoridad local y los organismos públicos que correspondan según Decreto 1309/17, contando con la siguiente información: balance de superficies, cantidad de manzanas y lotes, superficies loteadas, ancho de calles; y si existen colectoras, servidumbres, afectaciones, áreas protegidas (Ley de Bosques, Protección de Fitosanitario) lotes asignados a equipamiento comunitaria, reservorios con sus respectivos cortes longitudinales y transversales y espacios verdes (no superpuestos con reservorios).">(?)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage8 is defined and Storage8 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage8.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value=""  data-number="9"> 
+                    <label class="ml-2" for=""> 12.9 - Certificado de Zonificación. Según resolución N°736/16 del MIT (Ministerio de Infraestructura y Transporte). <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Emitido por la Secretaría de Recursos Hídricos del Ministerio de Infraestructura y Transporte, según Ley N° 11730.">(?)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage9 is defined and Storage9 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage9.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="10"> 
+                    <label class="ml-2" for=""> 12.10 - Certificado de Aptitud de Proyecto de Drenajes Urbanos.<br>Según resolución N° N°736/16 del MIT (Ministerio de Infraestructura y Transporte).<span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Emitido por la Secretaría de Recursos Hídricos del Ministerio de Infraestructura y Transporte, según Ley N° 11730.">(?)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage10 is defined and Storage10 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage10.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value=""  data-number="11"> 
+                    <label class="ml-2" for=""> 12.11 - Ordenanza de Regulación de la Aplicación de Fitosanitarios.<span class="text-danger">(*)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage11 is defined and Storage11 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage11.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+     {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check"  name="" value="" data-number="12"> 
+                    <label class="ml-2" for=""> 12.12 - Actas Societarias.<span class="text-danger">(*)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage12 is defined and Storage12 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage12.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% set i = i + 1 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="check" name="" value="" data-number="13"> 
+                    <label class="ml-2" for=""> 12.13 - Contrato Social o Estatus .<span class="text-danger">(*)</span></label><br>
+                </div>
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file" disabled/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light" style="display:none;">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage13 is defined and Storage13 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage13.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-14">
+            <b> Factibilidades </b>
+            <ul class="mt-3" style="list-style:none;">  
+                {% set i = i + 1 %}
+                {% if Factibilidad is defined and Factibilidad.recoleccionRsu != 1 %}
+                <li>
+                    <input type="checkbox" class="factibilidades" data-number="14"  name="" value=""> 
+                    <label for="">Factibilidad de Recolección de RSU.</label><br>
+                    <div id = "divArchivo14" style="display:none;">
+                        <div class="col-md-12">
+                            <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                            <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                        </div>
+                        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                            {% if Storage14 is defined and Storage14 != null %}
+                                <div>
+                                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage14.nombre}} </h6>
+                                </div>
+                            {% endif %}
+                            <div id="spinner{{i}}" class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+                {% endif %}
+                {% set i = i + 1 %}
+                {% if Factibilidad is defined and Factibilidad.cloacasRed != 1 %}
+                
+                <li>
+                    <input type="checkbox" class="factibilidades" data-number="15"  name="" value=""  >
+                    <label for="">Factibilidad Cloacales por Red.</label><br>
+                    <div id = "divArchivo15" style="display:none;">
+                        <div class="col-md-12">
+                            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                            <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                        </div>
+                        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                            {% if Storage15 is defined and Storage15 != null %}
+                                <div>
+                                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage15.nombre}} </h6>
+                                </div>
+                            {% endif %}
+                            <div id="spinner{{i}}" class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+                {% endif %}
+                {% set i = i + 1 %}
+                {% if Factibilidad is defined and Factibilidad.gas != 1 %}
+                
+                <li>
+                    <input type="checkbox" class="factibilidades" data-number="16"  name="" value="" >
+                    <label for="">Factibilidad de Gas.</label><br>
+                    <div id = "divArchivo16" style="display:none;">
+                        <div class="col-md-12">
+                            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                            <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                        </div>
+                        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                            {% if Storage16 is defined and Storage16 != null %}
+                                <div>
+                                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage16.nombre}} </h6>
+                                </div>
+                            {% endif %}
+                            <div id="spinner{{i}}" class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+                {% endif %}
+                 {% set i = i + 1 %}
+                {% if Factibilidad is defined and Factibilidad.energiaElectrica != 1 %}
+               
+                <li>
+                    <input type="checkbox" class="factibilidades" data-number="17"  name="" value="" >
+                    <label for="">Factibilidad de Energía Eléctrica.</label><br>
+                    <div id = "divArchivo17" style="display:none;">
+                        <div class="col-md-12">
+                            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                            <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                        </div>
+                        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                            {% if Storage17 is defined and Storage17 != null %}
+                                <div>
+                                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage17.nombre}} </h6>
+                                </div>
+                            {% endif %}
+                            <div id="spinner{{i}}" class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+                {% endif %}
+                {% set i = i + 1 %}
+                {% if Factibilidad is defined and Factibilidad.aguaPotable != 1 %}
+                
+                <li>
+                    <input type="checkbox" class="factibilidades" data-number="18"  name="" value="" >
+                    <label for="">Factibilidad de Agua Potable por Red.</label><br>
+                    <div id = "divArchivo18" style="display:none;">
+                        <div class="col-md-12">
+                            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                            <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                        </div>
+                        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                            {% if Storage18 is defined and Storage18 != null %}
+                                <div>
+                                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage18.nombre}} </h6>
+                                </div>
+                            {% endif %}
+                            <div id="spinner{{i}}" class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+                {% endif %}
+                {% set i = i + 1 %}
+                {% if Factibilidad is defined and Factibilidad.transportePublico != 1 %}
+                
+                <li>
+                    <input type="checkbox" class="factibilidades" data-number="19"  name="" value="" >
+                    <label for="">Servicio de Transporte Público.</label><br>
+                    <div id = "divArchivo19" style="display:none;">
+                        <div class="col-md-12">
+                            <input id="archivo{{i}}" class="p-top mb-1" type="file" /> 
+                            <a id="button{{i}}" onclick="subirArchivo({{i}},'12.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                        </div>
+                        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                            {% if Storage19 is defined and Storage19 != null %}
+                                <div>
+                                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage19.nombre}} </h6>
+                                </div>
+                            {% endif %}
+                            <div id="spinner{{i}}" class='spinner form-row'>
+                                <div class="three-quarters-loader"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div> 
+    <br> 
+    <div>
+        <b> Otras Factibilidades</b>
+        <div class="mt-4" id="factibilidades">
+        {% if Factibilidades is defined %}
+            {% for factibilidad in Factibilidades %}
+            <div class="input-group divFactibilidad mb-3">
+                <input type="text" value="{{ factibilidad.otras }}" name="Factibilidades[otras][]" class="form-control" >
+                <div class="input-group-append" >
+                    <span class="input-group-text"><a onclick="deleteFactibilidad(this)" style="cursor:pointer" class="far fa-trash-alt text-danger"></a></span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            
+            <div class="input-group divFactibilidad">
+                <input type="text" name="Factibilidades[otras][]" class="form-control" >
+                <div class="input-group-append" >
+                    <span class="input-group-text"><a onclick="deleteFactibilidad(this)" style="cursor:pointer" class="far fa-trash-alt text-danger"></a></span>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+    <br>
+    <div class="text-center">
+        <a onClick="addFactibilidad()" class="btn btn-primary text-light">Agregar</a>
+    </div>
+    <hr>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/formularioUrbanizacion/formularioU13.js')}}"></script>    
+{% endblock %}

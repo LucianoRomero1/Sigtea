@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Evaluación Ambiental!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="stylesheet" href="https://www.santafe.gob.ar/assets/standard/css/fonts.css" type="text/css">
+        <link rel="stylesheet" href="{{asset('bundles/css/styles.css')}}" type="text/css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="icon" href="https://www.santafe.gob.ar/assets/standard/images/favicon.ico">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    
+    <body>
+        <nav class="navbar navbar-fixed-top login-nav">
+            <div class="container row-top">
+
+                    <div class="navbar-header">
+                        <a href="#"><img src="https://www.santafe.gob.ar/assets/standard/images/gob-santafe.png"></a>
+                    </div>
+
+                    <div class="media" style="float: right;">
+
+                        <a class="btn-circle" href="#"><i class="fab fa-twitter nav-icon"></i></a>
+                        <a class="btn-circle" href="#"><i style="margin-left: 9px;" class="fab fa-facebook-f nav-icon"></i></a>
+                        <a class="btn-circle" href="#"><i style="margin-left: 5px;" class="fab fa-youtube nav-icon"></i></a>
+                        
+                    </div>
+            </div>
+        </nav>
+        <div id="general">
+            <form action="{{ path('validar') }}" method="post">
+            {# Div del login #}
+            <div class="login-div container-fluid">
+
+                    <div class="login-div-purple">
+                        Acceso centralizado a sistemas
+                    </div>
+
+                <div class="container-fluid">
+                    {# Usuario #}
+                    <div class="row">
+                        <div class="mx-auto container-fluid">
+                            <div class="form-group">
+                                <label>USUARIO (CUIL | EMAIL | IUP):</label>
+                                <input type="text" name="Usuario[iup]" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    {# Contraseña #}
+                    <div class="row">
+                        <div class="mx-auto  container-fluid">
+                            <div class="form-group">
+                                <label>CONTRASEÑA:</label>
+                                <input type="password" name="Usuario[password]" class="form-control">
+                            </div>
+                            <button class="btn btn-success container-fluid">INICIAR SESIÓN</button>
+
+                                <a href="{{ path('admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-success container-fluid m-top">SESIÓN Admin</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Olvidaste tu contraseña? #}
+                    <div class="m-top">
+
+                        <a href="#"><b>¿Olvidaste tu contraseña?</b></a>
+                        <br>
+                        <a href="#"><b>Crear cuenta</b></a>
+
+                        <div class="m-top">
+                            <p>
+                                Cierre su sesión y el navegador al finalizar.
+                                Recuerde que con su usuario puede acceder a
+                                múltiples sistemas provinciales.
+                            </p>
+                        </div>
+
+                    </div>
+                    </form>
+                </div> 
+
+        </div>
+    </body>
+        <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
+</html>

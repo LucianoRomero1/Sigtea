@@ -1,0 +1,162 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 2. UBICACIÓN DEL ESTABLECIMIENTO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL2" action="{{ path('tramiteFL3') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-5">
+            <h6>DOMICILIO REAL </h6>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-row">
+                <label for="calle">CALLE <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="calle" name="Domicilio[calle]" value="{% if Domicilio != null %}{{Domicilio.calle}}{% endif %}" >
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-row">
+                <label for="nro">N° <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="nro" name="Domicilio[numero]" value="{% if Domicilio != null %}{{Domicilio.numero}}{% endif %}" >
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-row">
+                <label for="piso">PISO</label>
+                <input type="text" class="form-control" id="piso" name="Domicilio[piso]" value="{% if Domicilio != null %}{{Domicilio.piso}}{% endif %}" >
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-row">
+                <label for="dpto">DEPTO</label>
+                <input type="text" class="form-control" id="dpto" name="Domicilio[depto]" value="{% if Domicilio != null %}{{Domicilio.depto}}{% endif %}" >
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <p>Provincia: <span class="text-danger">(*)</span></p>
+            <select for="provincia" class="form-control" id="provincia" name="Domicilio[provincia]" onChange="parent.provincia('provincia','departamento')" >
+                <option value="">SELECCIONE UNA PROVINCIA</option>
+                {% for provincia in provincias %}
+                    {% if Domicilio != null and Domicilio.provincia.id == provincia.id %}
+                        <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                    {% else %}
+                        <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p>Departamento: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="departamento" name="Domicilio[departamento]"  onChange="parent.localidad('departamento','localidad')">
+                {% if Domicilio != null %}
+                <option value="{{Domicilio.departamento.id}}">{{Domicilio.departamento.nombre}}</option>   
+                {% endif %}
+                <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p>Localidad: <span class="text-danger">(*)</span></p>
+            <select class="form-control" id="localidad" name="Domicilio[localidad]"  onChange="parent.departamento('localidad','codigoPostal')">
+                {% if Domicilio != null %}
+                    <option value="{{Domicilio.localidad.id}}">{{Domicilio.localidad.nombre}}</option> 
+                {% endif %}
+                <option value="">SELECCIONE UNA LOCALIDAD</option>
+            </select>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+       <div class="col-md-3">
+            <p>CP: <span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if Domicilio != null %}{{Domicilio.localidad.codigoPostal}} {% endif %}"  id="codigoPostal" name="Domicilio[cp]" readonly>
+        </div>
+        <div class="col-md-3">
+            <p>Teléfono / Fax: <span class="text-danger">(*)</span></p>
+            <input type="text" value="{% if Domicilio != null %}{{Domicilio.telefono}} {% endif %}" class="form-control" name="Domicilio[telefono]"  />
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-row">
+                <label for="mail">EMAIL <span class="text-danger">(*)</span> <span class="text-success" data-toggle="tooltip" title="Este email recibirá notificaciones legales.">(?)</span></label>
+                <input type="email" class="form-control" id="mail" name="Domicilio[email]" value="{% if Domicilio != null %}{{Domicilio.email}} {% endif %}" >
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-5">
+            <h6>UBICACIÓN CATASTRAL </h6>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-10">
+            <p>NÚMERO<span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if PartidaInmobiliaria != null %}{{PartidaInmobiliaria.numero}}{% endif %}" name="Coordenadas[partida]">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <p>LATITUD<span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if PartidaInmobiliaria != null %}{{PartidaInmobiliaria.latitud}}{% endif %}" name="Coordenadas[lat]">
+        </div>
+        <div class="col-md-6">
+            <p>LONGITUD<span class="text-danger">(*)</span></p>
+            <input type="text" class="form-control" value="{% if PartidaInmobiliaria != null %}{{PartidaInmobiliaria.longitud}}{% endif %}" name="Coordenadas[long]">
+        </div>
+    </div>
+    <br>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <h6> UBICACIÓN FEEDLOT (TODAS LAS DISTANCIAS EN METROS) </h6>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <p>DISTANCIA A ÁREAS URBANAS Y/O SUBURBANAS<span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Ubicacion != null %}{{Ubicacion.distanciaUrbana}}{% endif %}"   name="Ubicacion[distanciaUrbana]">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+             <p>DISTANCIA A ASENTAMIENTOS RURALES <span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Ubicacion != null %}{{Ubicacion.distanciaAsentamiento}}{% endif %}"   name="Ubicacion[distanciaAsentamiento]">
+        </div>
+        <div class="col-md-6">
+             <p>DISTANCIA ESTABLECIMIENTO DE ALIMENTACIÓN ANIMAL <span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Ubicacion != null %}{{Ubicacion.distanciaAnimal}}{% endif %}"   name="Ubicacion[distanciaAnimal]">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+             <p>DISTANCIA A CURSOS O ESPEJOS DE AGUA<span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Ubicacion != null %}{{Ubicacion.distanciaEspejoAgua}}{% endif %}"   name="Ubicacion[distanciaEspejoAgua]">
+        </div>
+        <div class="col-md-6">
+             <p>DISTANCIA ESTABLECIMIENTO EDUCATIVO, DE SALUD U OTROS <span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" value="{% if Ubicacion != null %}{{Ubicacion.distanciaOtroEstablecimiento}}{% endif %}"   name="Ubicacion[distanciaOtroEstablecimiento]">
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>
+{% endblock %}

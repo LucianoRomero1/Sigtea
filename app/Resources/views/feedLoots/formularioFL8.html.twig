@@ -1,0 +1,21 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE FEED LOOTS {% endblock %}
+
+{% block subTitle %} 8. EFLUENTES LÍQUIDOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioFL8" action="{{ path('tramiteFL9') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-12">
+            <p>DESCRIPCIÓN DE LA GESTIÓN<span class="text-danger">(*)</span></p>
+            <textarea class="form-control" name="Efluente[gestion]">{% if Efluente != null %}{{Efluente.gestion}}{% endif %}</textarea>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

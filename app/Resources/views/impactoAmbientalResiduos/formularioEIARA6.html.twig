@@ -1,0 +1,52 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} 6. REPRESENTANTE LEGAL {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARA6') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <table class="table">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">APELLIDO NOMBRE</th>
+                    <th scope="col">CUIT</th>
+                </tr>
+            </thead>
+            <tbody id="filas">
+            {% if Representante != null %}
+                <tr>
+                    <td><input type="text" class="form-control" name="Persona[razonSocial]" required value="{{Representante.Representante.Persona.razonSocial}}"></td>
+                    <td><input type="number" class="form-control" name="Persona[cuit]" required value="{{Representante.Representante.Persona.cuit}}" max="99999999999" min="10000000000" step="1"></td>
+                    {# <td>
+                        <input type="text" name="Representante[cargo][]" required value="{{representante.Representante.cargo}}">
+                        <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td> #}
+                </tr>  
+            {% else %}
+                <tr>
+                    <td><input type="text" class="form-control" name="Persona[razonSocial]" required></td>
+                    <td><input type="number" class="form-control" name="Persona[cuit]" required  max="99999999999" min="10000000000" step="1"></td>
+                    {# <td>
+                        <input type="text" name="Representante[cargo][]" required value="{{representante.Representante.cargo}}">
+                        <a onClick="eliminarFila(this)" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td> #}
+                </tr>  
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {# <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila()" class="btn btn-secondary text-light">Agregar Fila</a>
+        </div>
+    </div> #}
+    </br>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

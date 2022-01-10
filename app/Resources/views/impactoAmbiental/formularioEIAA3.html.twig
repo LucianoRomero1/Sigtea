@@ -1,0 +1,365 @@
+{% extends 'default/index.html.twig' %}
+{# {% extends 'default/baseFormularios.html.twig' %} #}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">3. Ubicación del proyecto y caracterización del área de influencia</div>
+    <div class="card-body">
+        <form id="formularioEIAAA3" action="{{ path('tramiteEIAA3') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        
+        <h6>3.1 Domicilio real - Ubicación de planta <span class="text-danger">(*)</span><span data-toggle="tooltip" data-placement="right"  title="Consignar los datos de ubicación real, donde se emplaza el proyecto. Deberá coincidir con lo declarado dentro del título 8 del Formulario A de la Resolución N° 403/16." class="text-success">(?)</span></h6>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <p>Calle: <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" value="{% if Domicilio is defined %}{{Domicilio.calle}}{% endif %}" name="Domicilio[calle]" required />
+            </div>
+
+            <div class="col-md-2">
+                <p>N°: <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" value="{% if Domicilio is defined %}{{Domicilio.numero}}{% endif %}" name="Domicilio[numero]" required />
+            </div>
+            <div class="col-md-1">
+                <p>Depto: </p>
+                <input type="text" class="form-control" value="{% if Domicilio is defined %}{{Domicilio.depto}}{% endif %}" name="Domicilio[depto]" required />
+            </div>
+            <div class="col-md-1">
+                <p>Piso: </p>
+                <input type="text" class="form-control" value="{% if Domicilio is defined %}{{Domicilio.piso}}{% endif %}" name="Domicilio[piso]" required />
+            </div>
+            <div class="col-md-2">
+                <p>CP: <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" value="{% if Domicilio is defined %}{{Domicilio.localidad.codigoPostal}}{% endif %}"  id="codigoPostal" name="Domicilio[cp]" readonly>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <p>Provincia: <span class="text-danger">(*)</span></p>
+                <select for="provincia" class="form-control" id="provincia" name="Domicilio[provincia]" onChange="parent.provincia('provincia','departamento')" required>
+                    <option value="">SELECCIONE UNA PROVINCIA</option>
+                    {% for provincia in provincias %}
+                        {% if Domicilio is defined and Domicilio|length >0 and Domicilio.provincia.id == provincia.id %}
+                            <option value="{{ provincia.id }}" selected>{{ provincia.nombre }}</option>
+                        {% else %}
+                            <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <p>Departamento: <span class="text-danger">(*)</span></p>
+                <select class="form-control" id="departamento" name="Domicilio[departamento]" onChange="parent.localidad('departamento','localidad')" required>
+                    {% if Domicilio is defined %}
+                    <option value="{{Domicilio.departamento.id}}">{{Domicilio.departamento.nombre}}</option>   
+                    {% endif %}
+                    <option value="">SELECCIONE UN DEPARTAMENTO</option>                        
+                     
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <p>Localidad: <span class="text-danger">(*)</span></p>
+                <select class="form-control" id="localidad" name="Domicilio[localidad]" onChange="parent.departamento('localidad','codigoPostal')" required>
+                    
+                    {% if Domicilio is defined %}
+                        <option value="{{Domicilio.localidad.id}}">{{Domicilio.localidad.nombre}}</option> 
+                    {% endif %}
+                    <option value="">SELECCIONE UNA LOCALIDAD</option>
+                </select>
+            </div>
+        </div>
+        <hr/>
+        <h6>3.2 Coordenadas geodésicas <span class="text-danger">(*)</span><span data-toggle="tooltip" data-placement="right"  title="Colocar las coordenadas geodésicas del sitio de emplazamiento. Los 3 campos de cada fila, corresponden a los grados, minutos y segundos, respectivamente. Debe coincidir con lo declarado dentro del título 8 del Formulario A de la Resolución N° 403/16" class="text-success">(?)</span></h6>
+        <br/>
+        <div class="row">
+            <div class="col-md-6">
+                <p>Latitud: <span class="text-danger">(*)</span></p>
+                <input type="text" {% if Coordenadas|length != 0 %} value="{{Coordenadas.latitud}}" {% endif %} class="form-control" name="Coordenadas[lat]" required />
+            </div>  
+
+            <div class="col-md-6">
+                <p>Longitud: <span class="text-danger">(*)</span></p>
+                <input type="text" {% if Coordenadas|length != 0 %} value="{{Coordenadas.longitud}}" {% endif %} class="form-control" name="Coordenadas[long]" required />
+            </div>
+        </div>
+        <hr/>
+        {% set i = 1 %}
+        <h6>3.3 Imágenes satelitales / Planos / Diagramas del área de localización del proyecto <span class="text-success" data-toggle="tooltip" data-placement="right"  title="Anexar en papel y en digital: Planos o imágenes, a escala legible, que muestren la ubicación del predio. Máximo: 600 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr/>
+        <h6>3.4 Determinación del área de influencia del proyecto: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right"  title="Por área de influencia se entiende a la superficie ocupada por el proyecto, sumada al área sobre la cual la actividad pudiera ocasionar impacto ambiental directa e indirectamente. Especificar el criterio utilizado para la determinación del área de influencia. Se recomienda que esta determinación se realice con presición, ya que un área demasiado ocotada puede ocasionar que algunos impactos significativos no sean analizados y que la actividad del proyecto tenga consecuencias no previstas. Por el contrario, un área demasiado extensa puede llevar a la incorporación de una gran cantidad de información innecesaria, incrementando los tiempos y costos de elaboración y evaluación y haciendo que no se vislumbren cuestiones de relevancia. Anexar en papel en digital: Las imágens del área de influencia y si considera necesario, imágenes que grafiquen su determinación. Límite: 3500 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="text" class="form-control" placeholder="Pendiente de Rober" name="Caracterizacion[pendiente]" required />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea maxlength="3500" class="form-control" placeholder="Pendiente de Rober" name="Caracterizacion[pendiente1]" required></textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 2 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage2 is defined and Storage2 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <h6>3.5 Datos de base del área de influencia del proyecto: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right"  title="Relevar información vinculada al área de influencia indicada en el punto 3.4, caracterizando cada uno de sus componentes. En este punto se debe indicar el 'nivel de base', es decir, el estado del medio ambiente sin la presencia del proyecto.">(?)</span></h6>
+        
+        <br/>
+        {% set i = 3 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage3 is defined and Storage3 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+
+        <h6>3.5.1 Caracterización del entorno Inmediato: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right"  title="Recopilar información y efectuar la descripción del entorno. Ubicar en imágen, plano o diagrama del área de influencia del establecimiento, viviendas, sitios de concentración de personas (escuelas, edificios públicos, centros asistenciales, clubes, etc.), otras industrias o actividades de servicio, reservas naturales, áreas protegidas, cursos de agua, sitios de interés arqueológico, valores recreativos y estéticos, etc. Es recomendable mejorar la descripción gráficamente mediante fotografías tomadas in situ. Anexar las imágenes en papel y en digital. Límite: 1800 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" name="Caracterizacion[descripcion]" required>{% if Caracterizacion is not null %}{{Caracterizacion.descripcionInmediata}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 4 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'3.5.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage4 is defined and Storage4 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+
+        <h6>3.5.2 Ambiente físico, químico, biológico y social susceptible de afectación: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right"  title="Caracterizar el ambiente en el que se insertará el proyecto. Para ello se deben indicar los diferentes factores del ambniente (ser humano, flora, fauna, suelo, aguas, aires, clima, paisaje, bienes materiales, patrimonio histórico y cultural) y sobre éstos, describir aquellas características relacionadas a los aspectos en los que los mismos pueden resultar impactados, limitándose al área de influencia determinada en el punto 3.4. Se deberá confeccionar una tabla por cada factor ambiental identificado.">(?)</span></h6>
+        <br/>
+        <table id="tablaFactor" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Factor <span class="text-success" data-toggle="tooltip" data-placement="right"  title="Indicar el factor que se va a desarollar">(?)</span></th>
+                    <th scope="col">Descripción <span class="text-success" data-toggle="tooltip" data-placement="right"  title="Sobre el factor indicado, describir aquellas características relacionadas a los aspectos en los que los mismos pueden resultar impactados, limitándose al área de influencia determinada en el punto 3.4. Para describir los factores ambientales se deben realizar inventarios in situ, estudios o análisis de base relacionados a los aspectos en los que los mismos pueden resultar impactados (por ejemplo y no taxativamente, de calidad, suelo, agua, aire) o recurrir a monitoreos realizados por terceros en sitios próximos, dentro del área de influencia del proyecto. Además, es deseable efectuar la descripción gráfica mediante fotografías tomadas in situ, planos temáticos, etc. Límite: 1800 caracteres.">(?)</span></th>
+                    <th scope="col">Archivos<span class="text-success" data-toggle="tooltip" data-placement="right"  title="(?) Adjuntar las imágenesy archivos de: protocolos, 
+                    fotografías del sitio, inventarios, certificados de calibración, estud ios, planos temáticos, monitoreos, etc.; que se utilizaron para describir el factor en la celda anterior. 
+                    También se deberá obligatoria mente indicar y 
+                    geo-referenciar los puntos donde setomaron muestras, mediciones, ofotografías y se deberá demostrar la confiabilidad de los datos, adjuntando los protocolos de 
+                    análisis correspondientes, certificados de calibración de los equipos utilizados y citar como referencia lasfuentes de los datos secundarios, o citas bibl iográficas. 
+                    Límite: 1200 caracteres. ">(?)</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for factor in Factor %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>
+                            <input type="text" class="form-control" value="{{factor.factor}}" name="Factor[factor][]" />
+                        </td>
+                        <td>
+                            <textarea class="form-control" maxlength="1800" name="Factor[descripcion][]" required>{{factor.descripcion}}</textarea>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input id="archivo5" class="p-top" type="file" /> 
+                                    <a id="button5" onclick="subirArchivo(5)"  class="btn btn-info text-light">Subir</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="nombreArchivo5" class="col-md-12 p-top">
+                                    <div id="spinner5" class='spinner form-row'>
+                                        <div class="three-quarters-loader"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="btn text-danger" onClick="eliminarFila(this,'tablaFactor')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+            {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="text" class="form-control" name="Factor[factor][]" />
+                    </td>
+                    <td>
+                        <textarea class="form-control" maxlength="180" name="Factor[descripcion][]" required></textarea>
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input id="archivo5" class="p-top" type="file" /> 
+                                <a id="button5" onclick="subirArchivo(5)"  class="btn btn-info text-light">Subir</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="nombreArchivo5" class="col-md-12 p-top">
+                                <div id="spinner5" class='spinner form-row'>
+                                    <div class="three-quarters-loader"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <a class="btn text-danger" onClick="eliminarFila(this,'tablaFactor')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <a onClick="agregarFila('tablaFactor')" class="btn text-primary">Agregar fila</a>
+            </div>
+        </div>
+        <hr/>
+
+        <h6>3.5.3 Infraestructura: Servicios y vías de acceso al predio: <span class="text-danger">(*)</span><span class="text-success"  data-toggle="tooltip" data-placement="right" title="Considerar la infraestructura zonal específica del área de influencia determinada en el punto 3.4 e indicar claramente los accesos al predio. Anexar en papel y formato digital, las correspondientes factibilidades de provisión de servicios. Límite: 1800 caracteres.">(?)</span></h6>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="text" class="form-control" placeholder="Pendiente de Rober" name="Pendiente[areaInfluencia]" required />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" name="Caracterizacion[acceso]" required>{% if Caracterizacion is not null %}{{Caracterizacion.viaAcceso}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 5 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'3.5.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage5 is defined and Storage5 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h6>3.5.4 Situación ambiental inicial del predio: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right" title="(?) Reconstruir la historia del sitio en relación a los usos o
+        actividades industriales desarrolladas en el mismo, en el pasado, realizando un diagnóstico del predio a fin de establecer las modificaciones físicas o químicas que pudieran implicar la existencia de un pasivo ambiental. Límite: 200 palabras. 
+        Anexar en papel y en digital, la documentación y/o imágenes que complementen el desarrollo. Límite: 1800 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" name="Caracterizacion[situacion]" required>{% if Caracterizacion is not null %}{{Caracterizacion.situacionAmbiental}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 6 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'3.5.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage6 is defined and Storage6 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage6.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA1',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA1',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/domicilio.js')}}"></script>
+{% endblock %}

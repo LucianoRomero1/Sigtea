@@ -1,0 +1,55 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 4. DELIMITACIÓN DEL ÁREA DEL PROYECTO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU4') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <h6>Descripción del entorno según: </h6>
+    <hr/>
+    {% set i = 1 %}
+    <h6>4.1 - Delimitación del área de influencia directa (cercana) de la urbanización <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'4.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% set i = i + 1 %}
+    <h6>4.2 - Delimitación del área de influencia indirecta <span class="text-danger">(*)</span></h6>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+            <a id="button{{i}}" onclick="subirArchivo({{i}},'4.{{i}}')"  class="btn btn-info text-light">Subir</a>
+        </div>
+        <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+            {% if Storage1 is defined and Storage1 != null %}
+                <div>
+                    <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                </div>
+            {% endif %}
+            <div id="spinner{{i}}" class='spinner form-row'>
+                <div class="three-quarters-loader"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

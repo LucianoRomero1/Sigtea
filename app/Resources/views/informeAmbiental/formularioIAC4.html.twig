@@ -1,0 +1,43 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 4. CARACTERIZACIÓN DEL ENTORNO  {% endblock %}
+
+{% block contenctForms %}
+    <div class="card-body">
+        <form id="formularioIAC4" action="{{ path('tramiteIAC5') }}" method="post">
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <h6 class="titulos">4.1 DESCRIPCIÓN DEL ENTORNO INMEDIATO AL ESTABLECIMIENTO <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Describir el entorno inmediato, identificando todos los componentes/ externalidades que pueden afectar/condicionar desde o hcia la actividad del emprendimiento. Inlcuir cursos de agua, áreas naturales protegidas, viviendas, otras industrias o actividades de servicio, sitios de interés arqueológicos, valores recreativos y estéticos, etc. Se entiende por entorno inmediato al área que ocupa el establecimiento mas el area afectada por la actividad del emprendimiento. Agregar imágenes que complementen esta descripción en anexo. Límite 3000 caracteres.">(?)</span></h6>
+                    <textarea class="form-control" name="Caracterizacion[descripcion]" required>{% if CaracterizacionEntorno is defined %}{{CaracterizacionEntorno.descripcionInmediata}}{% endif %}</textarea>
+                </div>
+            </div>
+            <br>
+            {% set i = 1 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'4.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage1 is defined and Storage1 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <h6 class="titulos">4.2 VÍAS DE ACCESO AL ESTABLECIMIENTO <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Describir las principales vías de ingreso al emprendimiento, vehicular, fluvial ,etc. Describir ingreso al establecimiento. Límite 3000 caracteres.">(?)</span></h6>
+                    <textarea class="form-control" name="Caracterizacion[viaAcceso]" required>{% if CaracterizacionEntorno is defined %}{{CaracterizacionEntorno.viaAcceso}}{% endif %}</textarea>
+                </div>
+            </div>
+    </div>
+{% endblock %}

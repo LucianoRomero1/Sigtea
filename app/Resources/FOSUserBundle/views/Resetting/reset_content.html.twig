@@ -1,0 +1,27 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class = "container-fluid login-div">
+    <div class="login-div-purple">
+        Restablezca su contraseña
+    </div>
+    {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+        <div class = "mt-1">
+            {{ form_label(form.plainPassword.first, 'Contraseña: ', {'label_attr': {'class': 'foo'}}) }}
+            {{ form_widget(form.plainPassword.first, {attr: {class: 'form-control'}})}}
+            {{ form_errors(form.plainPassword.first) }}
+            <p class ="mt-1 float-right"><input type="checkbox" onclick="showResetPassword()">Ver</p>
+        </div>
+        <div class = "mt-1">
+            {{ form_label(form.plainPassword.second, 'Confirme la contraseña: ', {'label_attr': {'class': 'foo'}}) }}
+            {{ form_widget(form.plainPassword.second, {attr: {class: 'form-control'}})}}
+            {{ form_errors(form.plainPassword.second) }}
+            <p class ="mt-1 float-right"><input type="checkbox" onclick="showResetPasswordConfirm()">Ver</p>
+        </div>
+        <br>
+        <div class="text-right mt-4">
+            <input class="btn" type="submit" value="{{ 'resetting.reset.submit'|trans }}" />
+        </div>
+        <br>
+    {{ form_end(form) }}
+</div>
+<script src="{{asset('bundles/js/mostrarPW.js')}}"></script>

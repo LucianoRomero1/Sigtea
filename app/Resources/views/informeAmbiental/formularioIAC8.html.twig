@@ -1,0 +1,626 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 8. GENERACION DE RESIDUOS, EFLUENTES Y EMISIONES {% endblock %}
+
+{% block contenctForms %}
+  <div class="card-body">
+    <form id="formularioIAC8" action="tramiteIAC9" method="POST">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% if rol is not defined %} #}
+            <h6 class="titulos">8.1 RESIDUOS <span class="text-success" data-toggle="tooltip" title="Se deberá completar una tabla por los RSU e insertar una tabla más por cada residuo asimilable a RSU que se genere">(?)</span></h6>
+            <h6 class="titulos">8.1.1 RESIDUOS SOLIDOS URBANOS (RSU)</h6>
+            <div class="">
+                <table class="table" id="tablaResiduos">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Describir tipo <span class="text-success" data-toggle="tooltip" title="Indicar RSU o asimilable, especificando el tipo de residuo">(?)</span></th>
+                            <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada bajo el título 3">(?)</span></th>
+                            <th scope="col">Cantidad / unidad de tiempo</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for residuo in ResiduosRsu %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="ResiduosRsu[categoria][]" value="{{residuo.categoria}}"/></td>
+                                <td><input type="text" class="form-control" name="ResiduosRsu[procesoGenerador][]" value="{{residuo.procesoGenerador}}"/></td>
+                                <td><input type="text" class="form-control" name="ResiduosRsu[periodoTiempo][]" value="{{residuo.periodoTiempo}}"/></td>
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tablaResiduos', {{residuo.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="ResiduosRsu[categoria][]" required/></td>
+                            <td><input type="text" class="form-control" name="ResiduosRsu[procesoGenerador][]" required/></td>
+                            <td><input type="text" class="form-control" name="ResiduosRsu[periodoTiempo][]" required/></td>
+                            <td>
+                                <button onClick="eliminarFila(this, 'tablaResiduos')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaResiduos')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">8.1.2 RESIDUOS PELIGROSOS (Decreto 1844/02) <span class="text-success" data-toggle="tooltip" title="Indicar si se generan este tipo de residuos en el establecimiento. Agregar una fila por cada residuo">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ResiduosPeligrosos[check]" id="residuosPeligrosos_si" value="Si" {% if ResiduosPeligrosos != null %}checked{% endif %}>
+                    <label class="form-check-label" for="residuosPeligrosos_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ResiduosPeligrosos[check]" id="residuosPeligrosos_no" value="No" {% if ResiduosPeligrosos == null %}checked{% endif %}>
+                    <label class="form-check-label" for="residuosPeligrosos_no">No</label>
+                </div>
+            </div>
+            <div class="" id="div_residuos_peligrosos" {% if ResiduosPeligrosos != null %}style="display: block"{% else %}style="display: none"{% endif %}>  
+                <div class="col-md-8 inputs">
+                    <p>-Número de Generador otorgado por el Ministerio de Medio Ambiente para la confección del manifiesto
+                    electrónico <span class="text-success" data-toggle="tooltip" title="En caso de contar con un número de Generador de este tipo de residuo (otorgado por el Ministerio de Medio Ambiente, S/ Resolución N° 0234/16), tipear el mismo">(?)</span></p>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">G-</span>
+                        </div>
+                    <input type="number" class="form-control" id="calle" name="ResiduosPeligrosos[nrogenerador]" max="9999" min="1000" step="1" {% if ResiduosPeligrosos != null %}value="{{ResiduosPeligrosos[0].nroGenerador}}"{% endif %}/>
+                    </div>
+                </div>
+                <table class="table" id="tablaResiduosPeligrosos">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Tipo (anexo I-decreto 1844/02)</th>
+                            <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilziar la misma nomenclatura que la utilizada bajo el título 3">(?)</span></th>
+                            <th scope="col">Cantidad / unidad de tiempo</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for residuo in ResiduosPeligrosos %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td>
+                                <select name="ResiduosPeligrosos[tipo][]" class="form-control" id="tiposPeligrosos">
+                                {% for peligroso in TipoResiduosPeligroso %}
+                                    <option {% if peligroso.id == residuo.tipo %}selected{% endif %} value="{{peligroso.id}}">{{peligroso.clase}} {{peligroso.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                            <td><input class="form-control" type="text" name="ResiduosPeligrosos[procesoGenerador][]" value="{{residuo.procesoGenerador}}" ></td>
+                            <td><input class="form-control" type="text" name="ResiduosPeligrosos[periodoTiempo][]" value="{{residuo.periodoTiempo}}" ></td>
+                            <td>
+                                <button onClick="eliminarFilaBd(this, 'tablaResiduosPeligrosos', {{residuo.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <select name="ResiduosPeligrosos[tipo][]" class="form-control" id="tiposPeligrosos">
+                                    <option value="">Seleccione una opción</option>
+                                {% for peligroso in TipoResiduosPeligroso %}
+                                    <option value="{{peligroso.id}}">{{peligroso.clase}} {{peligroso.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                            <td><input class="form-control" type="text" name="ResiduosPeligrosos[procesoGenerador][]" ></td>
+                            <td><input class="form-control" type="text" name="ResiduosPeligrosos[periodoTiempo][]" ></td>
+                            <td>
+                                <button onClick="eliminarFila(this, 'tablaResiduosPeligrosos')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaResiduosPeligrosos')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-6 inputs">
+                <h6 class="titulos">8.1.3 RESIDUOS INDUSTRIALES NO PELIGROSOS (Dec. 2151/14) <span class="text-success" data-toggle="tooltip" title="Indicar si se generan este tipo de residuos en el establecimiento. Agregar una fila por cada residuo">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ResiduosIndustriales[check]" id="residuosIndustriales_si" value="Si" {% if ResiduosIndustriales != null %}checked{% endif %}>
+                    <label class="form-check-label" for="residuosIndustriales_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ResiduosIndustriales[check]" id="residuosIndustriales_no" value="No" {% if ResiduosIndustriales == null %}checked{% endif %}>
+                    <label class="form-check-label" for="residuosIndustriales_no">No</label>
+                </div>
+            </div>
+            <div class="" id="div_residuos_industriales" {% if ResiduosIndustriales != null %}style="display: block"{% else %}style="display: none"{% endif %}> 
+                <table class="table" id="tablaResiduosIndustriales">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Tipo (anexo I-decreto 2151/14)</th>
+                            <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada en el título 3">(?)</span></th>
+                            <th scope="col">Cantidad / unidad de tiempo</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for residuo in ResiduosIndustriales %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td>
+                                <select name="ResiduosIndustriales[tipo][]" class="form-control" id="tiposNoPeligrosos">
+                                {% for nopeligroso in TipoResiduosNoPeligroso %}
+                                    <option {% if nopeligroso.id == residuo.tipo %}selected{% endif %} value="{{nopeligroso.id}}">{{nopeligroso.clase ~ nopeligroso.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                            <td><input class="form-control" type="text" name="ResiduosIndustriales[procesoGenerador][]" value="{{residuo.procesoGenerador}}" ></td>
+                            <td><input class="form-control" type="text" name="ResiduosIndustriales[periodoTiempo][]" value="{{residuo.periodoTiempo}}" ></td>
+                            <td>
+                                <button onClick="eliminarFilaBd(this, 'tablaResiduosIndustriales', {{residuo.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <select name="ResiduosIndustriales[tipo][]" class="form-control" id="tiposNoPeligrosos">
+                                    <option value="">Seleccione una opción</option>
+                                {% for nopeligroso in TipoResiduosNoPeligroso %}           
+                                    <option value="{{nopeligroso.id}}">{{nopeligroso.clase ~ nopeligroso.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                            <td><input class="form-control" type="text" name="ResiduosIndustriales[procesoGenerador][]" ></td>
+                            <td><input class="form-control" type="text" name="ResiduosIndustriales[periodoTiempo][]" ></td>
+                            <td>
+                                <button onClick="eliminarFila(this, 'tablaResiduosIndustriales')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaResiduosIndustriales')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">8.1.4 RESIDUOS PATOLÓGICOS <span class="text-success" data-toggle="tooltip" title="Indicar si se generan este tipo de residuos en el establecimiento">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ResiduosPatologicos[check]" id="residuosPatologicos_si" value="Si" {% if ResiduosPatologicos != null %}checked{% endif %}>
+                    <label class="form-check-label" for="residuosPatologicos_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ResiduosPatologicos[check]" id="residuosPatologicos_no" value="No" {% if ResiduosPatologicos == null %}checked{% endif %}>
+                    <label class="form-check-label" for="residuosPatologicos_no">No</label>
+                </div>
+            </div>
+            <div class="" id="div_residuos_patologicos" {% if ResiduosPatologicos != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tablaResiduosPatologicos">
+                    <thead>
+                        <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada en el título 3">(?)</span></th>
+                        <th scope="col">Cantidad / unidad de tiempo</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for residuo in ResiduosPatologicos %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="ResiduosPatologicos[categoria][]" value="{{residuo.categoria}}"/></td>
+                                <td><input type="text" class="form-control" name="ResiduosPatologicos[procesoGenerador][]" value="{{residuo.procesoGenerador}}"/></td>
+                                <td><input type="text" class="form-control" name="ResiduosPatologicos[periodoTiempo][]" value="{{residuo.periodoTiempo}}"/></td>
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tablaResiduosPatologicos', {{residuo.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                    {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="ResiduosPatologicos[categoria][]" /></td>
+                                <td><input type="text" class="form-control" name="ResiduosPatologicos[procesoGenerador][]" /></td>
+                                <td><input type="text" class="form-control" name="ResiduosPatologicos[periodoTiempo][]" /></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tablaResiduosPatologicos')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaResiduosPatologicos')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+               <h6 class="titulos">8.1.5 OTROS RESIDUOS <span class="text-success" data-toggle="tooltip" title="Indicar se se generan otro tipo de residuos en el establecimiento. Agregar una fila por cada residuo no tipificado previamente">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="OtrosResiduos[check]" id="otrosResiduos_si" value="Si" {% if OtrosResiduos != null %}checked{% endif %}>
+                    <label class="form-check-label" for="otrosResiduos_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="OtrosResiduos[check]" id="otrosResiduos_no" value="No" {% if OtrosResiduos == null %}checked{% endif %}>
+                    <label class="form-check-label" for="otrosResiduos_no">No</label>
+                </div>
+            </div>
+            <div class="" id="div_otros_residuos" {% if OtrosResiduos != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tablaResiduosOtros">
+                    <thead>
+                        <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada en el título 3">(?)</span></th>
+                        <th scope="col">Cantidad / unidad de tiempo</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for residuo in OtrosResiduos %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="OtrosResiduos[categoria][]" value="{{residuo.categoria}}"/></td>
+                                <td><input type="text" class="form-control" name="OtrosResiduos[procesoGenerador][]" value="{{residuo.procesoGenerador}}"/></td>
+                                <td><input type="text" class="form-control" name="OtrosResiduos[periodoTiempo][]" value="{{residuo.periodoTiempo}}"/></td>
+                                <td>
+                                    <button onClick="eliminarFilaBd(this, 'tablaResiduosOtros', {{residuo.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                    {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="OtrosResiduos[categoria][]" /></td>
+                                <td><input type="text" class="form-control" name="OtrosResiduos[procesoGenerador][]" /></td>
+                                <td><input type="text" class="form-control" name="OtrosResiduos[periodoTiempo][]" /></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tablaResiduosOtros')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaResiduosOtros')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">8.2 EFLUENTES <span class="text-success" data-toggle="tooltip" title="Declarar la totalidad de los efluentes líquidos que se generan en el establecimiento">(?)</span></h6>
+                <h6 class="titulos">8.2.1 EFLUENTES LÍQUIDOS INDUSTRIALES <span class="text-success" data-toggle="tooltip" title="Indicar si se generan este tipo de efluentes en el establecimiento. Agregar una fila por cada efluente">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EfluentesIndustriales[check]" id="efluentesLiquidos_si" value="Si" {% if EfluentesIndustriales != null %}checked{% endif %}>
+                    <label class="form-check-label" for="efluentesLiquidos_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EfluentesIndustriales[check]" id="efluentesLiquidos_no" value="No" {% if EfluentesIndustriales == null %}checked{% endif %}>
+                    <label class="form-check-label" for="efluentesLiquidos_no">No</label>
+                </div>
+            </div>
+            <div clas="" id="div_efluentes_liquidos" {% if EfluentesIndustriales != null %}style="display: block"{% else %}style="display: none"{% endif %}> 
+                <table class="table" id="tablaEfluentesLiquidos">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Tipo <span class="text-success" data-toggle="tooltip" title="Caracterización del efluente">(?)</span></th>
+                            <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada en el título 3">(?)</span></th>
+                            <th scope="col">Cantidad / unidad de tiempo </th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for efluente in EfluentesIndustriales %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="EfluentesIndustriales[tipo][]" value="{{efluente.tipo}}"/></td>
+                            <td><input type="text" class="form-control" name="EfluentesIndustriales[procesoGenerador][]"  value="{{efluente.procesoGenerador}}"/></td>
+                            <td><input type="text" class="form-control" name="EfluentesIndustriales[periodoTiempo][]" value="{{efluente.periodoTiempo}}"/></td>
+                            <td>
+                                <button onClick="eliminarFilaBd2(this, 'tablaEfluentesLiquidos', {{efluente.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="EfluentesIndustriales[tipo][]" /></td>
+                            <td><input type="text" class="form-control" name="EfluentesIndustriales[procesoGenerador][]" /></td>
+                            <td><input type="text" class="form-control" name="EfluentesIndustriales[periodoTiempo][]" /></td>
+                            <td>
+                                <button onClick="eliminarFila(this, 'tablaEfluentesLiquidos')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaEfluentesLiquidos')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">8.2.2 EFLUENTES SANITARIOS</h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EfluentesSanitarios[check]" id="efluentesSanitarios_si" value="Si" {% if EfluentesSanitarios != null %}checked{% endif %}>
+                    <label class="form-check-label" for="efluentesSanitarios_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EfluentesSanitarios[check]" id="efluentesSanitarios_no" value="No" {% if EfluentesSanitarios == null %}checked{% endif %}>
+                    <label class="form-check-label" for="efluentesSanitarios_no">No</label>
+                </div>
+            </div>
+            <div id="div_efluentes_sanitarios" {% if EfluentesSanitarios != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tablaEfluentesSanitarios" >
+                    <thead>
+                        <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Sitios de Generación</th>
+                        <th scope="col">Cantidad / unidad de tiempo</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for efluente in EfluentesSanitarios %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="EfluentesSanitarios[caudal][]" value="{{efluente.caudal}}"/></td>
+                                <td><input type="text" class="form-control" name="EfluentesSanitarios[periodoTiempo][]" value="{{efluente.periodoTiempo}}"/></td>
+                                <td>
+                                    <button onClick="eliminarFilaBd2(this, 'tablaEfluentesSanitarios', {{efluente.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="EfluentesSanitarios[caudal][]" /></td>
+                                <td><input type="text" class="form-control" name="EfluentesSanitarios[periodoTiempo][]" /></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tablaEfluentesSanitarios')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaEfluentesSanitarios')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">8.3 EMISIONES <span class="text-success" data-toggle="tooltip" title="Declarar la totalidad de las emisiones a la atmósfera que se generan en el establecimiento">(?)</span></h6>
+                <h6 class="titulos">8.3.1 EMISIONES PUNTUALES <span class="text-success" data-toggle="tooltip" title="Indicar si se generan emisiones puntuales en el establecimiento">(?)</span></h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EmisionesPuntuales[check]" id="emisionesPuntuales_si" value="Si" {% if EmisionesPuntuales != null %}checked{% endif %}>
+                    <label class="form-check-label" for="emisionesPuntuales_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EmisionesPuntuales[check]" id="emisionesPuntuales_no" value="No" {% if EmisionesPuntuales == null %}checked{% endif %}>
+                    <label class="form-check-label" for="emisionesPuntuales_no">No</label>
+                </div>
+            </div>
+            <div id="div_emisiones_puntuales"  {% if EmisionesPuntuales != null %}style="display: block"{% else %}style="display: none"{% endif %}> 
+                <table class="table" id="tablaEmisionesPuntuales">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Tipo <span class="text-success" data-toggle="tooltip" title="Caracterización de la emisión">(?)</span></th>
+                            <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada en el título 3">(?)</span></th>
+                            <th scope="col">Diámetro y altura de chimenea</span></th>
+                            <th scope="col">Cantidad / unidad de tiempo</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for emision in EmisionesPuntuales %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[tipo][]" value="{{emision.tipo}}"/></td>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[procesoGenerador][]" value="{{emision.procesoGenerador}}"/></td>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[chimenea][]"  value="{{emision.chimenea}}"/></td>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[emision][]" value="{{emision.emision}}"/></td>
+                            <td>
+                                <button onClick="eliminarFilaBd3(this, 'tablaEmisionesPuntuales', {{emision.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[tipo][]"/></td>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[procesoGenerador][]"/></td>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[chimenea][]" /></td>
+                            <td><input type="text" class="form-control" name="EmisionesPuntuales[emision][]"/></td>
+                            <td>
+                                <button onClick="eliminarFila(this, 'tablaEmisionesPuntuales')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaEmisionesPuntuales')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-5 inputs">
+                <h6 class="titulos">8.3.2 EMISIONES DIFUSAS</h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EmisionesDifusas[check]" id="emisionesDifusas_si" value="Si" {% if EmisionesDifusas != null %}checked{% endif %}>
+                    <label class="form-check-label" for="emisionesDifusas_si">Si</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="EmisionesDifusas[check]" id="emisionesDifusas_no" value="No" {% if EmisionesDifusas == null %}checked{% endif %}>
+                    <label class="form-check-label" for="emisionesDifusas_no">No</label>
+                </div>
+            </div>
+            <div id="div_efluentes_difusas" {% if EmisionesDifusas != null %}style="display: block"{% else %}style="display: none"{% endif %}>
+                <table class="table" id="tablaEmisionesDifusas" >
+                    <thead>
+                        <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Tipo <span class="text-success" data-toggle="tooltip" title="Caracterización de la emisión">(?)</span></th>
+                        <th scope="col">Proceso que lo genera <span class="text-success" data-toggle="tooltip" title="Utilizar la misma nomenclatura que la utilizada en el título 3">(?)</span></th>
+                        <th scope="col">Cantidad / unidad de tiempo</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emision in EmisionesDifusas %}
+                            <tr>
+                                <th scope="row">{{loop.index}}</th>
+                                <td><input type="text" class="form-control" name="EmisionesDifusas[tipo][]" value="{{emision.tipo}}"/></td>
+                                <td><input type="text" class="form-control" name="EmisionesDifusas[procesoGenerador][]" value="{{emision.procesoGenerador}}"/></td>
+                                <td><input type="text" class="form-control" name="EmisionesDifusas[emision][]" value="{{emision.emision}}"/></td>
+                                <td>
+                                    <button onClick="eliminarFilaBd3(this, 'tablaEmisionesDifusas', {{emision.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td><input type="text" class="form-control" name="EmisionesDifusas[tipo][]"/></td>
+                                <td><input type="text" class="form-control" name="EmisionesDifusas[procesoGenerador][]"/></td>
+                                <td><input type="text" class="form-control" name="EmisionesDifusas[emision][]"/></td>
+                                <td>
+                                    <button onClick="eliminarFila(this, 'tablaEmisionesDifusas')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button onClick="agregarFila('tablaEmisionesDifusas')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/informeAmbiental/formularioIAC8.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script>
+    {# $( "#formularioIAC8" ).validate( {
+
+        submitHandler: function () {
+            $("#formularioIAC8").submit();
+        },
+        onkeyup: function(element) {
+            $(element).valid()
+        },
+        rules:
+        {
+            tipo_tablaResiduos:{required: true},
+            proceso_tablaResiduos:{required: true},
+            cantidad_tablaResiduos:{required: true},
+            tipo_peligroso:{required: true},
+            proceso_peligroso:{required: true},
+            cantidad_peligroso:{required: true},
+            tipo_industrial:{required: true},
+            proceso_industrial:{required: true},
+            cantidad_industrial:{required: true},
+            tipo_patoloficos:{required: true},
+            proceso_patoloficos:{required: true},
+            cantidad_patoloficos:{required: true},
+            tipo_otros:{required: true},
+            proceso_otros:{required: true},
+            cantidad_otros:{required: true},
+            tipo_eliquidos:{required: true},
+            proceso_eliquidos:{required: true},
+            cantidad_eliquidos:{required: true},
+            sitios_sanitarios:{required: true},
+            cantidad_sanitarios:{required: true},
+            tipo_puntuales:{required: true},
+            proceso_puntuales:{required: true},
+            diametro_puntuales:{required: true},
+            cantidad_puntuales:{required: true},
+            tipo_difusas:{required: true},
+            proceso_difusas:{required: true},
+            cantidad_difusas:{required: true}
+        },
+        messages:
+        {
+            tipo_tablaResiduos:{required: 'Este campo es requerido.'},
+            proceso_tablaResiduos: {required:'Este campo es requerido.'},
+            cantidad_tablaResiduos:{required: 'Este campo es requerido.'},
+            tipo_peligroso:{required: 'Este campo es requerido.'},
+            proceso_peligroso:{required: 'Este campo es requerido.'},
+            cantidad_peligroso:{required: 'Este campo es requerido.'},
+            tipo_industrial:{required: 'Este campo es requerido.'},
+            proceso_industrial:{required: 'Este campo es requerido.'},
+            cantidad_industrial:{required: 'Este campo es requerido.'},
+            tipo_patoloficos:{required: 'Este campo es requerido.'},
+            proceso_patoloficos:{required: 'Este campo es requerido.'},
+            cantidad_patoloficos:{required: 'Este campo es requerido.'},
+            tipo_otros:{required: 'Este campo es requerido.'},
+            proceso_otros:{required: 'Este campo es requerido.'},
+            cantidad_otros:{required: 'Este campo es requerido.'},
+            tipo_eliquidos:{required: 'Este campo es requerido.'},
+            proceso_eliquidos:{required: 'Este campo es requerido.'},
+            cantidad_eliquidos:{required: 'Este campo es requerido.'},
+            sitios_sanitarios:{required: 'Este campo es requerido.'},
+            cantidad_sanitarios:{required: 'Este campo es requerido.'},
+            tipo_puntuales:{required: 'Este campo es requerido.'},
+            proceso_puntuales:{required: 'Este campo es requerido.'},
+            diametro_puntuales:{required: 'Este campo es requerido.'},
+            cantidad_puntuales:{required: 'Este campo es requerido.'},
+            tipo_difusas:{required: 'Este campo es requerido.'},
+            proceso_difusas:{required: 'Este campo es requerido.'},
+            cantidad_difusas:{required: 'Este campo es requerido.'}
+
+        },
+        errorElement: "em",
+        errorPlacement: function ( error, element ) {
+            // Add the `help-block` class to the error element
+            error.addClass( "help-block" )
+
+            // Add `has-feedback` class to the parent div.form-group
+            // in order to add icons to inputs
+            element.parents( ".col-md-5" ).addClass( "has-feedback" )
+
+            if (  element.prop( "type" ) ===  "select-one" || element.prop( "type" ) ===  "text" || element.prop( "type" ) ===  "checkbox" ||  element.prop( "type" ) ===  "number" || element.prop( "type" ) === "date" || element.prop( "type" ) ===  "radio" || element.prop( "type" ) === "textarea" ) {
+                error.insertAfter( element.parent("div"))
+                if(element.parent()[0].localName == "td"){
+                    error.insertAfter(element)
+                }
+            }
+            // Add the span element, if doesn't exists, and apply the icon classes to it.
+            if ( !element.next( "span" )[ 0 ] ) {
+            }
+        },
+        success: function ( label, element ) {
+            // Add the span element, if doesn't exists, and apply the icon classes to it.
+            if ( !$( element ).next( "span" )[ 0 ] ) {
+            }
+        },
+        highlight: function ( element, errorClass, validClass ) {
+            $( element ).parents( ".col-md-5" ).addClass( "has-error" ).removeClass( "has-success" )
+            $( element ).addClass("noValidado").removeClass( " validado" )
+        },
+        unhighlight: function ( element, errorClass, validClass ) {
+            $( element ).parents( ".col-md-5" ).addClass( "has-success" ).removeClass( "has-error" )
+            $( element ).addClass( "validado" ).removeClass( "noValidado" )
+        },
+    }) #}
+
+  </script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">7. Análisis de riesgo</div>
+    <div class="card-body">
+        <form id="formularioEIAAA7" action="{{ path('tramiteEIAA7') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        
+        <h6>7.1 Categorización de Grado de Riesgo: <span class="text-danger">(*)</span> (Según resolución N° 306/14)<span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Seguir Anexo I de la Resolución N° 306/14. Anexar documentación en papel y en digital. Límite: 2600 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea maxlength="2600" class="form-control" name="Riesgo[categorizacion]" required>{% if Riesgo != null %}{{Riesgo.categorizacion}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'7.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <h6>7.2 Presentación del Estudio de Riesgo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Según se establece en Artículos 4 y 5 y Anexo II de la Resolución N° 306/14. Anexar documentación en papel y en digital.">(?)</span></h6>
+        {% set i = 2 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'7.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage2 is defined and Storage2 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <h6>7.3 Plan de Contingencias y gerenciamiento del riesgo: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Según se establece en Artículos 6 y Anexo III de la resolución N° 306/14. Anexar documentación en papel y en digital. Límite: 4400 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea maxlength="4400" class="form-control" name="Riesgo[contingencia]" required>{% if Riesgo != null %}{{Riesgo.planContingencia}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 3 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'7.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage3 is defined and Storage3 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA62',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA4',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario2.js')}}"></script>
+{% endblock %}

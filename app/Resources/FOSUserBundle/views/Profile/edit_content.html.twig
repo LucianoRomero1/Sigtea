@@ -1,0 +1,33 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class = "container-fluid login-div">
+    <div class="login-div-purple">
+       
+        <a href="{{path('fos_user_profile_show')}}" class="text-white"><i class="fas fa-arrow-circle-left float-left"></i></a>
+        <p class="d-inline text-center">Modificar nombre de usuario o email</p>
+    </div>
+    {{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'fos_user_profile_edit' } }) }}
+        <div class = "mt-1">
+            {{ form_label(form.username, 'Nombre de usuario: ', {'label_attr': {'class': 'foo'}}) }}
+            {{ form_widget(form.username, {attr: {class: 'form-control'}})}}
+            {{ form_errors(form.username) }}
+        </div>
+        <div class = "mt-1">
+            {{ form_label(form.email, 'Email: ', {'label_attr': {'class': 'foo'}}) }}
+            {{ form_widget(form.email, {attr: {class: 'form-control'}})}}
+            {{ form_errors(form.email) }}
+        </div>
+        <div class = "mt-1">
+            {{ form_label(form.current_password, 'Contraseña actual: ', {'label_attr': {'class': 'foo'}}) }}
+            {{ form_widget(form.current_password, {attr: {class: 'form-control'}})}}
+            {{ form_errors(form.current_password) }}
+            <p class ="mt-1 float-right"><input type="checkbox" onclick="showCurrentPassword()">Ver</p>
+        </div>
+        <br>
+        <div class="text-right mt-4">
+            <input  class= "btn" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+        </div>
+        <br>
+    {{ form_end(form) }}
+</div>
+<script src="{{asset('bundles/js/mostrarPW.js')}}"></script>

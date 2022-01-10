@@ -1,0 +1,157 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO B</h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario</label>        
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">4. DIMENSIONAMIENTO </div>
+    <div class="card-body">
+        <form action="{{ path('tramiteB4') }}" method="post">
+        {# {% if idtramite is defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        <input type="hidden" name="idPlanta" value="{{idPlanta}}">
+        {# {% endif %} #}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>SUPERFICIE TOTAL DEL PREDIO (en m2):<span class="text-danger">(*)</span></label>
+                    <input type="number" value="{{ DimensionPlanta is defined and DimensionPlanta != null ? DimensionPlanta.superficieTotal}}" class="form-control" name="DimensionPlanta[superficieTotal]" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>SUPERFICIE CUBIERTA (en m2):<span class="text-danger">(*)</span></label>
+                    <input type="number" value="{{ DimensionPlanta is defined and DimensionPlanta != null ? DimensionPlanta.superficieCubierta}}" class="form-control" name="DimensionPlanta[superficieCubierta]" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>POTENCIA INSTALADA (en HP):<span class="text-danger">(*)</span></label>
+                    <input type="text" class="form-control" value="{{ DimensionPlanta is defined and DimensionPlanta != null ? DimensionPlanta.superficieInstalada}}" name="DimensionPlanta[superficieInstalada]" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <label>
+                        DOTACIÓN DE PERSONAL:
+                        <span class="text-danger">(*)</span>
+                        <span data-toggle="tooltip" data-placement="right" 
+                        title="(?) Debe ser comprendido todo el personal afectado a la empresa, titulares, personal 
+                        administrativo, personal de limpieza, personal de mantenimiento, y cualquier otra persona que 
+                        se encuentre o encontrará trabajando en relación de dependencia."
+                        class="text-success pad-span">(?)</span>
+                    </label>
+                    <input type="text" class="form-control" value="{{ DimensionPlanta is defined and DimensionPlanta != null ? DimensionPlanta.dotacionPersonal}}" name="DimensionPlanta[dotacionPersonal]" required>
+                </div>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <label>FORMACIÓN DE PERSONAL:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>Obreros</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-row">
+                    <label>Cantidad:</label>
+                    <input type="number" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.cantidadObrero}}" class="form-control" min=0 name="FormacionPersonalObrero[cantidad]">
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="form-row">
+                    <label>Capacitación/Especialidades:</label>
+                    <input type="text" class="form-control" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.capacitacionObrero}}" name="FormacionPersonalObrero[capacitacion]">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>Técnicos</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-row">
+                    <label>Cantidad:</label>
+                    <input type="number" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.cantidadTecnico}}" class="form-control" min=0 name="FormacionPersonalTecnico[cantidad]">
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="form-row">
+                    <label>Capacitación/Especialidades:</label>
+                    <input type="text" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.capacitacionTecnico}}" class="form-control" name="FormacionPersonalTecnico[capacitacion]">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <label>Profesionales</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-row">
+                    <label>Cantidad:</label>
+                    <input type="number" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.cantidadProfecional}}" class="form-control" min=0 name="FormacionPersonalProfesional[cantidad]">
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="form-row">
+                    <label>Capacitación/Especialidades:</label>
+                    <input type="text" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.cantidadProfecional}}" class="form-control" name="FormacionPersonalProfesional[capacitacion]">
+                </div>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>Horarios de Trabajo</label>
+                    <input type="text" class="form-control" value="{{ FormacionPersonal is defined and FormacionPersonal != null ? FormacionPersonal.horarioTrabajo}}" name="FormacionPersonal[horas]">
+                </div>
+            </div>            
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('tramiteB2') }} data-idtramite="{{idTramite}}" data-idplanta="{{idPlanta}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('/tramiteB2',{'idTramite': idTramite ?? 0},{'rol':'admin'},{'diPlanta': idPlanta ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a href="{{ path('tramiteB5',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+    {% if userSession.Roles[0] == 'ROLE_ADMIN' %}
+        $('input, select').attr('readonly',true);
+        $('input, select').prop('required',false);
+    {% endif %}
+    </script>
+{% endblock %}

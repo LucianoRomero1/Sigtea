@@ -1,0 +1,45 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO "A" DE CATEGORIZACIÓN LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 2. DATOS IDENTIFICATORIOS DEL PROPONENTE {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioU2" action="{{ path('tramiteU3') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <input type="hidden" name="Subdivision" value="{{Subdivision}}">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <p for="razonSocial">NOMBRE COMPLETO / RAZÓN SOCIAL <span class="text-danger">(*)</span></p>
+                <input type="text" class="form-control" id="razonSocial" name="Persona[razonSocial]" required value="{% if Persona is defined %}{{Persona.razonSocial}}{% endif %}">
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <p for="cuit">CUIT <span class="text-danger">(*)</span></p>
+            <input type="number" class="form-control" id="cuit" name="Persona[cuit]" required max="99999999999" min="10000000000" step="1" value="{% if Persona is defined %}{{Persona.cuit}}{% endif %}">
+        </div>
+    </div>
+    {# <br>
+    <div>
+        <input type="radio" name="Empresa[tipoPersona]" id=""  value="1" {% if (Empresa is defined and Empresa.tipoPersona == 1) %} selected {% endif %} onclick="hideInput()" required> 
+        <label for="">Persona Física</label><br>
+        
+        <input type="radio" name="Empresa[tipoPersona]" id = "pJuridica"  value="2"  {% if (Empresa is defined and Empresa.tipoPersona == 2) %} selected {% endif %} onclick="showInput()" >
+        <label for="">Persona Jurídica</label><br>
+
+        <input type="radio" name="Empresa[tipoPersona]" id=""  value="3"  {% if (Empresa is defined and Empresa.tipoPersona == 3) %} selected {% endif %} onclick="hideInput()" >
+        <label for="">Sociedad de Hecho</label><br>
+    <div>
+    <div id ="divJuridica" class ='mt-2' style="display: none;">
+        <label for="tipo">Tipo:</label>
+        <input type="text" class ='form-control w-50' id ='inputJuridica' name="tipo" value=''><br>
+    </div> #}
+    <br>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/formularioUrbanizacion/formularioU2.js')}}"></script>
+{% endblock %}

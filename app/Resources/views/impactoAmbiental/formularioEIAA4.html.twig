@@ -1,0 +1,985 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">4. Descripción del proyecto</div>
+    <div class="card-body">
+        <form id="formularioEIAAA4" action="{{ path('tramiteEIAA4') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        <h6>4.1 Definición y duración de las distintas etapas del proyecto. Cronograma de trabajo: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right" title="Indicar las tareas que componen las etapas constructiva y de puesta en funcionamiento del proyecto, señalando la duración de las mismas y plasmándolo en un cronograma de tareas / tiempo. Anexar el cronograma en papel y formato digital. Estimar la vida útil del proyecto. Límite: 1800 caracteres.">(?)</span></h6>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" name="Proyecto[definicion]" required>{% if Proyecto != null %}{{Proyecto.definicion}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        {% set i = 1 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'4.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage1 is defined and Storage1 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage1.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+    <br>
+        <hr/>
+        <h6>4.2 Diagrama de distribución de la planta (lay out): <span data-toggle="tooltip"  data-placement="right" title="(?) Anexar en papel y formato digital:planos, imágenes o 
+        diagramas -en una escala que resulte claramente legible- en los cuales se muestre la ubicación y superficie de la planta industrial en relación a la supe.rficietotal del terreno, los 
+        diferentes sectores que integran el predioy la distribución de la planta (indicando áreas productivas, de serviciosy otras complementarias). 
+        Se deberá indicar también en un plano la ubicación de pozos de extracc ión de agua subterránea y de pozos de monitoreo, en  caso de corresponder. 
+        Se deberá anexar también un plano con el sistema de drenajes de planta.
+        Enumerar en el campo debajo,. los nombres detodos los anexos de este inciso, respetando el formato de nombre indicado en la advertencia de lla primera página. Ejemplo:'
+            Plano de Fábrica _ Inciso4.2'; 'Diagrama de Distribución en Planta _ Inciso4.2' ; ...etc." class="text-success">(?)</span></h6>
+        <br/>
+        {% set i = 2 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'4.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage2 is defined and Storage2 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h6>4.3 Etapa constructiva: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="Aregar una tabla para cada tarea/obra de la etapa constructiva.">(?)</span></h6>
+        <br/>
+        <div id="divTarea">
+        {% set tarea = 1 %}
+        {% for etapaConstructiva in EtapasConstructivas %}
+            <div id="tarea{{loop.index}}" class="tabla-pers">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Tarea: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar la tarea a desarrollar">(?)</span></p>
+                        <input type="text" value="{{etapaConstructiva.tarea}}" class="form-control" name="EtapaConstructiva[tarea][]" required />
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Descripción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Detallar la tarea indicada en la fila precedente, mencionando, en caso de corresponder, los procedimientos constructivos, tecnologías utilizadas, etc. Límite: 875 caracteres.">(?)</span></p>
+                        <textarea maxlength="3500" class="form-control" name="EtapaConstructiva[descripcion][]" required>{{etapaConstructiva.descripcion}}</textarea>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Insumos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Listar y estimar cuantitativamente los requerimientos de materiales, energía eléctrica, gas, agua, combustibles y mano de obra necesarios para llevar adelante esa tarea. Deberá describirse cualitativamente cada uno, indicar estado físico, si posee características de peligrosidad y detallar las condiciones de almacenamiento (capacidad, tipo de envases, contenedores o tanques, condiciones edilicias y de seguridad) y transporte. Es recomendable indicar la ubicación en plano de la planta. Para el uso de energía deberá indicarse además si será adquirida (debiendo adjuntarse la correspondiente prefactibilidad otorgada por el proveedor) o generación propia (debiendo describirse el método de generación, capacidad, combustible). (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 875 caracteres.">(?)</span></p>
+                        <textarea class="form-control" name="EtapaConstructiva[insumo][]" required>{{etapaConstructiva.insumo}}</textarea>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Residuos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Especificar y listar cada uno de los residuos que se generarán durante la ejecución de esta tarea. (Aclaración: Deberá corroborarse con lo declarado en el formulario B de la resolución N° 403/16 Ministerio de Medio Ambiente).">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Residuo</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tarea{{loop.index}}Residuos">
+                            {% for residuo in Residuos if residuo.etapaConstructiva == etapaConstructiva %}
+                                <tr id="tarea{{tarea}}Residuo{{loop.index}}">
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>
+                                        <input type="text" value="{{residuo.categoria}}" class="form-control" name="EtapaConstructiva[Residuo][{{tarea}}][{{loop.index - 1}}][residuo]" required />
+                                    </td>
+                                    <td>
+                                        <select name="EtapaConstructiva[Residuo][{{tarea}}][{{loop.index - 1}}][tipo]" class="form-control">
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Peligroso' %} selected {% endif %} value="Residuo Peligroso">Residuo peligroso</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Industrial No Peligroso' %} selected {% endif %} value="Residuo Industrial No Peligroso">Residuos no peligrosos industriales o de act. de servicio</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Solido Urbano' %} selected {% endif %} value="Residuo Solido Urbano">Residuos sólidos urbanos asimilables a estos</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Patologico' %} selected {% endif %} value="Residuo Patologico">Residuos patológicos o provenientes de catering de buques o aeronaves</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Otro Residuo' %} selected {% endif %} value="Otro Residuo">Otros residuos</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="eliminarDiv('tarea{{tarea}}Residuo{{loop.index}}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% set iTareaResiduo = loop.index %}
+                            {% else %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control" name="EtapaConstructiva[Residuo][{{tarea}}}][0][residuo]" required />
+                                    </td>
+                                    <td>
+                                        <select name="EtapaConstructiva[Residuo][{{tarea}}][0][tipo]" class="form-control">
+                                            <option value="Residuo Peligroso">Residuo peligroso</option>
+                                            <option value="Residuo Industrial No Peligroso">Residuos no peligrosos industriales o de act. de servicio</option>
+                                            <option value="Residuo Solido Urbano">Residuos sólidos urbanos asimilables a estos</option>
+                                            <option value="Residuo Patologico">Residuos patológicos o provenientes de catering de buques o aeronaves</option>
+                                            <option value="Otro Residuo">Otros residuos</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarResiduo('tarea{{loop.index}}', {{loop.index}})">Agregar residuo</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Efluentes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada uno de los efluentes líquidos que se generarán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Efluente</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tarea{{tarea}}Efluentes">
+                            {% for efluente in Efluentes if efluente.etapaConstructiva == etapaConstructiva %}
+                                <tr id="tarea{{tarea}}Efluente{{loop.index}}">
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>
+                                        <input type="text" value="{{efluente.tipoEfluente.tipo}}" class="form-control"  name="EtapaConstructiva[Efluente][{{tarea}}][0][efluente]" required />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control"  name="EtapaConstructiva[Efluente][{{tarea}}][0][efluente]" required />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a class="btn text-primary" onClick="agregarEfluente('tarea{{tarea}}', {{tarea}})">Agregar efluente</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Emisiones: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada una de las emisiones al aire que se producirán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Emisión</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tarea{{tarea}}Emisiones">
+                            {% for emision in Emisiones if emision.etapaConstructiva == etapaConstructiva %}
+                                <tr id="tarea{{tarea}}Emision{{loop.index}}">
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>
+                                        <input type="text" value="{{emision.categoria}}" class="form-control" name="EtapaConstructiva[Emision][{{tarea}}][{{loop.index - 1}}][emision]" required />
+                                    </td>
+                                    <td>
+                                        <select  name="EtapaConstructiva[Emision][{{tarea}}][{{loop.index - 1}}][tipo]" class="form-control">
+                                            <option {% if emision.tipoEmision.tipo == 'Fuente puntual' %} selected {% endif %} value="Fuente puntual">Fuente puntual</option>
+                                            <option {% if emision.tipoEmision.tipo == 'Emisión difusa' %} selected {% endif %} value="Emisión difusa">Emisión difusa</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="eliminarDiv('tarea{{tarea}}Emision{{loop.index}}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control" name="EtapaConstructiva[Emision][{{tarea}}][0][emision]" required />
+                                    </td>
+                                    <td>
+                                        <select  name="EtapaConstructiva[Emision][{{tarea}}][0][tipo]" class="form-control">
+                                            <option value="Fuente puntual">Fuente puntual</option>
+                                            <option value="Emisión difusa">Emisión difusa</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarEmision('tarea{{tarea}}', {{tarea}})">Agregar emision</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+            <br/>
+            {% set tarea = tarea + 1 %}
+        {% else %}
+    
+            <div id="tarea1" class="tabla-pers">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Tarea: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar la tarea a desarrollar">(?)</span></p>
+                        <input type="text" value="" class="form-control" name="EtapaConstructiva[tarea][]" required />
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Descripción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Detallar la tarea indicada en la fila precedente, mencionando, en caso de corresponder, los procedimientos constructivos, tecnologías utilizadas, etc. Límite: 875 caracteres.">(?)</span></p>
+                        <textarea maxlength="3500" class="form-control" name="EtapaConstructiva[descripcion][]" required></textarea>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Insumos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Listar y estimar cuantitativamente los requerimientos de materiales, energía eléctrica, gas, agua, combustibles y mano de obra necesarios para llevar adelante esa tarea. Deberá describirse cualitativamente cada uno, indicar estado físico, si posee características de peligrosidad y detallar las condiciones de almacenamiento (capacidad, tipo de envases, contenedores o tanques, condiciones edilicias y de seguridad) y transporte. Es recomendable indicar la ubicación en plano de la planta. Para el uso de energía deberá indicarse además si será adquirida (debiendo adjuntarse la correspondiente prefactibilidad otorgada por el proveedor) o generación propia (debiendo describirse el método de generación, capacidad, combustible). (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 875 caracteres.">(?)</span></p>
+                        <textarea class="form-control" name="EtapaConstructiva[insumo][]" required></textarea>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Residuos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Especificar y listar cada uno de los residuos que se generarán durante la ejecución de esta tarea. (Aclaración: Deberá corroborarse con lo declarado en el formulario B de la resolución N° 403/16 Ministerio de Medio Ambiente).">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Residuo</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tarea1Residuos">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control" name="EtapaConstructiva[Residuo][1][0][residuo]" required />
+                                    </td>
+                                    <td>
+                                        <select name="EtapaConstructiva[Residuo][1][0][tipo]" class="form-control">
+                                            <option value="Residuo Peligroso">Residuo peligroso</option>
+                                            <option value="Residuo Industrial No Peligroso">Residuos no peligrosos industriales o de act. de servicio</option>
+                                            <option value="Residuo Solido Urbano">Residuos sólidos urbanos asimilables a estos</option>
+                                            <option value="Residuo Patologico">Residuos patológicos o provenientes de catering de buques o aeronaves</option>
+                                            <option value="Otro Residuo">Otros residuos</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarResiduo('tarea1', 1)">Agregar residuo</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Efluentes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada uno de los efluentes líquidos que se generarán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Efluente</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tarea1Efluentes">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control"  name="EtapaConstructiva[Efluente][1][0][efluente]" required />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a class="btn text-primary" onClick="agregarEfluente('tarea1', 1)">Agregar efluente</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Emisiones: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada una de las emisiones al aire que se producirán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Emisión</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tarea1Emisiones">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control" name="EtapaConstructiva[Emision][1][0][emision]" required />
+                                    </td>
+                                    <td>
+                                        <select  name="EtapaConstructiva[Emision][1][0][tipo]" class="form-control">
+                                            <option value="Fuente puntual">Fuente puntual</option>
+                                            <option value="Emisión difusa">Emisión difusa</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarEmision('tarea1', 1)">Agregar emision</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        <br/>
+        <div class="text-center">
+            <a class="btn btn-primary text-light" onClick="agregarDivTarea({{tarea}})">
+                Agregar tarea
+            </a>
+        </div>
+        <br/>
+        <h6>4.4 Etapa operativa <span class="text-danger">(*)</span> </h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Descripción de actividades principales y secundarias del proyecto: <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" data-placement="right" title="Máximo: 1800 caracteres">(?)</span></p>
+                <input type="text" value="{% if EtapasOperativas != null %}{{EtapasOperativas[0].tarea}}{% endif %}" maxlength="1800" class="form-control" name="EtapaOperativa[tarea]" required />
+            </div>
+        </div>
+        <br/>
+        <h6>4.4.1 Diagramas de flujo <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Deberá anexarse un diagrama general de la actividad industrial a desarrollar y, en el caso de desarrollarse más de un proceso productivo, uno por cada proceso, incluyendo procesos secundarios o auxiliares. El anexo debe acompañar al formulario en papel y formato digital, nombrado con el formato indicado. Ej. "Diagrama de flujo Proceso 1 _ Inciso 4.4.1" Los diagramas que se anexen deberán ser diagramas de bloques. Cada bloque representará una operación o grupo de operaciones del proceso. El proceso evoluciona desde arriba hacia abajo (o de derecha a izquierda), comenzando con el ingreso de la materia prima principal que avanza a través de las diferentes operaciones que representan los mencionados bloques. En cada bloque se detallará el ingreso de materias primas o insumos desde la izquierda (o arriba), y la salida de productos, subproductos, residuos, efluentes, emisiones y/o subproductos por la derecha (o abajo). Los residuos con características peligrosas deberán señalarse con un color especial al que se hará referencia. El grado de detalle en este tipo de diagramas y sus descripciones complementarias deberá ser suficiente para que la Autoridad de Aplicación interprete el proceso y los posibles efectos y riesgos significativos sobre el entorno. ">(?)</span> </h6>
+        <br/>
+        {% set i = 3 %}
+        <div class="row">
+            <div class="col-md-6">
+                <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                <a id="button{{i}}" onclick="subirArchivo({{i}},'4.{{i}}')"  class="btn btn-info text-light">Subir</a>
+            </div>
+            <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                {% if Storage3 is defined and Storage3 != null %}
+                    <div>
+                        <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                    </div>
+                {% endif %}
+                <div id="spinner{{i}}" class='spinner form-row'>
+                    <div class="three-quarters-loader"></div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <h6>4.4.2 Descripción detallada de las distintas operaciones y procesos, incluyendo servicios auxiliares: <span class="text-danger">(*)</span> <span data-toggle="tooltip" class="text-success" data-placement="right" title="Describir detalladamente cada línea de procesos, incluyendo servicios auxiliares, relacionándolos con el'los Diagrama/s del punto anterior (y utilizando la misma nomenclatura), agregando una tabla por cada proceso.">(?)</span> </h6>
+        <br/>
+        <div id="divProceso">
+            {% set proceso = 1 %}
+            {% for etapaOperativa in EtapasOperativas %}
+            <div id="proceso{{loop.index}}" class="tabla-pers">
+        
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Nombre del proceso: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar el nombre principal con el cual se identifica al proceso. (Mantener la misma nomenclatura).">(?)</span></p>
+                        <input type="text" value="{{etapaOperativa.proceso}}" class="form-control" name="EtapaOperativa[proceso][]" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Descripción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Describir concisamente el proceso completo indicado en la fila precedente. Detallar las operaciones que se desarrollan en el mismo. Mencionar, en caso de corresponder, las tecnologías utilizadas, medidas de seguridad, etc. Límite 2600 caracteres. ">(?)</span></p>
+                        <textarea class="form-control" maxlength="2600" name="EtapaOperativa[descripcion][]" required>{{etapaOperativa.descripcion}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Materias primas, Insumos, sustancias auxiliares, fluídos, agua: <span class="text-success" data-toggle="tooltip" data-placement="right" title="(?) Listar y estimar cuantitativamente (en la unidad que corresponda), los requerimientos de materias primas e insumos que se utilizan en el proceso, o en cada operación del mismo, como así también las sustancias auxiliares, servicios y mano de obra necesarios para llevar adelante ese proceso. Deberá identificarse como mínimo: sustancia, composición, estado físico, características de peligrosidad, capacidad y condiciones de almacenamiento, medidas de seguridad y consumo estimado. Para el uso de energía deberá indicarse además si será adquirida (debiendo adjuntarse la correspondiente prefactibilidad otorgada por el proveedor) o generación propia (debiendo describirse el método de generación, capacidad, combustible) y para el uso, su abastecimiento: público (agua de red) o propio (fuentes: superficial, subterránea, otras (especificar). (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 2600 caracteres. ">(?)</span></p>
+                        <textarea class="form-control" maxlength="2600" name="EtapaOperativa[materia][]" required>{{etapaOperativa.materiaPrima}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Productos y subproductos:<span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Listar los productos y subproductos que se obtienen en el proceso, o en cada operación del mismo. Deberán detallarse las características de cada producto, estado físico e indicarse también las condiciones de almacenamiento (capacidad, tipo de envases, contenedores o tanques, condiciones edilicias y de seguridad) y transporte y, en caso de corresponder, indicar la ubicación en plano de la planta. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 875 caracteres.">(?)</span></p>
+                        <textarea class="form-control" maxlength="875" name="EtapaOperativa[producto][]" required>{{etapaOperativa.producto}}</textarea>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Residuos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada uno de los residuos que se generarán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Residuo</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proceso{{proceso}}Residuos">
+                                {% for residuo in Residuos if residuo.etapaOperativa == etapaOperativa %}
+                                <tr id="proceso{{proceso}}Residuo{{loop.index}}">
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>
+                                        <input type="text" value="{{residuo.categoria}}" class="form-control" name="EtapaOperativa[Residuo][{{proceso}}][{{loop.index - 1 }}][residuo]" required />
+                                    </td>
+                                    <td>
+                                        <select name="EtapaOperativa[Residuo][{{proceso}}][{{loop.index - 1}}][tipo]" class="form-control">
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Peligroso' %} selected {% endif %} value="Residuo Peligroso">Residuo peligroso</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Industrial No Peligroso' %} selected {% endif %} value="Residuo Industrial No Peligroso">Residuos no peligrosos industriales o de act. de servicio</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Solido Urbano' %} selected {% endif %} value="Residuo Solido Urbano">Residuos sólidos urbanos asimilables a estos</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Residuo Patologico' %} selected {% endif %} value="Residuo Patologico">Residuos patológicos o provenientes de catering de buques o aeronaves</option>
+                                            <option {% if residuo.tipoResiduo.tipo == 'Otro Residuo' %} selected {% endif %} value="Otro Residuo">Otros residuos</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="eliminarDiv('proceso{{proceso}}Residuo{{loop.index}}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="EtapaOperativa[Residuo][1][0][residuo]" required />
+                                    </td>
+                                    <td>
+                                        <select name="EtapaOperativa[Residuo][1][0][tipo]" class="form-control">
+                                            <option value="Residuo Peligroso">Residuo peligroso</option>
+                                            <option value="Residuo Industrial No Peligroso">Residuos no peligrosos industriales o de act. de servicio</option>
+                                            <option value="Residuo Solido Urbano">Residuos sólidos urbanos asimilables a estos</option>
+                                            <option value="Residuo Patologico">Residuos patológicos o provenientes de catering de buques o aeronaves</option>
+                                            <option value="Otro Residuo">Otros residuos</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarResiduoOperativo('proceso1', 1)">Agregar residuo</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Efluentes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada uno de los efluentes líquidos que se generarán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Efluente</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proceso{{proceso}}Efluentes">
+                            {% for efluente in Efluentes if efluente.etapaOperativa == etapaOperativa  %}
+                                <tr id="proceso{{proceso}}Efluente{{loop.index}}">
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>
+                                        <input type="text" value="{{efluente.tipoEfluente.tipo}}" class="form-control"  name="EtapaOperativa[Efluente][{{proceso}}][0][efluente]" required />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="eliminarDiv('proceso{{proceso}}Efluente{{loop.index}}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else  %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control"  name="EtapaOperativa[Efluente][1][0][efluente]" required />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a class="btn text-primary" onClick="agregarEfluenteOperativo('proceso1', 1)">Agregar efluente</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Emisiones: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Especificar y listar cada una de las emisiones al aire que se producirán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el formulario B de la resolución N° 403/16 Ministerio de medio ambiente).">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Emisión</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proceso{{proceso}}Emisiones">
+                                {% for emision in Emisiones if emision.etapaOperativa == etapaOperativa %}
+                                <tr id="proceso{{proceso}}Emision{{loop.index}}">
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>
+                                        <input type="text" value="{{emision.categoria}}" class="form-control" name="EtapaOperativa[Emision][{{proceso}}][{{loop.index - 1 }}][emision]" required />
+                                    </td>
+                                    <td>
+                                        <select  name="EtapaOperativa[Emision][{{proceso}}][{{loop.index - 1}}][tipo]" class="form-control">
+                                            <option {% if emision.tipoEmision.tipo == 'Fuente puntual' %} selected {% endif %} value="Fuente puntual">Fuente puntual</option>
+                                            <option {% if emision.tipoEmision.tipo == 'Emisión difusa' %} selected {% endif %} value="Emisión difusa">Emisión difusa</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="eliminarDiv('proceso{{proceso}}Emision{{loop.index}}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control" name="EtapaOperativa[Emision][1][0][emision]" required />
+                                    </td>
+                                    <td>
+                                        <select  name="EtapaOperativa[Emision][1][0][tipo]" class="form-control">
+                                            <option value="Fuente puntual">Fuente puntual</option>
+                                            <option value="Emisión difusa">Emisión difusa</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarEmisionOperativa('proceso{{proceso}}', {{proceso}})">Agregar emision</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% set proceso = proceso + 1 %}
+            {% else %}
+            <div id="proceso1" class="tabla-pers">
+        
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Nombre del proceso: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar el nombre principal con el cual se identifica al proceso. (Mantener la misma nomenclatura).">(?)</span></p>
+                        <input type="text" value="" class="form-control" name="EtapaOperativa[proceso][]" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Descripción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Describir concisamente el proceso completo indicado en la fila precedente. Detallar las operaciones que se desarrollan en el mismo. Mencionar, en caso de corresponder, las tecnologías utilizadas, medidas de seguridad, etc. Límite 2600 caracteres. ">(?)</span></p>
+                        <textarea class="form-control" maxlength="2600" name="EtapaOperativa[descripcion][]" required></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Materias primas, Insumos, sustancias auxiliares, fluídos, agua: <span data-toggle="tooltip" data-placement="right" title="(?) Listar y estimar cuantitativamente (en la unidad que corresponda), los requerimientos de materias primas e insumos que se utilizan en el proceso, o en cada operación del mismo, como así también las sustancias auxiliares, servicios y mano de obra necesarios para llevar adelante ese proceso. Deberá identificarse como mínimo: sustancia, composición, estado físico, características de peligrosidad, capacidad y condiciones de almacenamiento, medidas de seguridad y consumo estimado. Para el uso de energía deberá indicarse además si será adquirida (debiendo adjuntarse la correspondiente prefactibilidad otorgada por el proveedor) o generación propia (debiendo describirse el método de generación, capacidad, combustible) y para el uso, su abastecimiento: público (agua de red) o propio (fuentes: superficial, subterránea, otras (especificar). (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 2600 caracteres. ">(?)</span></p>
+                        <textarea class="form-control" maxlength="2600" name="EtapaOperativa[materia][]" required></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Productos y subproductos:<span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Listar los productos y subproductos que se obtienen en el proceso, o en cada operación del mismo. Deberán detallarse las características de cada producto, estado físico e indicarse también las condiciones de almacenamiento (capacidad, tipo de envases, contenedores o tanques, condiciones edilicias y de seguridad) y transporte y, en caso de corresponder, indicar la ubicación en plano de la planta. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16). Límite 875 caracteres.">(?)</span></p>
+                        <textarea class="form-control" maxlength="875" name="EtapaOperativa[producto][]" required></textarea>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Residuos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada uno de los residuos que se generarán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Residuo</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proceso1Residuos">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="EtapaOperativa[Residuo][1][0][residuo]" required />
+                                    </td>
+                                    <td>
+                                        <select name="EtapaOperativa[Residuo][1][0][tipo]" class="form-control">
+                                            <option  value="Residuo Peligroso">Residuo peligroso</option>
+                                            <option  value="Residuo Industrial No Peligroso">Residuos no peligrosos industriales o de act. de servicio</option>
+                                            <option  value="Residuo Solido Urbano">Residuos sólidos urbanos asimilables a estos</option>
+                                            <option  value="Residuo Patologico">Residuos patológicos o provenientes de catering de buques o aeronaves</option>
+                                            <option  value="Otro Residuo">Otros residuos</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarResiduoOperativo('proceso1', 1)">Agregar residuo</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Efluentes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Especificar y listar cada uno de los efluentes líquidos que se generarán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el Formulario B de la Resolución N° 403/16 Ministerio de Medio Ambiente). ">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Efluente</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proceso1Efluentes">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control"  name="EtapaOperativa[Efluente][1][0][efluente]" required />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a class="btn text-primary" onClick="agregarEfluenteOperativo('proceso1', 1)">Agregar efluente</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Emisiones: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Especificar y listar cada una de las emisiones al aire que se producirán durante la ejecución de esta tarea. (Aclaración: deberá corroborarse con lo declarado en el formulario B de la resolución N° 403/16 Ministerio de medio ambiente).">(?)</span></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Emisión</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proceso1Emisiones">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>
+                                        <input type="text" value="" class="form-control" name="EtapaOperativa[Emision][1][0][emision]" required />
+                                    </td>
+                                    <td>
+                                        <select  name="EtapaOperativa[Emision][1][0][tipo]" class="form-control">
+                                            <option value="Fuente puntual">Fuente puntual</option>
+                                            <option value="Emisión difusa">Emisión difusa</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a class="btn text-danger" onClick="">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <div class="text-center">
+                                <a class="btn text-primary" onClick="agregarEmisionOperativa('proceso1', 1)">Agregar emision</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <br/>
+        <div class="text-center">
+            <a class="btn btn-primary text-light" onClick="agregarDivProceso({{proceso}})">
+                Agregar proceso
+            </a>
+        </div>
+        <hr/>
+        <br/>
+        <h6>4.5 Etapa de cierre o clausura: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Prever las etapas a llevar a cabo para el desmantelamiento de la empresa y enunciar las mismas. Si se efectiviza el cierre de la planta, se deberá presentar -con la debida antelación- el Plan de Cierre completo, que describa las etapas antes citadas, su tiempo de realización y los estudios que demuestren la situación ambiental del predio. Límite: 2600 caracteres. ">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" maxlength="2600" name="Proyecto[cierre]" required>{% if Proyecto != null %}{{Proyecto.cierre}}{% endif %}</textarea>
+            </div>
+        </div>
+        <h6>4.6 Previsiones con respecto al uso de recursos naturales: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Considerar recursos naturales de uso directo, es decir no suministrados por terceros, por ejemplo: suelo, agua (extracción del subsuelo o cuerpo de agua superficial, o reuso de agua de origen pluvial), elementos forestales, animales defauna autóctona, minerales, etc. Estimar las previsiones correspondientes a cada tarea de la etapa constructiva o proceso de la etapa operativa (en toneladas, kilogramos, litros, metros cúbicos, u otras unidades según corresponda / unidad detiempo). Agregar una tabla para cada recurso natural. ">(?)</span></h6>
+        <div id="recursos">
+        {% set recursoCantidad = 1 %}
+        {% for recurso in Recursos %}
+            <div id="recurso{{loop.index}}" class="tabla-pers">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Recurso: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Límite: 50 caracteres.">(?)</span></p>
+                        <input type="text" value="{{recurso.recurso}}" class="form-control" maxlength="50" name="Recurso[recurso][]" required />
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Extracción / Capacitación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Por ejemplo, para la captación de agua subterránea deberá indicarse la cantidad de pozos, su ubicación en plano general de la planta y deberá detallarse las características de los mismos. Para captación de agua superficial deberá indicarse el nombre del cuerpo de agua, su ubicación en plano y características de la toma y conducción. Para la extracción de suelo deberá indicarse y georreferenciarse el sitio de extracción y deberá detallarse la profundidad de extracción. Anexar en papel y en digital, imágenes del plano o fotografías sitio de extracción, su georreferenciación, etc., según corresponda. Indicar el nombre de estos anexos, en la última celda de la tabla. Límite 875 caracteres. ">(?)</span></p>
+                        <textarea maxlength="875" class="form-control" name="Recurso[extraccion][]" required>{{recurso.extraccion}}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Tareas / Procesos / Etapas en los que se utiliza: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar todas las tareas o procesos en los que se utiliza ese recurso, utilizando la misma nomenclatura que en los puntos, 4.3 y 4.4.2. Límite: 875 caracteres.">(?)</span></p>
+                        <textarea maxlength="875" class="form-control" name="Recurso[proceso][]" required>{{recurso.proceso}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Cantidad / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Deberán indicarse la cantidad correspondiente a cada tarea o proceso de la fila anterior y sumar el total. Límite: 875 caracteres.">(?)</span></p>
+                        <textarea maxlength="875" class="form-control" name="Recurso[cantidad][]" required>{{recurso.cantidadTiempo}}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <p>Archivo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Anexar en papel y en digital imagenes / planos / fotografías del sitio de extracción, su georreferenciación, etc. Adjuntar además las solicitudes o autorizaciones que correspondan, por ejemplo, del Ministerio de la Producción por la extracción de suelo.">(?)</span></p>
+                            <input class="p-top" name="Almacenamiento" type="file" /> 
+                            <a id="" class="btn btn-info text-light">Subir</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a class="btn text-danger" onClick="eliminarFila('recurso{{loop.index}}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+            <br/>
+            {% set recursoCantidad = recursoCantidad + 1 %}
+        {% else %} 
+            <div class="tabla-pers">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Recurso: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Límite: 50 caracteres.">(?)</span></p>
+                        <input type="text" value="" class="form-control" maxlength="50" name="Recurso[recurso][]" required />
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Extracción / Capacitación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Por ejemplo, para la captación de agua subterránea deberá indicarse la cantidad de pozos, su ubicación en plano general de la planta y deberá detallarse las características de los mismos. Para captación de agua superficial deberá indicarse el nombre del cuerpo de agua, su ubicación en plano y características de la toma y conducción. Para la extracción de suelo deberá indicarse y georreferenciarse el sitio de extracción y deberá detallarse la profundidad de extracción. Anexar en papel y en digital, imágenes del plano o fotografías sitio de extracción, su georreferenciación, etc., según corresponda. Indicar el nombre de estos anexos, en la última celda de la tabla. Límite 875 caracteres. ">(?)</span></p>
+                        <textarea maxlength="875" class="form-control" name="Recurso[extraccion][]" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Tareas / Procesos / Etapas en los que se utiliza: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar todas las tareas o procesos en los que se utiliza ese recurso, utilizando la misma nomenclatura que en los puntos, 4.3 y 4.4.2. Límite: 875 caracteres.">(?)</span></p>
+                        <textarea maxlength="875" class="form-control" name="Recurso[proceso][]" required></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Cantidad / Unidad de tiempo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Deberán indicarse la cantidad correspondiente a cada tarea o proceso de la fila anterior y sumar el total. Límite: 875 caracteres.">(?)</span></p>
+                        <textarea maxlength="875" class="form-control" name="Recurso[cantidad][]" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <p>Archivo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="Anexar en papel y en digital imagenes / planos / fotografías del sitio de extracción, su georreferenciación, etc. Adjuntar además las solicitudes o autorizaciones que correspondan, por ejemplo, del Ministerio de la Producción por la extracción de suelo.">(?)</span></p>
+                            <input class="p-top" name="Almacenamiento" type="file" /> 
+                            <a id="" class="btn btn-info text-light">Subir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        {% endfor %}
+        </div>
+        <br/>
+        <div class="text-center">
+            <a class="btn btn-primary text-light" onClick="agregarRecurso({{recursoCantidad}})">
+                Agregar recurso
+            </a>
+        </div>
+        <hr/>
+        <h6>4.7 Distribución anual de la producción (estacionalidad): <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="Indicar, en ese caso de corresponder, cómo se estima la distribución anual de la producción (estacionalidad). Límite: 3500 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea maxlength="3500" class="form-control" name="Proyecto[anual]" required>{% if Proyecto != null %}{{Proyecto.produccionAnual}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        <h6>4.8 Cantidad de turnos y horarios: <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="Límite: 1800 caracteres.">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea maxlength="1800" class="form-control" name="Proyecto[horario]" required>{% if Proyecto != null %}{{Proyecto.cantidadTurnoHorario}}{% endif %}</textarea>
+            </div>
+        </div>
+        <br/>
+        
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA3',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA2',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario4-constructiva.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario4-operativa.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario4-recurso.js')}}"></script>
+{% endblock %}

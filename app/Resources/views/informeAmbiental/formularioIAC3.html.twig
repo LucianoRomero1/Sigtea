@@ -1,0 +1,352 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE INFORME AMBIENTAL DE CUMPLIMIENTO {% endblock %}
+
+{% block subTitle %} 3. ACTIVIDAD - PROCESOS {% endblock %}
+
+{% block contenctForms %}
+
+    <div class="card-body">
+        <form id="formularioIAC3" action="{{ path('tramiteIAC4') }}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="idTramite" value="{{idTramite}}">
+            <h6 class="titulos">3.1 DESCRIPCIÓN DE LOS PROCESOS PRODUCTIVOS SEGÚN DIAGRAMA DE FLUJO ADJUNTO <span class="text-success" data-toggle="tooltip" title="Tipear en la celda y adjuntar imágenes en anexo sobre las operaciones, acciones por cada linea de procesos de transformación, modificación, tratamiento de materias primas, Adjuntar croquis, flow sheets, diagramas, diagrama en bloques, etc, indicando cuales son la entrada de materias primas, insumos, sustancias auxiliares, energía y salidas de productos, subproductos, emisiones, residuos y efluentes relacionados a cada línea de proceso. Máximo 1 carillas a4 por LP. Si exite más de un proceso, agregar una tabla por cada uno y sus archivos correspondientes en anexo.">(?)</span></h6>
+            <table class="table inputs" id="tablaProceso">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Nombre de archivos adjuntados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proceso in Procesos  %}
+                    <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td><input type="text" class="form-control" name="Procesos[descripcion][]" value="{{proceso.descripcion}}"></td>
+                        <td><input name="Procesos[archivos][]" type="file" accept=".pdf"><span class='text-success'>{{ImagenesProcesos.archivos[loop.index - 1]}}</span></td>
+                        <td>
+                            <button onClick="eliminarFilaBd(this,'tablaProceso', {{proceso.id}})" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td><input type="text" class="form-control" name="Procesos[descripcion][]" required></td>
+                        <td><input name="Procesos[archivos][]" type="file" accept=".pdf" required></td>                   
+                        <td>
+                            <button onClick="eliminarFila(this,'tablaProceso')" type="button" class="btn btn-danger "><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button onClick="agregarFila('tablaProceso')" type="button" class="btn btn-primary "><i class="fas fa-plus"></i> Agregar Fila</button>
+                </div>
+            </div>
+            {% set i = 2 %}
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <h6 class="titulos">3.2 DESCRIPCIÓN DETALLADA DE LAS OPERACIONES AUXILIARES ASOCIADAS <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Idem punto 3.1, incluyen operaciones de , envasado, carga y descarga de Mat. Primas, productos, etc. Límite 3000 caracteres">(?)</span></h6>
+                    <textarea class="form-control"  name="ProcesoOperacion[descripcion]" required>{% if ProcesoOperacion != null and ProcesoOperacion.descripcion != null %}{{ProcesoOperacion.descripcion}}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage2 is defined and Storage2 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage2.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% set i = i + 1 %}
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <h6 class="titulos">3.3 DESCRIPCIÓN DE PROCESOS NO INCLUIDOS ANTERIORMENTE (Opcional) <span class="text-success" data-toggle="tooltip" title="Descripción de otras operaciones, acciones, etc. de interés no incluido en los items del punto 3. Límite 3000 caracteres">(?)</span></h6>
+                    <textarea class="form-control"  name="ProcesoOtro[descripcion]">{% if ProcesoOtro != null and ProcesoOtro.descripcion != null %}{{ProcesoOtro.descripcion}}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage3 is defined and Storage3 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage3.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% set i = i + 1 %}
+            <div class="col-md-14 inputs">
+                <div class="form-group">
+                    <h6 for="descripcion_operaciones" class="titulos">3.4 DESCRIPCIÓN DE OPERACIONES / ACCIONES DE ALMACENAMIENTO <span class="text-danger">(*)</span><span class="text-success" data-toggle="tooltip" title="Descripción de operaciones/acciones de almacenamiento">(?)</span></h6>
+                    <textarea class="form-control" name="ProcesoAlmacenamiento[descripcion]" required>{% if ProcesoAlmacenamiento != null and ProcesoAlmacenamiento.descripcion != null %}{{ProcesoAlmacenamiento.descripcion}}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage4 is defined and Storage4 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage4.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <h6 class="titulos">3.4.1 CONDICIONES DE ALMACENAMIENTO DE SUSTANCIAS EN TANQUE (Opcional) <span class="text-success" data-toggle="tooltip" title="Enumere y describa los tanques p, ej. TK1...N de almacenamiento de sustancias, materias primas, insumos, producto terminados, otros, indicando tipo de contenedor, tanques. Identificar: estado físico/ capacidad (m3), característica de peligrosidad (H) Anexo II - Dec. 1844/02. Cumple alguna norma de seguridad?, identificarla, Agregar auditorias en anexo. Ej normas: ASTM, API, NFPA, Sec de Energía de la Nación (404/94) etc.">(?)</span></p>
+            <div class="row">
+                <table class="table table-responsive" id="tablaSustancia">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">TANQUE</th>
+                            <th scope="col">SUSTANCIA</th>
+                            <th scope="col">CAPACIDAD</th>
+                            <th scope="col">ESTADO FISICO</th>
+                            <th scope="col">PRESURIZADO</th>
+                            <th scope="col">PELIGROSIDAD</th>
+                            <th scope="col">NORMA DE SEGURIDAD</th>
+                            <th scope="col">N° NORMA</th> 
+                        </tr>
+                    </thead>
+                    <tbody>    
+                        {% for sustancia in SustanciaTanque %}
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td><input type="text" class="form-control" name="Tanque[unidad][]" value="{{sustancia.tanque.unidad}}"></td>
+                            <td><input type="text" class="form-control" name="SustanciaTanque[sustancia][]" value="{{sustancia.sustancia}}"></td>
+                            <td><input type="text" class="form-control" name="SustanciaTanque[capacidad][]" value="{{sustancia.capacidad}}"></td>
+                            <td>
+                                <select class="form-control" name="SustanciaTanque[estadoFisico][]" >
+                                    <option {% if sustancia.estadoFisico == 0 %} selected {% endif %} value="0">LÍQUIDO</option>
+                                    <option {% if sustancia.estadoFisico == 1 %} selected {% endif %} value="1">SÓLIDO</option>
+                                    <option {% if sustancia.estadoFisico == 2 %} selected {% endif %} value="2">GASEOSO</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" name="SustanciaTanque[presurizado][]" >
+                                    <option {% if sustancia.presurizado == 0 %} selected {% endif %} value="0">SI</option>
+                                    <option {% if sustancia.presurizado == 1 %} selected {% endif %} value="1">NO</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="SustanciaTanque[peligrosidad][]" value="{{sustancia.peligrosidad}}"></td>
+                            <td>
+                                <select class="form-control" name="SustanciaTanque[normaSeguridad][]" >
+                                    <option {% if sustancia.normaSeguridad == 0 %} selected {% endif %} value="0">SI</option>
+                                    <option {% if sustancia.normaSeguridad == 1 %} selected {% endif %} value="1">NO</option>
+                                </select>
+                            </td>
+                            <td class="media">
+                                <input type="text" class="form-control" name="SustanciaTanque[nroNorma][]" value="{{sustancia.nroNorma}}">
+                                <a onClick="eliminarFilaBd(this,'tablaProceso', {{sustancia.id}})" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><input type="text" class="form-control" name="Tanque[unidad][]" required></td>
+                            <td><input type="text" class="form-control" name="SustanciaTanque[sustancia][]" required></td>
+                            <td><input type="text" class="form-control" name="SustanciaTanque[capacidad][]" required></td>
+                            <td>
+                                <select class="form-control" name="SustanciaTanque[estadoFisico][]" required>
+                                    <option value="">SELECCIONE UNA OPCIÓN</option>
+                                    <option value="0">LÍQUIDO</option>
+                                    <option value="1">SÓLIDO</option>
+                                    <option value="2">GASEOSO</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" name="SustanciaTanque[presurizado][]" required>
+                                    <option value="">SELECCIONE UNA OPCIÓN</option>
+                                    <option value="0">SI</option>
+                                    <option value="1">NO</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="SustanciaTanque[peligrosidad][]"required></td>
+                            <td>
+                                <select class="form-control" name="SustanciaTanque[normaSeguridad][]" required>
+                                    <option value="">SELECCIONE UNA OPCIÓN</option>
+                                    <option value="0">SI</option>
+                                    <option value="1">NO</option>
+                                </select>
+                            </td>
+                            <td class="media">
+                                <input type="text" class="form-control" name="SustanciaTanque[nroNorma][]" required>
+                                <a onClick="eliminarFila(this, 'tablaSustancia')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>       
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <a onClick="agregarFila('tablaSustancia')" class="btn btn-primary text-light">Agregar fila</a>
+                </div>
+            </div>
+            <input id="cantSustancias" name="cantSustancias" value="1" hidden>
+            {# <button title="agregar fila" type="button" class="btn btn-primary agregarFila"><i class="fas fa-plus"></i> Agregar fila</button> #}
+            {% set i = i + 1 %}
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <input id="archivo{{i}}" class="p-top mb-1" type="file"/> 
+                    <a id="button{{i}}" onclick="subirArchivo({{i}},'3.{{i}}')"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo{{i}}" class="col-md-6 p-top">
+                    {% if Storage5 is defined and Storage5 != null %}
+                        <div>
+                            <h6 class="text-success"><i class='fas fa-check'></i> {{Storage5.nombre}} </h6>
+                        </div>
+                    {% endif %}
+                    <div id="spinner{{i}}" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/informeAmbiental/formularioIAC3.js')}}"></script>
+<script>
+
+    {# function agregarFila(){
+        var i = $('#tabla tbody tr').length;
+        if(i<10){
+            $('#tabla tbody').append($("#tabla tbody tr:last").clone());
+            i++;
+            $('#tabla tbody tr:last th')[0].innerText = i;
+            setearArchivos(i-1);
+        }
+    } #}
+
+    function setearArchivos(k){
+        var cant = $('#tabla tbody tr').length;
+        for(i=0; i<cant; i++){
+            $('#tabla tbody input')[i].id = "archivo"+i;
+            $('#tabla tbody input')[i].name = "archivo"+i;
+            $('#tabla tbody a')[i].id = "button"+i;
+            $('#tabla tbody a')[i].attributes["onclick"].value = "subirArchivo("+i+")";
+            $('#tabla tbody .archivos')[i].nextElementSibling.id = "nombreArchivo"+i;
+            $('#tabla tbody .archivos')[i].nextElementSibling.children[0].id = "spinner"+i;
+        }
+        $('#archivo'+k).val('')
+        $('#spinner'+k).text('')
+    }
+
+    $(document).on("click", ".agregarRegistro", function(){
+        agregarFila();
+    })
+
+    $(document).on("click", ".eliminarRegistro", function(){
+        var fila = $(this).closest("tr")
+        eliminarFila(fila);
+    })
+
+    $(document).on("click", ".agregarFila", function(){
+        var cantTablas = agregarTabla();
+        $('#cantSustancias').val(cantTablas);
+    })
+{# 
+    $(document).on("click", ".eliminarFila", function(){
+        var tabla = $(this).closest("table")
+        eliminarTabla(tabla);
+        var cantTablas = $('#tablasAlmacenamientos table').length;
+        $('#cantSustancias').val(cantTablas);
+    }) #}
+
+    {# function eliminarFila(fila){
+        var cant = $('#tabla tbody tr').length
+        var indiceFila = parseInt(fila[0].cells[0].innerText)
+        if(cant!= 1){
+            var filaSiguiente = fila.next()
+            for(var i = 0; i < cant - indiceFila; i++){
+                if(filaSiguiente[0] != undefined){
+                    filaSiguiente[0].cells[0].innerText = parseInt(filaSiguiente[0].cells[0].innerText) - 1
+                    filaSiguiente = filaSiguiente.next()
+                }
+            }
+            fila.remove();
+        }
+    } #}
+
+    function agregarTabla(){
+        var cantTablas = $('#tablasAlmacenamientos table').length;
+        if(cantTablas<10){
+            $('#tablasAlmacenamientos').append($("#tablaAlmacenamiento").clone())
+            cantTablas = cantTablas+1
+        }
+        for(var i = 1; i < cantTablas; i++){
+            $("#tablasAlmacenamientos table")[i].id = 'tablaAlmacenamiento'+i
+            $("#tablaAlmacenamiento"+i+" tbody td:first")[0].innerText = i + 1
+        }
+        setIds(cantTablas);
+        return cantTablas;
+    }
+
+    function setIds(cant){
+        var inputs = $('#tablasAlmacenamientos table input');
+        var selects = $('#tablasAlmacenamientos table select');
+
+        for(i=0; i<inputs.length; i++){
+
+            switch(true){
+                case i > (cant*5 - 6):
+                    inputs[i].name = inputs[i].name+(cant-1);
+                    inputs[i].id = inputs[i].id+(cant-1);
+                    break;
+            }
+        }
+        for(k=0; k<selects.length; k++){
+
+            switch(true){
+                case k > (cant*2 + (cant-4)):
+                    selects[k].name = selects[k].name+(cant-1);
+                    selects[k].id = selects[k].id+(cant-1);
+                    break;
+            }
+        }
+    }
+
+    function eliminarTabla(tabla){
+        var cantTablas = $('#tablasAlmacenamientos table').length;
+        var indiceFila = parseInt($('#'+tabla[0].id+" tbody td:first")[0].innerText)
+        var tablaSiguiente = tabla.next()
+        if(cantTablas!= 1){
+            for(var i = 0; i < cantTablas - indiceFila; i++){
+                if(tablaSiguiente[0] != undefined){
+                    $('#'+tablaSiguiente[0].id+' tbody td:first')[0].innerText = parseInt($('#'+tablaSiguiente[0].id+' tbody td:first')[0].innerText) - 1
+                    tablaSiguiente = tablaSiguiente.next()
+                }
+            }
+            tabla.remove();
+        }
+    }
+
+</script>
+{% endblock %}

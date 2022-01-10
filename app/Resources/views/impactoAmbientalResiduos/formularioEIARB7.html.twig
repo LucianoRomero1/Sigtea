@@ -1,0 +1,147 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+
+{% block subTitle %} ANEXO B - 5. RESIDUOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB7') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+
+    <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existen fuentes móviles o fijas que pudieran generar ruidos por encima de lo permitido por las normas aplicables? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[fuentesMoviles]" required {{ (RiesgoPresunto != null and RiesgoPresunto.fuentesMoviles == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input value="off" type="radio" name="RiesgoPresunto[fuentesMoviles]" required {{ (RiesgoPresunto != null and RiesgoPresunto.fuentesMoviles == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Posee la empresa aparatos sometidos a presión? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[aparatosSometidos]" required {{ (RiesgoPresunto != null and RiesgoPresunto.aparatoSometido == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input value="off" type="radio" name="RiesgoPresunto[aparatosSometidos]" required {{ (RiesgoPresunto != null and RiesgoPresunto.aparatoSometido == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿La empresa manipula sustancias químicas? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[sustanciasQuimicas]" required {{ (RiesgoPresunto != null and RiesgoPresunto.sustanciaQuimica == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input value="off" type="radio" name="RiesgoPresunto[sustanciasQuimicas]" required {{ (RiesgoPresunto != null and RiesgoPresunto.sustanciaQuimica == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existe en la empresa riesgo de explosión? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[explosion]" required {{ (RiesgoPresunto != null and RiesgoPresunto.explosion == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input value="off" type="radio" name="RiesgoPresunto[explosion]" required {{ (RiesgoPresunto != null and RiesgoPresunto.explosion == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existe en la empresa riesgo de incendio? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" name="RiesgoPresunto[incendio]" required {{ (RiesgoPresunto != null and RiesgoPresunto.incendio == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input value="off" type="radio" name="RiesgoPresunto[incendio]" required {{ (RiesgoPresunto != null and RiesgoPresunto.incendio == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>¿Existe algún riesgo no mencionado anteriormente? <span class="text-danger">(*)</span></label>
+                    <div class="input-group-text">
+                        <input type="radio" onClick="mostrarObservaciones()" name="RiesgoPresunto[otros]" required {{ (RiesgoPresunto != null and RiesgoPresunto.otro == 1) ? 'checked' }}> SI
+                    </div>
+                    <div class="input-group-text">
+                        <input value="off" type="radio" onClick="ocultarObservaciones()" name="RiesgoPresunto[otros]" required {{ (RiesgoPresunto != null and RiesgoPresunto.otro == 0) ? 'checked' }}> NO
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="observaciones" class="row" style="display:none;">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <label>Observaciones:</label>
+                    <textarea type="text" class="form-control" name="RiesgoPresunto[observaciones]">{{ (RiesgoPresunto != null and RiesgoPresunto.observaciones != null ) ? RiesgoPresunto.observaciones }}</textarea>
+                </div>
+            </div>
+        </div>
+        
+        </br>
+    {# <div class="tabla-pers">
+        <h6>
+            RIESGOS
+        </h6>
+        <table id="tablaRiesgos" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Categorización</th>
+                    <th scope="col">Plan de contingencia</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="text" class="form-control" name="Riesgos[categorizacion][]" required />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="Riesgos[plan][]" required />
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminarFila(this, 'tablaRiesgos')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <div class="text-center">
+                <a class="btn btn-primary text-white" onClick="agregarFila('tablaRiesgos')">Agregar riesgo</a>
+            </div>
+        </div>
+    </div>
+    <br/> #}
+    
+    
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

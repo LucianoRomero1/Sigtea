@@ -1,0 +1,505 @@
+{% extends 'default/index.html.twig' %}
+
+{% block contenct %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-title alert alert-secondary text-center"><h4>FORMULARIO DE IMPACTO AMBIENTAL</h4></div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-title alert alert-secondary text-center">6.2 PLAN DE GESTIÓN AMBIENTAL <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Con base en las conclusiones obtenidas en la etapa anterior (Identificación y valoración de impactos ambientales), se deberá formular un Plan de Gestión ambiental, en el que se indique la gestión a adoptar para cada corriente residual ya identificada y proponga medidas de mitigación a implementar para evitar, minimizar y/o compensar los efectos negativos, o maximizar los positivos.">(?)</span></div>
+    <div class="card-body">
+        <form id="formularioEIAAA62" action="{{ path('tramiteEIAA62') }}" method="post">
+        {# {% if rol is not defined %} #}
+        <input type="hidden" name="idTramite" value="{{idTramite}}">
+        {# {% endif %} #}
+        
+        <h6>6.3 Gestión de emisiones al aire <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Debe incluir la totalidad de las emisiones identificadas en los puntos 4.3 y 4.4.2">(?)</span></h6>
+        <hr/>
+        <h6>6.3.1 Fuentes Puntuales <span class="text-danger">(*)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar si se generarán emisiones puntuales en el establecimiento ( considerando todas las etapas del proyecto).">(?)</span></p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if Emisiones|length != 0 %} checked {% endif %} onClick="mostrar('fuentesPuntuales')" value="SI" name="Emisiones[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if Emisiones|length == 0 %} checked {% endif %} value="NO" onClick="ocultar('fuentesPuntuales')" name="Emisiones[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="fuentesPuntuales" class="tabla-pers">
+            <p>Detalle de la gestión de emisiones puntuales: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá insertar una tabla por cada emisión identificada, no omitiendo ningúna de las emisiones identificadas en los puntos 4.3 y 4.4.2">(?)</span></p>
+            <div id="itemsFuentesPuntuales">
+                <div>
+                {% for Emision in Emisiones %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" value="{{Emision.nombre}}" placeholder="Ej: Gases de combustión" name="Emisiones[item][]" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Funcionamiento: </p>
+                                <input type="text" value="{{Emision.funcionamiento}}" name="Emisiones[funcionamiento][]" class="form-control" required></input>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Caudal estimado: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Volumen de cada emisión que se estima se generará en un determinado tiempo (Por ej. m3/h). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <input type="text" value="{{Emision.caudal}}" class="form-control" name="Emisiones[caudal][]" required></input>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura">(?)</span></p>
+                                <textarea class="form-control" name="Emisiones[proceso][]" required>{{Emision.procesoGenerador}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Contaminantes relevantes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar caracterización de la emisión. (Los parámetros relevantes deberán ser monitoreados en calidad de aire, lo que deberá estar plasmado en el Programa de monitoreo del punto 6.6). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="Emisiones[contaminante][]" class="form-control" required>{{Emision.contaminante}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Diámetro y altura de chimenea: </p>
+                                <textarea name="Emisiones[chimenea][]" class="form-control" required>{{Emision.chimenea}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar los procesos a implementar para el tratamiento de la emisión. (ciclón, filtro manga, precipitador electrostático, lavador de gases (scrubber), adsorción, combustión, otros (especificar). En anexo indicar características físicas y operativas de los equipos intervinientes, anexando en papel y en digital, su ficha técnica en caso de corresponder. Límite 1800 caracteres. ">(?)</span></p>
+                                <textarea name="Emisiones[tratamiento][]" class="form-control" required>{{Emision.tratamiento}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Archivos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Enumerar los nombres de los anexos adicionados en este inciso, por ejemplo, los de la ficha técnica de los equipos de tratamiento, los de modelizaciones realizadas, etc.. Respetar el formato para nombrar archivos, indicado en la primer página de este formulario. ">(?)</span></p>
+                                <input class="p-top" name="Almacenamiento" type="file" /> 
+                                <a id="" class="btn btn-info text-light">Subir</a>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsFuentesPuntuales')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" placeholder="Ej: Gases de combustión" name="Emisiones[item][]" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Funcionamiento: </p>
+                                <input type="text" name="Emisiones[funcionamiento][]" class="form-control" required></input>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Caudal estimado: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Volumen de cada emisión que se estima se generará en un determinado tiempo (Por ej. m3/h). Preferentemente se deberá citar la metodología utilizada, bibliografía consultada o documentación de otras industrias del mismo rubro para efectuar la estimación. ">(?)</span></p>
+                                <input type="text" class="form-control" name="Emisiones[caudal][]" required></input>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Remitirse a los puntos 4.3 o 4.4.2, utilizando la misma numeración o nomenclatura">(?)</span></p>
+                                <textarea class="form-control" name="Emisiones[proceso][]" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Contaminantes relevantes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar caracterización de la emisión. (Los parámetros relevantes deberán ser monitoreados en calidad de aire, lo que deberá estar plasmado en el Programa de monitoreo del punto 6.6). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="Emisiones[contaminante][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Diámetro y altura de chimenea: </p>
+                                <textarea name="Emisiones[chimenea][]" class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar los procesos a implementar para el tratamiento de la emisión. (ciclón, filtro manga, precipitador electrostático, lavador de gases (scrubber), adsorción, combustión, otros (especificar). En anexo indicar características físicas y operativas de los equipos intervinientes, anexando en papel y en digital, su ficha técnica en caso de corresponder. Límite 1800 caracteres. ">(?)</span></p>
+                                <textarea name="Emisiones[tratamiento][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Archivos: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Enumerar los nombres de los anexos adicionados en este inciso, por ejemplo, los de la ficha técnica de los equipos de tratamiento, los de modelizaciones realizadas, etc.. Respetar el formato para nombrar archivos, indicado en la primer página de este formulario. ">(?)</span></p>
+                                <input class="p-top" name="Almacenamiento" type="file" /> 
+                                <a id="" class="btn btn-info text-light">Subir</a>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsFuentesPuntuales')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsFuentesPuntuales')">
+                    Agregar emisión
+                </a>
+            </div>
+        </div>
+        <br/>
+        <h6>6.3.2 Emisiones Difusas <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar si se generarán emisiones difusas en el establecimiento (considerando todas las etapas del proyecto).">(?)</span></h6>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Seleccionar opción: </p>
+                <div class="form-row">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if EmisionesDifusas|length != 0 %} checked {% endif %} onClick="mostrar('emisionesDifusas')" value="SI" name="EmisionesDifusas[existen]" required> SI
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" {% if EmisionesDifusas|length == 0 %} checked {% endif %} onClick="ocultar('emisionesDifusas')" value="NO" name="EmisionesDifusas[existen]" required> NO
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div id="emisionesDifusas" class="tabla-pers">
+            <div id="itemsEmisionesDifusas">
+                <div>
+                {% for EmisionDifusa in EmisionesDifusas %}
+                    <div class="tabla-sub-pers mb-3">
+                        <p>Detalle de la gestión de emisiones difusas: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá insertar una tabla por cada emisión difusa identificada, no omitiendo ninguna de las emisiones identificadas en los puntos 4.3 y 4.4.2">(?)</span></p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" value="{{EmisionDifusa.nombre}}" name="EmisionesDifusas[item][]" placeholder="Ej: Emisión de materia particulado" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Sitio de generación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sector del establecimiento en el cuál se generan este tipo de emisiones.">(?)</span></p>
+                                <input type="text" value="{{EmisionDifusa.sitio}}" name="EmisionesDifusas[sitio][]" class="form-control" required></input>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el proceso o equipo, remitiéndose a los puntos 4.3 o 4.4.2 (utilizando la misma numeración o nomenclatura) que generan la emisión difusa identificada. ">(?)</span></p>
+                                <input type="text" value="{{EmisionDifusa.procesoGenerador}}" name="EmisionesDifusas[proceso][]" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Contaminantes relevantes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar caracterización de la emisión difusa. (Los parámetros relevantes deberán ser monitoreados en calidad de aire, lo que deberá estar plasmado en el Programa de monitoreo del punto 6.6). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="EmisionesDifusas[contaminante][]" class="form-control" required>{{EmisionDifusa.contaminante}}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento / Mitigación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) En el caso de implementar algún sistema o proceso para la gestión de la emisión difusa, deberá indicarse. En anexo agregar en papel y en digital, el detalle del mismo, en caso de corresponder. Límite: 1800 caracteres. ">(?)</span></p>
+                                <textarea maxlength="1800" name="EmisionesDifusas[tratamiento][]" class="form-control" required>{{EmisionDifusa.tratamiento}}</textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input class="p-top" name="Almacenamiento" type="file" /> 
+                                <a id="" class="btn btn-info text-light">Subir</a>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsEmisionesDifusas')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tabla-sub-pers mb-3">
+                        <p>Detalle de la gestión de emisiones difusas: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Se deberá insertar una tabla por cada emisión difusa identificada, no omitiendo ninguna de las emisiones identificadas en los puntos 4.3 y 4.4.2">(?)</span></p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Item:</p>
+                                <input type="text" name="EmisionesDifusas[item][]" placeholder="Ej: Emisión de materia particulado" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Sitio de generación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el sector del establecimiento en el cuál se generan este tipo de emisiones.">(?)</span></p>
+                                <input type="text" name="EmisionesDifusas[sitio][]" class="form-control" required></input>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Origen (Etapa y tarea o proceso que lo genera): <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar el proceso o equipo, remitiéndose a los puntos 4.3 o 4.4.2 (utilizando la misma numeración o nomenclatura) que generan la emisión difusa identificada. ">(?)</span></p>
+                                <input type="text" name="EmisionesDifusas[proceso][]" class="form-control" required></input>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Contaminantes relevantes: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar caracterización de la emisión difusa. (Los parámetros relevantes deberán ser monitoreados en calidad de aire, lo que deberá estar plasmado en el Programa de monitoreo del punto 6.6). Límite 200 caracteres. ">(?)</span></p>
+                                <textarea maxlength="200" name="EmisionesDifusas[contaminante][]" class="form-control" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Tratamiento / Mitigación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) En el caso de implementar algún sistema o proceso para la gestión de la emisión difusa, deberá indicarse. En anexo agregar en papel y en digital, el detalle del mismo, en caso de corresponder. Límite: 1800 caracteres. ">(?)</span></p>
+                                <textarea maxlength="1800" name="EmisionesDifusas[tratamiento][]" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input class="p-top" name="Almacenamiento" type="file" /> 
+                                <a id="" class="btn btn-info text-light">Subir</a>
+                            </div>
+                        </div>
+                        <div>
+                            <a class="btn text-danger" onClick="eliminar(this, 'itemsEmisionesDifusas')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                
+            </div>
+            <br/>
+            <div class="text-center">
+                <a class="btn btn-primary text-light" onClick="agregar('itemsEmisionesDifusas')">
+                    Agregar emisión
+                </a>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <h6>6.4 Medidas / Acciones / Obras a fin de prevenir o reducir cada uno de los impactos ambientales negativos
+        identificados <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Para cada uno de los impactos negativos identificados previamente (listados en el punto 5.3) deberán describirse medidas, acciones u obras a implementar a fin de disminuir el efecto sobre el medio ambiente, corregir acciones o procesos, proteger o conservar la calidad de los recursos naturales, etc. ">(?)</span></h6>
+        <p class="text-warning">Atención: Se generará automáticamente la misma cantidad de tablas "Medidas / Acciones / Obras" que de impactos
+        identificados en el ítem 5.3.
+        (Las celdas de "Plazo de implementación" y "Nombres de archivos" son opcionales, pero al menos una debe estar completa).</p>
+        {% for Impacto in Impactos %}
+        <div class="tabla-sub-pers mb-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>N°: <b>{{loop.index}}</b> <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Utilizar la misma numeración que en el punto 5.3">(?)</span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Impacto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Utilizar la misma nomenclatura que en punto 5.3">(?)</span></p>
+                    <input name="Impactos[descripcion][]" value="{{Impacto.descripcion}}" type="text" class="form-control" required></input>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Medida propuesta: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Describir detallada y concretamente las medidas, acciones u obras a implementar. Límite: 1800 caracteres.">(?)</span></p>
+                    <textarea name="Impactos[medida][]" maxlength="1800" class="form-control" required>{{Impacto.medidaImplementacion}}</textarea>
+                </div>
+                <div class="col-md-6">
+                    <p>Plazo de implementación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Anexar en papel y en digital, el cronograma correspondiente o indicar la fecha o plazo previsto para implementar esa medida, acción u obra. Límite: 300 caracteres. ">(?)</span></p>
+                    <textarea name="Impactos[plazo][]" maxlength="300" class="form-control" required>{{Impacto.plazo}}</textarea>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo4" class="p-top" type="file" /> 
+                    <a id="button4" onclick="subirArchivo(4)"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo4" class="col-md-6 p-top">
+                    <div id="spinner4" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div> 
+            <input type="hidden" value="{{Impacto.id}}" name="Impactos[id][]">
+        </div>
+        {% else %}
+        <div class="tabla-sub-pers">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>N°: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Utilizar la misma numeración que en el punto 5.3">(?)</span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Impacto: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Utilizar la misma nomenclatura que en punto 5.3">(?)</span></p>
+                    <input name="Impactos[descripcion][]" type="text" class="form-control" required></input>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Medida propuesta: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Describir detallada y concretamente las medidas, acciones u obras a implementar. Límite: 1800 caracteres.">(?)</span></p>
+                    <textarea name="Impactos[medida][]" maxlength="1800" class="form-control" required></textarea>
+                </div>
+                <div class="col-md-6">
+                    <p>Plazo de implementación: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Anexar en papel y en digital, el cronograma correspondiente o indicar la fecha o plazo previsto para implementar esa medida, acción u obra. Límite: 300 caracteres. ">(?)</span></p>
+                    <textarea name="Impactos[plazo][]" maxlength="300" class="form-control" required></textarea>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="archivo4" class="p-top" type="file" /> 
+                    <a id="button4" onclick="subirArchivo(4)"  class="btn btn-info text-light">Subir</a>
+                </div>
+                <div id="nombreArchivo4" class="col-md-6 p-top">
+                    <div id="spinner4" class='spinner form-row'>
+                        <div class="three-quarters-loader"></div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        {% endfor %}
+        <br/>
+        <h6>6.5 Medidas de eficiencia energética/ ambiental, Uso de energías alternativas, Ahorro de recursos naturales, u Otras
+        medidas a implementar (Opcional)</h6>
+        <div id="itemsMedidas">
+            <div>
+            {% for Medida in Medidas %}
+                <div class="tabla-sub-pers mb-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>N°:</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Medida: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar otras medidas no mencionadas hasta aquí que formen parte del Plan de Gestión Ambiental del proyecto. (Por ej. eficiencia energética, uso de energías alternativas, reuso de aguas de origen pluvial, plan arbóreo para compensar por fotosíntesis el CO2 generado en procesos de combustión, etc.) Se deberá seguir el mismo esquema que en el punto 6.4. Insertar una fila por cada medida adicional a implementar. Límite: 2600 caracteres.">(?)</span></p>
+                            <input maxlength="2600" name="Medidas[medida][]" value="{{Medida.medida}}" type="text" class="form-control" required></input>
+                        </div>
+                    </div>
+                    <div>
+                        <a class="btn text-danger" onClick="eliminar(this,'itemsMedidas')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="tabla-sub-pers mb-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>N°:</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Medida: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Indicar otras medidas no mencionadas hasta aquí que formen parte del Plan de Gestión Ambiental del proyecto. (Por ej. eficiencia energética, uso de energías alternativas, reuso de aguas de origen pluvial, plan arbóreo para compensar por fotosíntesis el CO2 generado en procesos de combustión, etc.) Se deberá seguir el mismo esquema que en el punto 6.4. Insertar una fila por cada medida adicional a implementar. Límite: 2600 caracteres.">(?)</span></p>
+                            <input maxlength="2600" name="Medidas[medida][]" type="text" class="form-control" required></input>
+                        </div>
+                    </div>
+                    <div>
+                        <a class="btn text-danger" onClick="eliminar(this,'itemsMedidas')">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            
+        </div>
+        <br/>
+        <div class="text-center">
+            <a class="btn btn-primary text-light" onClick="agregar('itemsMedidas')">
+                Agregar medida
+            </a>
+        </div>
+        <br/>
+        <h6>6.6 Programa de monitoreo <span class="text-danger">(*)</span><span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Definir el programa a implementar a fin de monitorear las variables determinantes de los potenciales impactos identificados en el punto 5.3. Insertar una tabla por cada medida adicional a implementar. determinantes de los potenciales impactos identificados en el punto 5.3. ">(?)</span></h6>
+        <p class="text-warning">Atención: Se generará automáticamente la misma cantidad de tablas "Programa de monitoreo" que de impactos
+        identificados en el ítem 5.3.</p>
+        {% for Impacto in Impactos %}
+        <div class="tabla-sub-pers mb-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Monitoreo de: <b>{{loop.index}}</b></p>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Parámetros a medir: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Los parámetros deberán tener relación con las obras o procesos que producen los efluentes, materiales almacenados, etc. Límite: 300 caracteres.">(?)</span></p>
+                    <textarea name="Impactos[parametro][]" maxlength="300" class="form-control" required>{{Impacto.parametroMonitoreo}}</textarea>
+                </div>
+                <div class="col-md-6">
+                    <p>Frecuencia: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Límite: 300 caracteres.">(?)</span></p>
+                    <textarea maxlength="300" name="Impactos[frecuencia][]" class="form-control" required>{{Impacto.frecuencia}}</textarea>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Puntos de muestreo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de puntos de medición, estimando su ubicación y justificando la misma. Límite: 500 caracteres.">(?)</span></p>
+                    <textarea maxlength="500" name="Impactos[muestreo][]" class="form-control" required>{{Impacto.puntoMuestreo}}</textarea> 
+                </div>
+                <div class="col-md-6">
+                    <p>Normativa de referencia: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Límite: 300 caracteres.">(?)</span></p>
+                    <textarea maxlength="300" name="Impactos[referencia][]" class="form-control" required>{{Impacto.normativaReferencia}}</textarea> 
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="tabla-sub-pers mb-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Monitoreo de:</p>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Parámetros a medir: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Los parámetros deberán tener relación con las obras o procesos que producen los efluentes, materiales almacenados, etc. Límite: 300 caracteres.">(?)</span></p>
+                    <textarea name="Impactos[parametro][]" maxlength="300" class="form-control" required></textarea>
+                </div>
+                <div class="col-md-6">
+                    <p>Frecuencia: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Límite: 300 caracteres.">(?)</span></p>
+                    <textarea maxlength="300" name="Impactos[frecuencia][]" class="form-control" required></textarea>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Puntos de muestreo: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Cantidad de puntos de medición, estimando su ubicación y justificando la misma. Límite: 500 caracteres.">(?)</span></p>
+                    <textarea maxlength="500" name="Impactos[muestreo][]" class="form-control" required></textarea> 
+                </div>
+                <div class="col-md-6">
+                    <p>Normativa de referencia: <span data-toggle="tooltip" class="text-success" data-placement="right" title="(?) Límite: 300 caracteres.">(?)</span></p>
+                    <textarea maxlength="300" name="Impactos[referencia][]" class="form-control" required></textarea> 
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <br/>
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <a href="{{ path('tramiteEIAA5',{'idTramite': idTramite ?? 0} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>                    
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <input type="submit" class="btn btn-success" value="Guardar y Salir" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('tramiteA5',{'rol':'admin'}) }}" class="btn btn-primary">Siguiente</a>
+                    <a href="#" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+{# <script src="{{asset('bundles/js/formularioA1.js')}}"></script> #}
+<script src="{{asset('bundles/js/volver.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formulario6.js')}}"></script>
+{% endblock %}

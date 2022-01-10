@@ -1,0 +1,146 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} PLANTAS DE ACOPIO Y/O ACONDICIONAMIENTO DE GRANOS {% endblock %}
+
+{% block subTitle %} 9. GENERACIÓN / DISPOSICIÓN DE RESIDUOS SÓLIDOS {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form id="formularioAG9" action="{{ path('tramiteAG10') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b>RESIDUOS</b>
+            </div>
+        </div>
+    </div>
+    <br>  
+    <div class="row">
+        <table class="table text-center" id="tablaResiduo">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">GENERACIÓN</th>
+                    <th scope="col">CARACTERIZACIÓN</th>
+                    <th scope="col">CANTIDAD DIARIA Y/O MENSUAL/</th>
+                    <th scope="col">COMPONENTE RELEVANTE</th>
+                    <th scope="col">TRATAMIENTO INCOMPLETO</th>
+                </tr>
+            </thead>
+            <tbody >
+                {% for residuo in Residuos %}  
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td><input type="text" class="form-control" name="Residuos[categoria][]"  value="{{residuo.categoria}}" required></td>
+                    <td><input type="text" class="form-control" name="Residuos[procesoGenerador][]"  value="{{residuo.procesoGenerador}}" required></td>
+                    <td><input type="text" class="form-control" name="Residuos[periodoTiempo][]"  value="{{residuo.periodoTiempo}}" required></td> 
+                    <td >
+                        <select class="form-control" name="Residuos[tipoOperacion][]" required>
+                            <option {% if TipoOperacion != null and TipoOperacion[loop.index - 1].operacion == 'recuperacion' %}selected{% endif %} value="recuperacion" >Reuso</option>
+                            <option {% if TipoOperacion != null and TipoOperacion[loop.index - 1].operacion == 'eliminacion' %}selected{% endif %} value="eliminacion" >Vertedero</option>
+                            <option {% if TipoOperacion != null and TipoOperacion[loop.index - 1].operacion == 'almacenamiento' %}selected{% endif %} value="almacenamiento" >Almacenamiento</option>
+                        </select>
+                    </td>
+                    <td class="media">
+                        <select class="form-control" name="Residuos[tratamientoPlanta][]" required>
+                            <option {% if TratamientoPlantaPropia != null and TratamientoPlantaPropia[loop.index - 1].tratamientoIncompleto == 1 %}selected{% endif %} value="1" >Si</option>
+                            <option {% if TratamientoPlantaPropia != null and TratamientoPlantaPropia[loop.index - 1].tratamientoIncompleto == 0 %}selected{% endif %} value="0" >No</option>
+                        </select>
+                        <a onClick="eliminarFila(this, 'tablaResiduo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>  
+                {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="text" class="form-control" name="Residuos[categoria][]"  required></td>
+                    <td><input type="text" class="form-control" name="Residuos[procesoGenerador][]"  required></td>
+                    <td><input type="text" class="form-control" name="Residuos[periodoTiempo][]"  required></td> 
+                    <td >
+                        <select class="form-control" name="Residuos[tipoOperacion][]"  required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="recuperacion">Reuso</option>
+                            <option value="eliminacion">Vertedero</option>
+                            <option value="almacenamiento">Almacenamiento</option>
+                        </select>
+                    </td>
+                       <td class="media">
+                        <select class="form-control" name="Residuos[tratamientoPlanta][]" required>
+                            <option value="1" >Si</option>
+                            <option value="0" >No</option>
+                        </select>
+                        <a onClick="eliminarFila(this, 'tablaResiduo')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaResiduo')" class="btn btn-secondary text-light">Agregar Residuo</a>
+        </div>
+    </div>
+    <br>   
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-row">
+                <b>GASES</b>
+            </div>
+        </div>
+    </div>
+    <br>   
+    <div class="row">
+        <table class="table text-center" id="tablaGases">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">GENERACIÓN</th>
+                    <th scope="col">CONSUMO</th>
+                    <th scope="col">TIPO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gas in Gases %} 
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td><input type="text" class="form-control" name="Gases[nombre][]"  value="{{gas.nombre}}" required></td>
+                    <td><input type="number"  step="0.01" class="form-control" name="Gases[consumo][]"  value="{{gas.consumo}}" required></td>
+                    <td class="media">
+                        <select class="form-control" name="Gases[tipo][]"  required>
+                            <option value="Nox">Nox</option>
+                            <option value="SO2">SO2</option>
+                        </select>
+                        <a onClick="eliminarFila(this, 'tablaGases')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr> 
+                {% else %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="text" class="form-control" name="Gases[nombre][]" required></td>
+                    <td><input type="number"  step="0.01" class="form-control" name="Gases[consumo][]" required></td>
+                    <td class="media">
+                        <select class="form-control" name="Gases[tipo][]" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Nox">Nox</option>
+                            <option value="SO2">SO2</option>
+                        </select>
+                        <a onClick="eliminarFila(this, 'tablaGases')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr> 
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaGases')" class="btn btn-secondary text-light">Agregar Gas</a>
+        </div>
+    </div>
+    <br>      
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+{% endblock %}

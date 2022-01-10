@@ -1,0 +1,32 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} FORMULARIO DE ESTUDIO DE IMPACTO AMBIENTAL PARA LOTEOS CON FINES DE URBANIZACIÓN {% endblock %}
+
+{% block subTitle %} 2. RESUMEN EJECUTIVO {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIAFU2') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p>Descripción concisa del proyecto: <span class="text-danger">(*)</span></p>
+                <textarea placeholder="Límite de 7500 caracteres" maxlength="7500" class="form-control" name="Resumen[descripcion]" required>{% if ResumenEjecutivo is defined and ResumenEjecutivo != null %}{{ResumenEjecutivo.descripcion}}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p for="razonSocial">N° de Expediente correspondiente al Formulario de presentación: <span class="text-danger">(*)</span>
+                <span data-toggle="tooltip" data-placement="right"  title="Para expedientes en papel el formato deberá ser: 99999 - 9999999 - 9. Para expedientes electrónicos: El formato deberá ser: EX- 'AÑO' - 99999999 - GSF - 'REPARTICIÓN'" class="text-success">(?)</span></p>
+                <input type="text" class="form-control" value="{% if ResumenEjecutivo is defined and ResumenEjecutivo != null %}{{ResumenEjecutivo.nroExpediente}}{% endif %}" name="Resumen[expediente]" required>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}

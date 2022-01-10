@@ -1,0 +1,161 @@
+{% extends 'default/baseFormularios.html.twig' %}
+
+{% block titleForm %} {{titulo}} {% endblock %}
+        
+{% block subTitle %} ANEXO B - 1. DATOS DE LA EMPRESA {% endblock %}
+
+{% block contenctForms %}
+<div class="card-body">
+<form action="{{ path('tramiteEIARB1') }}" method="post">
+    <input type="hidden" name="idTramite" value="{{idTramite}}">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p for="planta">Planta <span class="text-danger">(*)</span><span data-toggle="tooltip" data-placement="right" 
+                    title="(?) Escribir el nombre con que se identifica la planta en cuestión (sí es una sola identificarla como 'única')"
+                    class="text-success pad-span">(?)</span></p>
+                <input type="text" required class="form-control" id="planta" name="Planta[nombre]" value="{% if Planta != null %}{{ Planta.nombre }}{% endif %}">
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <label>
+                Servicios disponibles en la zona: 
+                <span class="text-danger">(*)</span>
+                <span data-toggle="tooltip" data-placement="right" 
+                    title="(?) Señalar aquellos servicios disponibles en la zona en la que está ubicado el predio, sin 
+                    importar si dichos servicios están contratados o no."
+                    class="text-success pad-span">(?)</span>
+            </label>
+        </div>
+    </div>
+    </br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-row">
+                <label>ENERGÍA ELÉCTRICA: </label>
+                <div class="input-group-text">
+                    <input type="radio" value="1" {% if Servicio != null and Servicio.energiaElectrica == 1 %} checked {% endif %} name="Servicio[energiaElectrica]" required> SI
+                </div>
+                <div class="input-group-text">
+                    <input type="radio" value="0" {% if Servicio != null and Servicio.energiaElectrica == 0 %} checked {% endif %} name="Servicio[energiaElectrica]" required> NO
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-row">
+                <label>GAS NATURAL: </label>
+                <div class="input-group-text" >
+                    <input type="radio" value="1" {% if Servicio != null and Servicio.gasNatural == 1 %} checked {% endif %} name="Servicio[gasNatural]" required> SI
+                </div>
+                <div class="input-group-text">
+                    <input type="radio" value="0" {% if Servicio != null and Servicio.gasNatural == 0 %} checked {% endif %} name="Servicio[gasNatural]" required> NO
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-row">
+                <label>AGUA DE RED: </label>
+                <div class="input-group-text">
+                    <input type="radio" value="1" {% if Servicio != null and Servicio.aguaRed == 1 %} checked {% endif %} name="Servicio[aguaRed]" required> SI
+                </div>
+                <div class="input-group-text">
+                    <input type="radio" value="0" {% if Servicio != null and Servicio.aguaRed == 0 %} checked {% endif %} name="Servicio[aguaRed]" required> NO
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-row">
+                <label>CLOACAS: </label>
+                <div class="input-group-text">
+                    <input type="radio"  value="1" {% if Servicio != null and Servicio.cloacas == 1 %} checked {% endif %} name="Servicio[cloacas]" required> SI
+                </div>
+                <div class="input-group-text">
+                    <input type="radio"  value="0" {% if Servicio != null and Servicio.cloacas == 0 %} checked {% endif %} name="Servicio[cloacas]" required> NO
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-row">
+                <label>
+                    EXISTEN INMUEBLES ANEXOS 
+                    <span class="text-danger">(*)</span>
+                    <span data-toggle="tooltip" data-placement="right" 
+                    title="(?) En caso de contar con inmueble anexo, se deberá adjuntar la documentación correspondiente 
+                    para el mismo."
+                    class="text-success pad-span">(?)</span>
+                </label>
+                
+                <div class="input-group-text">
+                    <input onClick="mostrar('InmueblesAnexos')"  {% if InmueblesAnexos|length != 0 %} checked {% endif %} type="radio" value="SI" name="InmuebleAnexo[opt]" required> SI
+                </div>
+                <div class="input-group-text">
+                    <input type="radio" onClick="ocultar('InmueblesAnexos')" value="NO" name="InmuebleAnexo[opt]" required> NO
+                </div>
+            </div>
+        <div>
+    <div>
+    </br>
+    <div id="InmueblesAnexos">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tablaInmueblesAnexos" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">N°</th>
+                            <th scope="col">DOMICILIO</th>
+                            <th scope="col">ACTIVIDAD DESARROLLADA</th>
+                            <th scope="col"></th>
+                        </tr>                        
+                    </thead>
+                    <tbody id="filasInmuebleAnexo">
+                    {% for inmuebleAnexo in InmueblesAnexos %}                                    
+                        <tr>
+                            <th>{{loop.index}}</th>
+                            <th><input class="form-control" value="{{inmuebleAnexo.domicilio}}" type="text" name="InmuebleAnexo[domicilio][]" required></th>
+                            <td>
+                                <input class="form-control" value="{{inmuebleAnexo.actividadDesarrollada}}" type="text" name="InmuebleAnexo[actividad][]" required>
+                            </td>
+                            <td>
+                                <a onClick="eliminarFila(this, 'tablaInmueblesAnexos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>  
+                    {% else %} 
+                        <tr>
+                            <th>{{loop.index}}</th>
+                            <td><input class="form-control" type="text" name="InmuebleAnexo[domicilio][]" required></td>
+                            <td>
+                                <input class="form-control" type="text" name="InmuebleAnexo[actividad][]" required>
+                            </td>
+                            <td>
+                                <a onClick="eliminarFila(this, 'tablaInmueblesAnexos')" class="btn text-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>         
+                    {% endfor %}
+                    </tbody>
+                </table>
+            <div>
+        <div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a onClick="agregarFila('tablaInmueblesAnexos')" class="btn btn-primary text-light">Agregar Fila</a>
+        </div>
+    </div>
+    
+    </br>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{asset('bundles/js/impactoAmbiental/formularioFilas.js')}}"></script>
+<script src="{{asset('bundles/js/impactoAmbiental/formularioDivs.js')}}"></script>
+{% endblock %}

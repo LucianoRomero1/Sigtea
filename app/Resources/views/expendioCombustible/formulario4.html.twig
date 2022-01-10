@@ -1,0 +1,126 @@
+{% extends 'default/baseFormularios.html.twig' %}
+{% block contenct %}   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-title alert alert-secondary text-center">
+                <h4>{% block titleForm %}Expendio de Combustible{% endblock %}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="text-success">ATENCIÓN: Posiciónese sobre los (?) y lea atentamente cómo completar el formulario. Recuerde que los campos marcados con (*) son campos obligatorios. La referencia (**) se explica al final del presente formulario
+            </label>
+        </div>
+    </div>
+    <div class="card">
+    <div class="card-title alert alert-secondary text-center">{% block subTitle %}4. SERVICIOS SECUNDARIOS QUE BRINDA{% endblock %}</div>
+    {% block contenctForms %}
+        <div class="card-body">
+        <form id="formulario" action="{{ path('formularioExpendio5') }}" method="post">
+            {# {% if rol is not defined %} #}
+            <input type="hidden" name="idTramite" value="{{idTramite ?? null}}">
+            {# {% endif %} #}
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">LAVADERO DE VEHÍCULOS<span class="text-success" title="En caso de seleccionar Si en esta opción, en el item 8 se seleccionará automáticamente y deberá completar la primera tavla del mismo con información correspondiente a efluentes generados por el lavade de vehículos">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="ActividadServicio[lavadero]" data-tipo="lavadero" required {% if ActividadServicio is defined and ActividadServicio.lavadero == 1 %} checked {% endif %} value="1"> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="ActividadServicio[lavadero]" data-tipo="lavadero" required {% if (ActividadServicio is defined and ActividadServicio.lavadero == 0) or ActividadServicio is not defined %} checked {% endif %} value="0"> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">CAMBIO DE ACEITE<span class="text-success" title="En caso de seleccionar Si en esta opción, en el item 8 se seleccionará automáticamente y deberá completar la primera tavla del mismo con información correspondiente a efluentes generados por el cambio de aceite">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="ActividadServicio[cambioAceite]" data-tipo="cambioAceite" required {% if ActividadServicio is defined and ActividadServicio.cambioAceite == 1 %} checked {% endif %} value="1"> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input type="radio" name="ActividadServicio[cambioAceite]" data-tipo="cambioAceite" required {% if (ActividadServicio is defined and ActividadServicio.cambioAceite == 0) or ActividadServicio is not defined %} checked {% endif %} value="0"> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-row">
+                        <p for="descripccion">OTROS<span class="text-success" title="En caso de seleccionar Si en esta opción, deberá completar el cambo de texto que aparece a continuaci+on especificando otros servicios secundatios que brinda el establecimiento. Máximo 200 caracteres">(?)</span></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-otros" type="radio" name="ActividadServicio[otroSecundario]" data-tipo="otroSecundario" required {% if ActividadServicio is defined and ActividadServicio.otroSecundario != null %} checked {% endif %} value="1"> SI
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                            <input class="ck-otros" type="radio" name="ActividadServicio[otroSecundario]" data-tipo="otroSecundario" required {% if (ActividadServicio is defined and ActividadServicio.otroSecundario == null) or ActividadServicio is not defined %} checked {% endif %} value="0"> NO
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <div class="row" id="otros" style="display:none">
+                <div class="col-md-12">
+                    <textarea name="ActividadServicio[otroSecundario]" rows="3" cols="130">{% if ActividadServicio is defined and ActividadServicio.otroSecundario != null %} {{ActividadServicio.otroSecundario}} {% endif %}</textarea>
+                </div>
+            </div>
+            <br/>
+        </div>
+    {% endblock %}
+        <div class="row">
+            <div class="col-md-12 text-right">                
+                {% if rol is empty %}
+                    <button class="btn btn-outline-dark" data-url={{ path('formularioExpendio3') }} data-idtramite="{{idTramite}}">Volver</button>
+                    <input type="submit" class="btn btn-primary" value="Siguiente" />
+                    <a href="{{ path('misTramites') }}" class="btn btn-danger">Salir</a>
+                {% else %}
+                    <a href="{{ path('formularioExpendio3',{'idTramite': idTramite ?? 0},{'rol':'admin'} ) }}" class="back"><button class="btn btn-outline-dark">Volver</button></a>
+                    <a class="btn btn-primary siguiente">Siguiente</a>
+                    <a href="{{ path('/admin/listadoTramite',{'rol':'admin'}) }}" class="btn btn-danger"  data-toggle="modal" data-target="#crearNoticias">Rechazar</a>
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('bundles/js/volver.js')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.ck-otros').click(function(){
+                $('#otros').toggle();
+            })
+            {% if ActividadServicio is defined and ActividadServicio.otroSecundario != null %}
+                $('#otros').show();
+            {% endif %}
+        })
+    </script>
+{% endblock %}
